@@ -10,7 +10,7 @@
 		<groupId>com.bodybuilding.catalog</groupId>
 		<artifactId>core-base</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../catalog/core-base</relativePath>
+		<relativePath>../../catalog/core-base</relativePath>
 	</parent>
 
 	<!-- HYPER CLIENT PROJECT DEFINITION -->
