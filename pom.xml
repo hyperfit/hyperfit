@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <name>Bodybuilding.com Commerce Http Hyper Client</name>
+    <name>Bodybuilding.com Commerce Hyper Client</name>
     <url>http://confluence/display/commerce/Commerce+Hyper+Client</url>
 
     <!-- CORE BASE DEPENDENCY -->
