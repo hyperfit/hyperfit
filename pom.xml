@@ -9,14 +9,14 @@
     <parent>
         <groupId>com.bodybuilding.catalog</groupId>
         <artifactId>core-base</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.3-SNAPSHOT</version>
         <relativePath>../../catalog/core-base</relativePath>
     </parent>
 
     <!-- HYPER CLIENT PROJECT DEFINITION -->
     <groupId>com.bodybuilding.hyper.client</groupId>
     <artifactId>commerce-hyper-client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <!-- HYPER CLIENT DEPENDENCIES -->
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.bodybuilding.catalog.test</groupId>
             <artifactId>core-test</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         
