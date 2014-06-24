@@ -7,14 +7,14 @@
 
     <!-- CORE BASE DEPENDENCY -->
     <parent>
-        <groupId>com.bodybuilding.catalog</groupId>
+        <groupId>com.bodybuilding.commerce</groupId>
         <artifactId>core-base</artifactId>
         <version>1.0.3-SNAPSHOT</version>
         <relativePath>../../catalog/core-base</relativePath>
     </parent>
 
     <!-- HYPER CLIENT PROJECT DEFINITION -->
-    <groupId>com.bodybuilding.hyper.client</groupId>
+    <groupId>com.bodybuilding.commerce</groupId>
     <artifactId>commerce-hyper-client</artifactId>
     <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -65,7 +65,7 @@
 
         <!-- TESTING BUNDLE -->
         <dependency>
-            <groupId>com.bodybuilding.catalog.test</groupId>
+            <groupId>com.bodybuilding.commerce</groupId>
             <artifactId>core-test</artifactId>
             <version>1.0.3-SNAPSHOT</version>
             <scope>test</scope>
