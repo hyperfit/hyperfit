@@ -4,7 +4,7 @@
 
     <groupId>com.bodybuilding</groupId>
     <artifactId>commerce-hyper-client</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.100.106-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>Bodybuilding.com Commerce Hyper Client</name>
