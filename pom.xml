@@ -118,7 +118,7 @@
                         <configuration>
                             <skipTests>false</skipTests>
                             <includes>
-                                <include>**/integration/**</include>
+                                <include>**/Integration/**</include>
                             </includes>
                             <excludes>
                                 <exclude>**/UnitTestSuite.class</exclude>
