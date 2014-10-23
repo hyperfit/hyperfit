@@ -39,7 +39,9 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.12.6</version>
+            <version>1.14.8</version>
+            <!--see http://projectlombok.org/mavenrepo/index.html no need to bundle this for runtime -->
+            <scope>provided</scope>
         </dependency>
 
         <!-- JSON PARSER -->
