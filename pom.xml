@@ -123,11 +123,11 @@
                         <configuration>
                             <skipTests>false</skipTests>
                             <includes>
-                                <include>**/Integration/**</include>
+                                <include>**/integration/**</include>
                             </includes>
                             <excludes>
                                 <exclude>**/UnitTestSuite.class</exclude>
-                                <exclude>**/IntegrationTestSuite.class</exclude>
+                                <exclude>**/integrationTestSuite.class</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
