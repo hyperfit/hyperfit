@@ -1,0 +1,51 @@
+# Auto generated files
+src/main/resources/git.properties
+
+# Eclipse
+*.launch
+*.buildpath
+*.classpath
+*.eclipse/
+*.metadata
+*.project
+*.springBeans
+*.revision/
+*.settings/
+bin/
+
+# General
+*~
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+*.idea/
+atlassian-ide-plugin.xml
+
+# Java
+*.class
+*.ear
+*.jar
+*.war
+
+# Maven
+target/
+
+# Netbeans
+build/
+dist/
+nbbuild/
+nbdist/
+nbproject/
+
+# Subversion
+*.svn/
+
+.DS_Store
+
+# TextMate 2
+.tm_properties
+
+#JRebel
+rebel.xml
