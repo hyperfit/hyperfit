@@ -11,14 +11,6 @@
     <url>http://confluence/display/commerce/Commerce+Hyper+Client</url>
 
 
-    <parent>
-        <groupId>com.bodybuilding.commerce</groupId>
-        <artifactId>core-base</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
-        <relativePath>../../catalog/core-base</relativePath>
-    </parent>
-
-
     <dependencies>
 
         <!-- LOGGING DEPENDENCIES  -->
@@ -125,7 +117,7 @@
 
     <profiles>
         <profile>
-            <id>integration-test-coverage</id>
+            <id>integrationTests</id>
             <build>
                 <plugins>
                     <plugin>
