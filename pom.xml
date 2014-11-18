@@ -106,13 +106,6 @@
             <version>1.7.7</version>
         </dependency>
 
-        <!-- CONVERSION UTILS -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
-        </dependency>
-
         <!-- URI Template Handler -->
         <dependency>
             <groupId>com.damnhandy</groupId>
