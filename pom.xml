@@ -4,7 +4,7 @@
 
     <groupId>com.bodybuilding</groupId>
     <artifactId>commerce-hyper-client</artifactId>
-    <version>1.100.112-SNAPSHOT</version>
+    <version>1.100.113-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>Bodybuilding.com Commerce Hyper Client</name>
@@ -93,25 +93,6 @@
             <version>2.2.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.7</version>
-        </dependency>
-
-        <!-- CONVERSION UTILS -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
-        </dependency>
 
         <!-- URI Template Handler -->
         <dependency>
