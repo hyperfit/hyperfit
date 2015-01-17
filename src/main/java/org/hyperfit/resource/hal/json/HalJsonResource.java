@@ -9,9 +9,7 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -81,6 +79,19 @@ public class HalJsonResource extends BaseHyperResource {
         return result;
     }
 
+
+    public HyperLink[] getLinks() {
+        //NOTE: if a getRels became useful this could move to baseresource adn depend on that
+        java.util.Iterator<String> rels = jsonResource.path("_links").fieldNames();
+
+        List<HyperLink> links = new ArrayList<HyperLink>();
+
+        while(rels.hasNext()){
+            Collections.addAll(links, getLinks(rels.next()));
+        }
+
+        return links.toArray(new HyperLink[links.size()]);
+    }
 
     public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {

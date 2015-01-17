@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import static com.bodybuilding.commerce.hyper.client.TestHelpers.makeSet;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
@@ -180,6 +180,74 @@ public class HalJsonResourceTest {
 
         HalJsonResource resource = new HalJsonResource(root);
         resource.getLink("bb:multi", "unknown-item-value");
+    }
+
+
+    @Test
+    public void testGetLinksNoLinksAtAll() {
+        HalJsonResource resource = new HalJsonResource(root);
+        assertArrayEquals(new HyperLink[0], resource.getLinks());
+
+    }
+
+    @Test
+    public void testGetLinksNoLinksEntry() {
+        root.remove("_links");
+        HalJsonResource resource = new HalJsonResource(root);
+        assertArrayEquals(new HyperLink[0], resource.getLinks());
+
+    }
+
+    @Test
+    public void testGetLinksNoLinksInRel() {
+        ArrayNode linkArray = nodeFactory.arrayNode();
+
+        links.put("bb:multi", linkArray);
+
+        HalJsonResource resource = new HalJsonResource(root);
+        assertArrayEquals(new HyperLink[0], resource.getLinks());
+
+    }
+
+    @Test
+    public void testGetLinksSingleAndMultipleLinks() {
+        ArrayNode linkArray = nodeFactory.arrayNode();
+        ObjectNode link1 = nodeFactory.objectNode();
+        ObjectNode link2 = nodeFactory.objectNode();
+        link1.put("href", "/first-item");
+        link1.put("title", "first-item-title");
+        link2.put("href", "/second-item");
+        link2.put("title", "second-item-title");
+        linkArray.add(link1);
+        linkArray.add(link2);
+
+        links.put("bb:multi", linkArray);
+
+        ObjectNode singleLink = nodeFactory.objectNode();
+        singleLink.put("href", "/singleItem");
+        singleLink.put("title", "single-item-title");
+
+        links.put("bb:single", singleLink);
+
+        HalJsonResource resource = new HalJsonResource(root);
+        HyperLink[] links = resource.getLinks();
+
+        assertEquals(3, links.length);
+        assertThat(links, arrayContainingInAnyOrder(
+            allOf(
+                hasProperty("title", equalTo("first-item-title")),
+                hasProperty("rel", equalTo("bb:multi"))
+            ),
+            allOf(
+                hasProperty("title", equalTo("second-item-title")),
+                hasProperty("rel", equalTo("bb:multi"))
+            ),
+            allOf(
+                hasProperty("title", equalTo("single-item-title")),
+                hasProperty("rel", equalTo("bb:single"))
+            )
+        ));
+
     }
 
     @Test
