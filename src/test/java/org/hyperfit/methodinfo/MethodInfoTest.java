@@ -1,5 +1,6 @@
 package org.hyperfit.methodinfo;
 
+import org.hyperfit.annotation.FirstLink;
 import org.hyperfit.annotation.Param;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 /**
  * @author Carlos Perez
  */
-public class ResourceMethodInfoTest {
+public class MethodInfoTest {
 
     /**
      * Exposes methods for working with a Page or resources in the Commerce Hyper API
@@ -35,6 +36,10 @@ public class ResourceMethodInfoTest {
             @Param("page") Long page,
             @Param("size") Long size
         );
+
+
+        @FirstLink(value="first-link", names={"name1", "name2"})
+        SomeResource<T> firstLink();
 
         public boolean equals(Object o);
     }
@@ -61,43 +66,46 @@ public class ResourceMethodInfoTest {
         //equals
         Method equalsMethod = methodMap.get("equals");
         MethodInfo equalsMethodInfo = methodInfoCache.get(equalsMethod);
-        assertEquals(equalsMethodInfo.getMethodType(), MethodInfo.MethodType.EQUALS);
-        System.out.println(equalsMethodInfo);
+        assertEquals(MethodInfo.MethodType.EQUALS, equalsMethodInfo.getMethodType());
 
         //link method
         Method linkMethod = methodMap.get("link");
         MethodInfo searchMethodInfo = methodInfoCache.get(linkMethod);
 
-        assertEquals(searchMethodInfo.getMethodType(), null);
+        assertNull(searchMethodInfo.getMethodType());
         assertArrayEquals(searchMethodInfo.getParameterAnnotations(), linkMethod.getParameterAnnotations());
-        assertTrue(searchMethodInfo.getParameterAnnotations().length == 2);
-        assertEquals(searchMethodInfo.getReturnType(), linkMethod.getReturnType());
-        assertEquals(searchMethodInfo.getGenericReturnType(), linkMethod.getGenericReturnType());
-        assertEquals(searchMethodInfo.getLinkAnnotation(), linkMethod.getAnnotation(Link.class));
-        assertNotNull(searchMethodInfo.getLinkAnnotation());
-        assertEquals(searchMethodInfo.getDataAnnotation(), null);
-        System.out.println(searchMethodInfo);
+        assertEquals(linkMethod.getReturnType(), searchMethodInfo.getReturnType());
+        assertEquals(linkMethod.getGenericReturnType(), searchMethodInfo.getGenericReturnType());
+        assertEquals(linkMethod.getAnnotation(Link.class), searchMethodInfo.getLinkAnnotation());
+        assertNull(searchMethodInfo.getDataAnnotation());
 
         //data method
         Method dataMethod = methodMap.get("data");
         MethodInfo dataMethodInfo = methodInfoCache.get(dataMethod);
 
-        assertEquals(dataMethodInfo.getMethodType(), null);
-        assertEquals(dataMethodInfo.getDataAnnotation(), dataMethod.getAnnotation(Data.class));
-        assertEquals(dataMethodInfo.getLinkAnnotation(), null);
-        System.out.println(dataMethodInfo);
+        assertNull(dataMethodInfo.getMethodType());
+        assertEquals(dataMethod.getAnnotation(Data.class), dataMethodInfo.getDataAnnotation());
+        assertNull(dataMethodInfo.getLinkAnnotation());
 
         //getLink method
         Method getLinkMethod = methodMap.get("getLink");
         MethodInfo getLinkMethodInfo = methodInfoCache.get(getLinkMethod);
-        assertEquals(getLinkMethodInfo.getMethodType(), MethodInfo.MethodType.GET_LINK);
-        System.out.println(getLinkMethodInfo);
+        assertEquals(MethodInfo.MethodType.GET_LINK, getLinkMethodInfo.getMethodType());
 
         //hyper resource method
         Method hyperResourceMethod = methodMap.get("resolveLinkLocal");
         MethodInfo hyperResourceMethodInfo = methodInfoCache.get(hyperResourceMethod);
-        assertEquals(hyperResourceMethodInfo.getMethodType(), MethodInfo.MethodType.FROM_HYPER_RESOURCE_CLASS);
-        System.out.println(hyperResourceMethod);
+        assertEquals(MethodInfo.MethodType.FROM_HYPER_RESOURCE_CLASS, hyperResourceMethodInfo.getMethodType());
+
+
+        //firstlinkmethod
+        Method firstLinkMethod = methodMap.get("firstLink");
+        MethodInfo firstLinkMethodInfo = methodInfoCache.get(firstLinkMethod);
+        assertNull(firstLinkMethodInfo.getDataAnnotation());
+        assertNull(firstLinkMethodInfo.getLinkAnnotation());
+        assertNull(firstLinkMethodInfo.getMethodType());
+        assertEquals(firstLinkMethod.getAnnotation(FirstLink.class), firstLinkMethodInfo.getFirstLinkAnnotation());
+
     }
 
 

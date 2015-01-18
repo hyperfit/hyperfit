@@ -129,12 +129,6 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         }
 
-        /*
-        if (List.class.isAssignableFrom(returnClass)) {
-            return processReturnValueList((ParameterizedType) genericReturnType, hyperResourcePart);
-        }
-        */
-
         throw new RuntimeException("Can't deal with return type");
     }
 
@@ -187,7 +181,6 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         // Link method invocation
         Link link = methodInfo.getLinkAnnotation();
-
         if (link != null) {
             String linkRelationship = link.value();
             String linkName = link.name();

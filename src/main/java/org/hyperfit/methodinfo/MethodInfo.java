@@ -1,5 +1,6 @@
 package org.hyperfit.methodinfo;
 
+import org.hyperfit.annotation.FirstLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.Link;
@@ -55,28 +56,14 @@ public class MethodInfo {
     }
 
     private MethodType methodType;
-    private Class<?> returnType;
-    private Type genericReturnType;
+    private final Class<?> returnType;
+    private final Type genericReturnType;
 
-    private Link linkAnnotation;
-    private Data dataAnnotation;
-    private Annotation[][] parameterAnnotations;
+    private final Link linkAnnotation;
+    private final FirstLink firstLinkAnnotation;
+    private final Data dataAnnotation;
+    private final Annotation[][] parameterAnnotations;
 
-
-    public MethodInfo(MethodType methodType,
-                      Class<?> returnType,
-                      Type genericReturnType,
-                      Data dataAnnotation,
-                      Link linkAnnotation,
-                      Annotation[][] parameterAnnotations
-    ) {
-        this.methodType = methodType;
-        this.returnType = returnType;
-        this.genericReturnType = genericReturnType;
-        this.linkAnnotation = linkAnnotation;
-        this.dataAnnotation = dataAnnotation;
-        this.parameterAnnotations = parameterAnnotations;
-    }
 
     /**
      * Builds it from a method
@@ -118,10 +105,9 @@ public class MethodInfo {
         this.genericReturnType = method.getGenericReturnType();
 
         this.dataAnnotation = method.getAnnotation(Data.class);
+        this.linkAnnotation = method.getAnnotation(Link.class);
+        this.firstLinkAnnotation = method.getAnnotation(FirstLink.class);
 
-        if (this.dataAnnotation == null) {
-            this.linkAnnotation = method.getAnnotation(Link.class);
-        }
     }
 
     public MethodType getMethodType() {
@@ -142,6 +128,10 @@ public class MethodInfo {
 
     public Link getLinkAnnotation() {
         return linkAnnotation;
+    }
+
+    public FirstLink getFirstLinkAnnotation() {
+        return firstLinkAnnotation;
     }
 
     public Annotation[][] getParameterAnnotations() {
