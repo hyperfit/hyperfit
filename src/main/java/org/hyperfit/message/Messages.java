@@ -1,8 +1,7 @@
 package org.hyperfit.message;
 
 /**
- *Collection of output messages
- *
+ * Collection of output messages
  */
 public class Messages {
 
@@ -54,12 +53,9 @@ public class Messages {
     public static final String MSG_ERROR_NO_CONTENT_TYPE = "Response must have a content type";
 
     // -- RESOURCE RELATED --
-    public static final String MSG_ERROR_RESOURCE_VALUE_NULL = "Resource value cannot be null.";
     public static final String MSG_ERROR_RESOURCE_DATA_SOURCE_NULL = "Resource data source cannot be null.";
     public static final String MSG_ERROR_RESOURCE_LINK_NOT_FOUND = "Resource link with path {} was not found in [{}]";
-    public static final String MSG_ERROR_RESOURCE_LINK_NOT_FOUND_WITH_NAME = "Resource link with path {} and value {} was not found in [{}]";
     public static final String MSG_ERROR_RESOURCE_DATA_SOURCE_CANNOT_BE_TRAVERSED = "Resource data source [%s] cannot be traversed. Search path is either null or empty.";
-    public static final String MSG_ERROR_RESOURCE_DATA_SOURCE_CANNOT_BE_TRAVERSED_WITH_NAME = "Resource data source [%s] cannot be traversed. Name is either null or empty.";
 
     public static final String MSG_ERROR_RESOURCE_CANNOT_BE_BUILT = "Resource cannot be built";
 
@@ -73,17 +69,10 @@ public class Messages {
     // -- REFLECTION RELATED --
     public static final String MSG_ERROR_REFLECTION_CANNOT_CAST = "Cannot cast object [{}] to [{}].";
 
-    // -- CLIENT RELATED --
-    public static final String MSG_ERROR_CLIENT_CANNOT_HANDLE_CONTENT_TYPE
-            = "Cannot handle response content type in response [{}]";
 
     // -- PROXY RELATED --
-    public static final String MSG_ERROR_PROXY_CANNOT_HANDLE_TYPE_CONVERSION
-            = "Cannot handle type conversion for class [{}] and value [{}]";
     public static final String MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION
             = "Cannot handle proxy method invocation [{}] in [{}] with arguments {}.";
-    public static final String MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_RETURN_VALUE
-            = "Cannot handle proxy method return for expected class [{}], with provided resource type [{}]";
 
     public static final String MSG_ERROR_LOOKING_FOR_PARAM = "No type param called [{}] was found in typeParamsLookup map";
     

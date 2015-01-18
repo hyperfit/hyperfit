@@ -5,8 +5,6 @@ import org.hyperfit.exception.HyperClientException;
 import org.hyperfit.message.Messages;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 /**
  * <p>Utility class for reflection operations.</p>
@@ -40,29 +38,6 @@ public class ReflectUtils {
      */
     public static Object[] createArray(Class<?> type, int size) {
         return cast(Object[].class, Array.newInstance(type, size));
-    }
-
-    /**
-     * Gets type representing actual type of parameterized type.
-     * @param type parameterized type
-     * @param index index for the array of actual parameters
-     * @return actual type
-     */
-    public static Type getArgumentType(ParameterizedType type, int index) {
-        return type.getActualTypeArguments()[index];
-    }
-
-    /**
-     * Returns raw class of specified type.
-     * @param type
-     * @return raw class.
-     */
-    public static Class getArgumentRawClass(Type type) {
-        if (Class.class.isInstance(type)) {
-            return cast(Class.class, type);
-        } else {
-            return cast(Class.class, cast(ParameterizedType.class, type).getRawType());
-        }
     }
 
 }
