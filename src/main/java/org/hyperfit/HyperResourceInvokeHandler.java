@@ -10,11 +10,10 @@ import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.Link;
-import org.hyperfit.utils.Pair;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.hyperfit.utils.TypeRef;
-
+import org.javatuples.Pair;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
@@ -116,12 +115,12 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         if (returnClass.isArray()) {
             Pair<? extends Class<?>,Type> arrayTypeInfo = typeInfo.getArrayType(returnClass, genericReturnType);
-            TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getRight());
+            TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getValue1());
 
-            Object[] result = ReflectUtils.createArray(arrayTypeInfo.getLeft(), hyperResources.length);
+            Object[] result = ReflectUtils.createArray(arrayTypeInfo.getValue0(), hyperResources.length);
 
             for (int i = 0; i < hyperResources.length; i++) {
-                result[i] =  this.requestProcessor.processResource(arrayTypeInfo.getLeft(), hyperResources[i], newInfo);
+                result[i] =  this.requestProcessor.processResource(arrayTypeInfo.getValue0(), hyperResources[i], newInfo);
             }
 
             return (T)result;

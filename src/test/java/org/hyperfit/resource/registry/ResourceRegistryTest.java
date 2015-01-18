@@ -3,7 +3,7 @@ package org.hyperfit.resource.registry;
 
 import org.hyperfit.annotation.Profiles;
 import org.hyperfit.resource.HyperResource;
-import org.hyperfit.utils.Pair;
+import org.javatuples.Pair;
 import org.junit.Test;
 
 import java.util.*;
@@ -100,7 +100,7 @@ public class ResourceRegistryTest {
         classSet.add(SomeResource3.class);
         resourceRegistry.add(classSet);
 
-        assertEquals(SomeResource2.class, resourceRegistry.getResourceClass(retrievalStrategy, Pair.of(HyperResource.class, mockResource)));
+        assertEquals(SomeResource2.class, resourceRegistry.getResourceClass(retrievalStrategy, Pair.with(HyperResource.class, mockResource)));
     }
 
 
@@ -125,7 +125,7 @@ public class ResourceRegistryTest {
         classSet.add(SomeResource3.class);
         resourceRegistry.add(classSet);
 
-        assertEquals(SomeResource.class, resourceRegistry.getResourceClass(profileResourceRegistryRetrievalStrategy, Pair.of(HyperResource.class, mockResource)));
+        assertEquals(SomeResource.class, resourceRegistry.getResourceClass(profileResourceRegistryRetrievalStrategy, Pair.with(HyperResource.class, mockResource)));
     }
 
     private <T> LinkedHashSet<T> createStringSet(T... strs) {

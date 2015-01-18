@@ -11,10 +11,10 @@ import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryRetrievalStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;
-import org.hyperfit.utils.HttpUtils;
-import org.hyperfit.utils.Pair;
+import org.hyperfit.mediatype.MediaTypeHelper;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.TypeInfo;
+import org.javatuples.Pair;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -152,7 +152,7 @@ public class HyperRequestProcessor {
      * converts a class to one of its sub classes, which is obtained from the last profile in the hyper resource
      */
     private <T> Class<T> convertToSubClass(Class<T> type, HyperResource hyperResource) {
-        Class possibleSubClass = resourceRegistry.getResourceClass(PROFILE_RESOURCE_REGISTRY_RETRIEVAL_STRATEGY, Pair.of(type, hyperResource));
+        Class possibleSubClass = resourceRegistry.getResourceClass(PROFILE_RESOURCE_REGISTRY_RETRIEVAL_STRATEGY, Pair.with(type, hyperResource));
         return (possibleSubClass == null) ? type : possibleSubClass;
     }
 
@@ -170,7 +170,7 @@ public class HyperRequestProcessor {
             reject responses where charset is added (i.e. application/hal+json;charset=utf-8)
             Should we care more about charset???*/
             MediaTypeHandler mediaTypeHandler = this.mediaTypeHandlers.get(
-                HttpUtils.getContentTypeWithoutCharset(contentType));
+                MediaTypeHelper.getContentTypeWithoutCharset(contentType));
 
             if (mediaTypeHandler != null) { // If we have an available handler for the response type.
                 if (response.isOK()) { // If response is OK (200 status)

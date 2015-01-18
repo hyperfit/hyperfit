@@ -1,10 +1,11 @@
-package org.hyperfit.utils;
+package org.hyperfit.mediatype;
 
 import com.squareup.okhttp.MediaType;
+import org.hyperfit.utils.StringUtils;
 
-public class HttpUtils {
+public class MediaTypeHelper {
 
-    private HttpUtils() { }
+    private MediaTypeHelper() { }
     
     public static String getContentTypeWithoutCharset(String contentTypeHeader) {
         String mediaTypeWithoutCharset = null;

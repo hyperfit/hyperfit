@@ -65,8 +65,8 @@ public class Messages {
 
     //LINK Related
     public static final String MSG_ERROR_LINK_WITHOUT_REL = "Link must have a relationship";
-    public static final String MSG_ERROR_LINK_WITH_NAME_NOT_FOUND = "Could not find a link with relationship [{}] and value [{}]";
-    public static final String MSG_ERROR_LINK_WITH_NAME_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}] and value [{}]";
+    public static final String MSG_ERROR_LINK_WITH_NAME_NOT_FOUND = "Could not find a link with relationship [{}] and name [{}]";
+    public static final String MSG_ERROR_LINK_WITH_NAME_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}] and name [{}]";
     public static final String MSG_ERROR_LINK_NOT_FOUND = "Could not find a link with relationship [{}]";
     public static final String MSG_ERROR_LINK_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}]";
 

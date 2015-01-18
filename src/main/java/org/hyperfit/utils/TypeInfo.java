@@ -2,6 +2,7 @@ package org.hyperfit.utils;
 
 import org.hyperfit.exception.ParameterizedTypeException;
 import org.hyperfit.message.Messages;
+import org.javatuples.Pair;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -48,7 +49,7 @@ public class TypeInfo {
             arrayComponentType = (Class) genericComponentType;
         }
 
-        return Pair.of(arrayComponentType, genericComponentType);
+        return Pair.with(arrayComponentType, genericComponentType);
     }
 
 

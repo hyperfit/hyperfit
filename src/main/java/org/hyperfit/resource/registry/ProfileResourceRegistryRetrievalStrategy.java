@@ -1,7 +1,7 @@
 package org.hyperfit.resource.registry;
 
 import org.hyperfit.resource.HyperResource;
-import org.hyperfit.utils.Pair;
+import org.javatuples.Pair;
 
 import java.util.*;
 
@@ -26,8 +26,8 @@ public class ProfileResourceRegistryRetrievalStrategy<T extends HyperResource> i
      */
     public Class<T> retrieve(Map<Object, Class<? extends HyperResource>> resourceClassMap, Pair<Class<T>, HyperResource> resourcePair) {
 
-        Class<T> type = resourcePair.getLeft();
-        HyperResource resource = resourcePair.getRight();
+        Class<T> type = resourcePair.getValue0();
+        HyperResource resource = resourcePair.getValue1();
 
         LinkedHashSet<String> profileSet = resource.getProfiles();
         ListIterator<String> profileListIterator =

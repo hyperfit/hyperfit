@@ -3,6 +3,7 @@ package org.hyperfit.resource;
 import org.hyperfit.message.Messages;
 import org.hyperfit.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -84,6 +85,29 @@ public abstract class BaseHyperResource implements HyperResource {
 
     }
 
+    public HyperLink getFirstMatchingLink(String relationship, String...names){
+        HyperLink[] relLinks = this.getLinks(relationship);
+
+        if(relLinks.length == 0){
+            throw new HyperResourceException(Messages.MSG_ERROR_LINK_NOT_FOUND, relationship);
+        }
+
+        for(String name : names){
+            if(StringUtils.equals(name, "*")){
+                //If it's the wildcard, just return the first one
+                return relLinks[0];
+            }
+
+            for(HyperLink link : relLinks){
+                if(StringUtils.equals(name, link.getName())){
+                    return link;
+                }
+            }
+        }
+
+        //If it was never found indicate that.
+        throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, Arrays.toString(names));
+    }
 
     public boolean hasLink(String relationship, String name) {
         if (StringUtils.isEmpty(name)) {
