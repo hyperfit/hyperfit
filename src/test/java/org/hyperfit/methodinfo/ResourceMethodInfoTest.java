@@ -1,5 +1,6 @@
 package org.hyperfit.methodinfo;
 
+import org.hyperfit.annotation.Param;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.Link;
@@ -31,8 +32,8 @@ public class ResourceMethodInfoTest {
 
         @Link("link")
         SomeResource<T> link(
-                @Link.Param("page") Long page,
-                @Link.Param("size") Long size
+            @Param("page") Long page,
+            @Param("size") Long size
         );
 
         public boolean equals(Object o);

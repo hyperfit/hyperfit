@@ -1,5 +1,7 @@
 package org.hyperfit;
 
+import org.hyperfit.annotation.Header;
+import org.hyperfit.annotation.Param;
 import org.hyperfit.exception.HyperClientException;
 import org.hyperfit.http.Request;
 import org.hyperfit.message.Messages;
@@ -263,12 +265,12 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      */
     protected void assignAnnotatedValues(Request.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, String value) {
         for (Annotation annotation : annotationsPerParams) {
-            if (Link.Param.class.isInstance(annotation)) {
-                requestBuilder.setUrlParam(ReflectUtils.cast(Link.Param.class, annotation).value(), value);
+            if (Param.class.isInstance(annotation)) {
+                requestBuilder.setUrlParam(ReflectUtils.cast(Param.class, annotation).value(), value);
             }
 
-            if (Link.Header.class.isInstance(annotation)) {
-                requestBuilder.addHeader(ReflectUtils.cast(Link.Header.class, annotation).value(), value);
+            if (Header.class.isInstance(annotation)) {
+                requestBuilder.addHeader(ReflectUtils.cast(Header.class, annotation).value(), value);
             }
 
         }

@@ -22,20 +22,5 @@ public @interface Link {
 
     Method methodType() default Method.GET;
 
-    // LINK PARAMETERS    
-    @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Param {
-
-        String value();
-    }
-
-    // LINK HEADERS
-    @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Header {
-
-        String value();
-    }
 
 }
