@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Annotation for method that denotes the result is determined by following a link relationship
+ * Annotation for use on resource methods that denotes the result is determined by the identified link
  *
  */
 @Target(ElementType.METHOD)
@@ -38,11 +38,4 @@ public @interface Link {
         String value();
     }
 
-    // LINK CONTENT
-    @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Content {
-
-        String type();
-    }
 }

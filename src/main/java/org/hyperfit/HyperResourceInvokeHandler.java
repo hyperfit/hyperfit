@@ -271,10 +271,6 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 requestBuilder.addHeader(ReflectUtils.cast(Link.Header.class, annotation).value(), value);
             }
 
-            if (Link.Content.class.isInstance(annotation)) {
-                requestBuilder.setContentType(ReflectUtils.cast(Link.Content.class, annotation).type());
-                requestBuilder.setContentBody(value);
-            }
         }
     }
 

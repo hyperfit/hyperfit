@@ -1,8 +1,7 @@
 package org.hyperfit.http;
 
 /**
- *Enum for all possible HTTP methods when invoking Hyper API
- *
+ * Enum for all possible methods when making a request
  */
 public enum Method {
 
