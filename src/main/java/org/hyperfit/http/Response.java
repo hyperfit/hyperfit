@@ -8,7 +8,7 @@ import lombok.ToString;
 import org.hyperfit.utils.StringUtils;
 
 /**
- * Define components of HyperResponse
+ * Represents a response message received by the hyper client from a service
  */
 @ToString
 public class Response {

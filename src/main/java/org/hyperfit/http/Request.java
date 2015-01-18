@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+
+/**
+ * Represents a request message sent by the hyper client to a service
+ */
 @ToString
 public class Request {
 
