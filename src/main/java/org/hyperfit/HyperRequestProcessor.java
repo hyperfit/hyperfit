@@ -67,11 +67,10 @@ public class HyperRequestProcessor {
             throw new IllegalArgumentException("Root Resource Builder must be provided");
         }
 
-        //TODO: this should be cloned/frozen so it's immutable and nobody can add stuff to the registry after all this is figured out
-        this.requestInterceptors = rootResourceBuilder.getRequestInterceptors();
-        if (this.requestInterceptors == null) {
+        if (rootResourceBuilder.getRequestInterceptors() == null) {
             throw new IllegalArgumentException("Request Interceptors must be provided");
         }
+        this.requestInterceptors = new RequestInterceptors(rootResourceBuilder.getRequestInterceptors());
 
 
     }

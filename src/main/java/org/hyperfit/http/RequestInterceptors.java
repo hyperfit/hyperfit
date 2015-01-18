@@ -1,6 +1,5 @@
 package org.hyperfit.http;
 
-import org.hyperfit.utils.DeepCloneable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -16,12 +15,25 @@ import java.util.Set;
  */
 @ToString
 @EqualsAndHashCode
-public class RequestInterceptors implements DeepCloneable {
+public class RequestInterceptors {
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestInterceptors.class);
 
     //A set is used so the same interceptor is not added more than once
-    Set<RequestInterceptor> requestInterceptorSet = new HashSet<RequestInterceptor>();
+    final Set<RequestInterceptor> requestInterceptorSet = new HashSet<RequestInterceptor>();
+
+    /**
+     * Creates a new instance containing all of the interceptors of the passed in instance.
+     * This is roughly a shallow clone
+     * @param requestInterceptors
+     */
+    public RequestInterceptors(RequestInterceptors requestInterceptors) {
+        this.requestInterceptorSet.addAll(requestInterceptors.requestInterceptorSet);
+    }
+
+    public RequestInterceptors() {
+
+    }
 
     //adds a request interceptor.
     public RequestInterceptors add(RequestInterceptor requestInterceptor) {
@@ -37,12 +49,7 @@ public class RequestInterceptors implements DeepCloneable {
         return this;
     }
 
-    //deep cloning
-    public RequestInterceptors deepClone() {
-        RequestInterceptors requestInterceptors = new RequestInterceptors();
-        requestInterceptors.requestInterceptorSet.addAll(requestInterceptorSet);
-        return requestInterceptors;
-    }
+
 
     public RequestInterceptors clear() {
         this.requestInterceptorSet.clear();
