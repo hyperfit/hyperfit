@@ -1,6 +1,7 @@
 package org.hyperfit.methodinfo;
 
 import org.hyperfit.annotation.FirstLink;
+import org.hyperfit.annotation.NamedLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.Link;
@@ -60,9 +61,11 @@ public class MethodInfo {
     private final Type genericReturnType;
 
     private final Link linkAnnotation;
+    private final NamedLink namedLinkAnnotation;
     private final FirstLink firstLinkAnnotation;
     private final Data dataAnnotation;
     private final Annotation[][] parameterAnnotations;
+    private final org.hyperfit.http.Method requestMethod;
 
 
     /**
@@ -107,12 +110,17 @@ public class MethodInfo {
         this.dataAnnotation = method.getAnnotation(Data.class);
         this.linkAnnotation = method.getAnnotation(Link.class);
         this.firstLinkAnnotation = method.getAnnotation(FirstLink.class);
+        this.namedLinkAnnotation = method.getAnnotation(NamedLink.class);
+        org.hyperfit.annotation.Method methodAnnotation = method.getAnnotation(org.hyperfit.annotation.Method.class);
+        this.requestMethod = methodAnnotation == null ? org.hyperfit.http.Method.GET : methodAnnotation.value();
 
     }
 
     public MethodType getMethodType() {
         return methodType;
     }
+
+    public org.hyperfit.http.Method getRequestMethod() { return this.requestMethod; }
 
     public Type getGenericReturnType() {
         return genericReturnType;
@@ -128,6 +136,10 @@ public class MethodInfo {
 
     public Link getLinkAnnotation() {
         return linkAnnotation;
+    }
+
+    public NamedLink getNamedLinkAnnotation() {
+        return namedLinkAnnotation;
     }
 
     public FirstLink getFirstLinkAnnotation() {

@@ -12,12 +12,13 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Link {
+public @interface NamedLink {
 
     public static final String NULL = "Java will not let you use null for attribute values so use this instead and let us hope no one ever names a link this";
-    public static final String MATCH_ANY_NAME = "This should match every link name";
 
-    String value();  //rel
+    String rel();
+
+    String name();
 
     //exactly 1 link by rel, regardless of name         Link(rel)
     //exactly 1 link by rel & name                      NamedLink(rel,name)

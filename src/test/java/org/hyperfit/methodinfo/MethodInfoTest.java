@@ -38,7 +38,7 @@ public class MethodInfoTest {
         );
 
 
-        @FirstLink(value="first-link", names={"name1", "name2"})
+        @FirstLink(rel="first-link", names={"name1", "name2"})
         SomeResource<T> firstLink();
 
         public boolean equals(Object o);

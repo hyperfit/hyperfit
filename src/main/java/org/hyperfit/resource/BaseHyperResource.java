@@ -13,10 +13,11 @@ import java.util.List;
  */
 public abstract class BaseHyperResource implements HyperResource {
     /**
-     * Get the hyper link information for the given relationship
+     * Get the the link identified by the given relationship
+     * If more than one link is present for this relationship a HyperResourceException will be thrown.
      *
      * @param relationship
-     * @return {@link String} href
+     * @return
      */
     public HyperLink getLink(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
@@ -41,10 +42,6 @@ public abstract class BaseHyperResource implements HyperResource {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
         }
 
-        if (StringUtils.isEmpty(name)) {
-            return getLink(relationship);
-        }
-
         HyperLink[] links = this.getLinks(relationship, name);
         if (links.length == 0) {
             throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, name);
@@ -63,10 +60,6 @@ public abstract class BaseHyperResource implements HyperResource {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
         }
 
-        if (StringUtils.isEmpty(name)) {
-            return getLinks(relationship);
-        }
-
         HyperLink[] links = this.getLinks(relationship);
 
         if (links.length == 0){
@@ -75,7 +68,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
         List<HyperLink> namedLinks = new ArrayList<HyperLink>(links.length);
         for(HyperLink link : links){
-            if(link.getName().equals(name)){
+            if(StringUtils.equals(link.getName(), name)){
                 namedLinks.add(link);
             }
         }
@@ -85,35 +78,8 @@ public abstract class BaseHyperResource implements HyperResource {
 
     }
 
-    public HyperLink getFirstMatchingLink(String relationship, String...names){
-        HyperLink[] relLinks = this.getLinks(relationship);
-
-        if(relLinks.length == 0){
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_NOT_FOUND, relationship);
-        }
-
-        for(String name : names){
-            if(StringUtils.equals(name, "*")){
-                //If it's the wildcard, just return the first one
-                return relLinks[0];
-            }
-
-            for(HyperLink link : relLinks){
-                if(StringUtils.equals(name, link.getName())){
-                    return link;
-                }
-            }
-        }
-
-        //If it was never found indicate that.
-        throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, Arrays.toString(names));
-    }
 
     public boolean hasLink(String relationship, String name) {
-        if (StringUtils.isEmpty(name)) {
-            return hasLink(relationship);
-        }
-
         return this.getLinks(relationship, name).length > 0;
     }
 
