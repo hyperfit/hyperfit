@@ -37,7 +37,7 @@ public class ResourceRegistry {
         for (Class<? extends HyperResource> clazz : classes) {
             for (Map.Entry<IndexStrategy, ConcurrentHashMap<Object, Class<? extends HyperResource>>> registryMapEntry : registryMap.entrySet()) {
                 IndexStrategy indexStrategy = registryMapEntry.getKey();
-                if (indexStrategy.doAccept(clazz)) {
+                if (indexStrategy.canHandle(clazz)) {
                     for (Object key : indexStrategy.getKeys(clazz)) {
                         registryMapEntry.getValue().putIfAbsent(key, clazz);
                     }
@@ -52,9 +52,8 @@ public class ResourceRegistry {
      * Gets the resource class using a search strategy
      */
     public <T> Class<? extends HyperResource> getResourceClass(RetrievalStrategy<T> retrievalStrategy, T value) {
-        Class<? extends IndexStrategy> filterClass = retrievalStrategy.getIndexStrategyClass();
 
-        IndexStrategy indexStrategy = indexStrategyClassMap.get(filterClass);
+        IndexStrategy indexStrategy = indexStrategyClassMap.get(retrievalStrategy.getIndexStrategyClass());
         if (indexStrategy != null) {
             Map<Object, Class<? extends HyperResource>> resourceClassMap = registryMap.get(indexStrategy);
 
@@ -70,7 +69,7 @@ public class ResourceRegistry {
      * Determines how to add a resource class into registryMap
      */
     public interface IndexStrategy<T> {
-        boolean doAccept(Class<? extends HyperResource> clazz);
+        boolean canHandle(Class<? extends HyperResource> clazz);
 
         //these are the keys that will identify a single hyper resource class
         Set<T> getKeys(Class<? extends HyperResource> clazz);

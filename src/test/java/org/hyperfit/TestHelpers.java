@@ -1,20 +1,26 @@
 package org.hyperfit;
 
 import com.bodybuilding.commerce.hyper.client.ContractConstants.Profile;
+import org.hyperfit.resource.HyperLink;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 
 public class TestHelpers {
+    public static HyperLink makeLink(String rel) {
+        return makeLink(rel, null);
+    }
+
+    public static HyperLink makeLink(String rel, String name) {
+        return new HyperLink("http://host/" + UUID.randomUUID().toString(), rel, false, null, null, name, null, null, null);
+    }
+
     public static LinkedHashSet<String> makeSet(String... strings){
         return new LinkedHashSet<String>(Arrays.asList(strings));
     }

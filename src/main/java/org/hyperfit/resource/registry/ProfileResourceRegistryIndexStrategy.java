@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class ProfileResourceRegistryIndexStrategy implements ResourceRegistry.IndexStrategy<String> {
 
-    public boolean doAccept(Class<? extends HyperResource> clazz) {
+    public boolean canHandle(Class<? extends HyperResource> clazz) {
         Profiles profilesAnnotation = clazz.getAnnotation(Profiles.class);
         return profilesAnnotation != null;
     }

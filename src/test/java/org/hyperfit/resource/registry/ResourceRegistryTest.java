@@ -39,8 +39,8 @@ public class ResourceRegistryTest {
 
         when(mockIndexStrategy.getKeys(SomeResource.class)).thenReturn(createStringSet(""));
         when(mockIndexStrategy.getKeys(SomeResource2.class)).thenReturn(createStringSet(""));
-        when(mockIndexStrategy.doAccept(SomeResource.class)).thenReturn(true);
-        when(mockIndexStrategy.doAccept(SomeResource2.class)).thenReturn(true);
+        when(mockIndexStrategy.canHandle(SomeResource.class)).thenReturn(true);
+        when(mockIndexStrategy.canHandle(SomeResource2.class)).thenReturn(true);
 
         when(mockRetrievalStrategy.getIndexStrategyClass()).thenReturn(mockIndexStrategy.getClass());
         when(mockRetrievalStrategy.retrieve(anyMap(), eq(value))).thenReturn(SomeResource.class);
@@ -62,7 +62,7 @@ public class ResourceRegistryTest {
         profiles.add("a");
         profiles.add("b");
 
-        assertTrue(indexStrategy.doAccept(SomeResource.class));
+        assertTrue(indexStrategy.canHandle(SomeResource.class));
         assertEquals(profiles, indexStrategy.getKeys(SomeResource.class));
     }
 
@@ -85,9 +85,9 @@ public class ResourceRegistryTest {
 
         when(mockResource.getProfiles()).thenReturn(profileSet);
 
-        when(mockIndexStrategy.doAccept(SomeResource.class)).thenReturn(true);
-        when(mockIndexStrategy.doAccept(SomeResource2.class)).thenReturn(true);
-        when(mockIndexStrategy.doAccept(SomeResource3.class)).thenReturn(true);
+        when(mockIndexStrategy.canHandle(SomeResource.class)).thenReturn(true);
+        when(mockIndexStrategy.canHandle(SomeResource2.class)).thenReturn(true);
+        when(mockIndexStrategy.canHandle(SomeResource3.class)).thenReturn(true);
 
         when(mockIndexStrategy.getKeys(SomeResource.class)).thenReturn(createStringSet(profiles[0]));
         when(mockIndexStrategy.getKeys(SomeResource2.class)).thenReturn(createStringSet(profiles[1], profiles[2]));

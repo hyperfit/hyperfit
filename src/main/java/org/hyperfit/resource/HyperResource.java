@@ -43,14 +43,6 @@ public interface HyperResource {
 
     HyperLink getLink(String relationship, String name);
 
-    /**
-     * For all links with the given relationship, finds the first entry in the given name list that matches the name of a link
-     * @param relationship the link relationship used to limit the search area
-     * @param names The ordered list of names to check for matches.  Use null to match links with no name, use * to match a link with any name.
-     * @return The first link that matched the relationship and name when iterating in the order of names given
-     */
-    HyperLink getFirstMatchingLink(String relationship, String...names);
-
 
     <T> T getPathAs(Class<T> classToReturn, String... path);
 
