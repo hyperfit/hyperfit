@@ -435,6 +435,7 @@ public class HalJsonResourceTest {
     @Test
     public void testHasPath() {
         assertTrue(!new HalJsonResource(root).hasPath("_embedded", "promotionResourceList", "title"));
+        assertTrue(!new HalJsonResource(root).hasPath());
 
         String value = UUID.randomUUID().toString();
 

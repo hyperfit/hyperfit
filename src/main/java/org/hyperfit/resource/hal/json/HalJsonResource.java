@@ -189,6 +189,8 @@ public class HalJsonResource extends BaseHyperResource {
 
 
     public boolean hasPath(String... path) {
+        if (path == null || path.length == 0) return false;
+
         JsonNode nodeValue = getJsonNode(jsonResource, path);
 
         return (nodeValue != null && !nodeValue.isMissingNode());
