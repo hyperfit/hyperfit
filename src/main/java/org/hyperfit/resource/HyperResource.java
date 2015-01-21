@@ -46,6 +46,7 @@ public interface HyperResource {
 
     <T> T getPathAs(Class<T> classToReturn, String... path);
 
+    boolean hasPath(String... path);
 
     boolean canResolveLinkLocal(String relationship);
 

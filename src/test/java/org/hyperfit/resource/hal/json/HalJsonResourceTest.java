@@ -432,6 +432,20 @@ public class HalJsonResourceTest {
     }
 
 
+    @Test
+    public void testHasPath() {
+        assertTrue(!new HalJsonResource(root).hasPath("_embedded", "promotionResourceList", "title"));
+        assertTrue(!new HalJsonResource(root).hasPath());
+
+        String value = UUID.randomUUID().toString();
+
+        root.put("complexProp", nodeFactory.objectNode().put("somekey", value));
+
+        HalJsonResource resource = new HalJsonResource(root);
+
+        assertTrue(value, resource.hasPath("complexProp", "somekey"));
+
+    }
 
     @Test(expected = HyperResourceException.class)
     public void testGetPathAsMissingNode() {
