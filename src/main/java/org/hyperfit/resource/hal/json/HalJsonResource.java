@@ -187,6 +187,13 @@ public class HalJsonResource extends BaseHyperResource {
         return this.canResolveLinkLocal(relationship) || super.hasLink(relationship);
     }
 
+
+    public boolean hasPath(String... path) {
+        JsonNode nodeValue = getJsonNode(jsonResource, path);
+
+        return (nodeValue != null && !nodeValue.isMissingNode());
+    }
+
     public <T> T getPathAs(Class<T> classToReturn, String... path) {
         JsonNode nodeValue = getJsonNode(jsonResource, path);
 
