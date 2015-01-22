@@ -15,9 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Class to store resource metadata
- *
- * @author Carlos Perez
+ * Class to cache information about resource methods.  This is built to avoid the overhead of using reflection each time
+ * Additionally this is passed to the strategies to determine what strategy to execute for the given method.
  */
 @ToString
 @EqualsAndHashCode
