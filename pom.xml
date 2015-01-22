@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bodybuilding</groupId>
-    <artifactId>commerce-hyper-client</artifactId>
-    <version>1.115.100-SNAPSHOT</version>
+    <groupId>org.hyperfit</groupId>
+    <artifactId>hyperfit</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
-    <name>Bodybuilding.com Commerce Hyper Client</name>
-    <url>http://confluence/display/commerce/Commerce+Hyper+Client</url>
+    <name>Hyperfit</name>
+    <url>http://hyperfit.org</url>
 
     <!-- BBCOM DEPENDENCY HANDLING -->
     <distributionManagement>
