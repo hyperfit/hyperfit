@@ -1,6 +1,5 @@
 package org.hyperfit;
 
-import com.bodybuilding.commerce.hyper.client.ContractConstants.Profile;
 import org.hyperfit.resource.HyperLink;
 
 import java.io.IOException;
@@ -25,14 +24,7 @@ public class TestHelpers {
         return new LinkedHashSet<String>(Arrays.asList(strings));
     }
 
-    public static LinkedHashSet<String> makeSet(Profile... profiles){
 
-        LinkedHashSet<String> m = new LinkedHashSet<String>(profiles.length);
-        for(Profile p : profiles){
-            m.add(p.toString());
-        }
-        return m;
-    }
 
     public static void validateImageLink(String url, Set<String> alreadyValidated) throws IOException {
         if(alreadyValidated.contains(url)){
