@@ -1,7 +1,7 @@
 package org.hyperfit.cache;
 
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.utils.ReflectUtils;
 
@@ -65,7 +65,7 @@ public class HyperCacheInMemory implements HyperCacheStrategy {
             LOG.debug(Messages.MSG_DEBUG_CACHE_ITEM_REFRESH, key);
             return action.execute(key);
         } catch (Exception ex) {
-            throw new HyperClientException(ex, Messages.MSG_ERROR_CACHE_ITEM_REFRESH, key);
+            throw new HyperfitException(ex, Messages.MSG_ERROR_CACHE_ITEM_REFRESH, key);
         }
     }
 

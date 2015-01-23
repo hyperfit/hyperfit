@@ -3,7 +3,7 @@ package org.hyperfit;
 
 import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.errorhandler.ResponseError;
-import org.hyperfit.http.*;
+import org.hyperfit.net.*;
 import org.hyperfit.mediatype.MediaTypeHandler;
 import org.hyperfit.message.Messages;
 
@@ -25,8 +25,6 @@ import java.util.Map;
  * Processes a request returning a type specified by the
  * classToReturn parameter in #processRequest by proxifying
  * the resulting hyper resource
- *
- * @author Carlos Perez
  */
 public class HyperRequestProcessor {
 
@@ -159,7 +157,7 @@ public class HyperRequestProcessor {
     //builds the a hyper resource from a hyper response. Exceptions are handled by
     protected HyperResource buildHyperResource(Response response) {
 
-        String contentType = response.getHeader(HttpHeader.CONTENT_TYPE);
+        String contentType = response.getContentType();
 
         ResponseError hyperError = null;
 

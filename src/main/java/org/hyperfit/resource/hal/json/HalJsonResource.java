@@ -1,8 +1,8 @@
 package org.hyperfit.resource.hal.json;
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
-import org.hyperfit.http.Response;
+import org.hyperfit.net.Response;
 import org.hyperfit.resource.BaseHyperResource;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
@@ -35,7 +35,7 @@ public class HalJsonResource extends BaseHyperResource {
         try {
             this.jsonResource = OBJECT_READER.readTree(response.getBody());
         } catch (Exception ex) {
-            throw new HyperClientException(ex,
+            throw new HyperfitException(ex,
                     Messages.MSG_ERROR_MEDIATYPE_CANNOT_CREATE_RESOURCE,
                     response, HalJsonResource.class);
         }

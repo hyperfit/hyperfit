@@ -1,4 +1,4 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
 import org.hyperfit.message.Messages;
 import java.util.HashMap;
@@ -16,11 +16,14 @@ public class Response {
     private final int code;
     private final Map<String, String> headers;
     private final String body;
+    private final String contentType;
+
 
     private Response(ResponseBuilder builder) {
         this.body = builder.body;
         this.code = builder.code;
         this.headers = builder.headers;
+        this.contentType = builder.contentType;
     }
 
     public int getCode() {
@@ -33,6 +36,10 @@ public class Response {
 
     public Iterator<Map.Entry<String, String>> getHeaders() {
         return headers.entrySet().iterator();
+    }
+
+    public String getContentType() {
+        return this.contentType;
     }
 
     public String getHeader(String key) {
@@ -56,6 +63,7 @@ public class Response {
         private int code;
         private String body;
         private Map<String, String> headers = new HashMap<String, String>();
+        private String contentType;
 
         public ResponseBuilder() {
         }
@@ -79,6 +87,11 @@ public class Response {
                 this.headers.put(name, value);
             }
 
+            return this;
+        }
+
+        public ResponseBuilder addContentType(String contentType) {
+            this.contentType = contentType;
             return this;
         }
 

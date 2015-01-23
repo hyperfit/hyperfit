@@ -1,7 +1,7 @@
 package org.hyperfit.resource;
 
 
-import org.hyperfit.http.Request;
+import org.hyperfit.net.Request;
 import org.hyperfit.utils.TypeRef;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Method {
 
-    org.hyperfit.http.Method value() default org.hyperfit.http.Method.GET;
+    org.hyperfit.net.Method value() default org.hyperfit.net.Method.GET;
 
 }

@@ -1,7 +1,7 @@
-package org.hyperfit.http.okhttp;
+package org.hyperfit.net.okhttp;
 
-import org.hyperfit.exception.HyperClientException;
-import org.hyperfit.http.*;
+import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.net.*;
 import com.google.common.base.Charsets;
 import com.squareup.okhttp.*;
 
@@ -40,7 +40,7 @@ public class OkHttpHyperClientTest {
     };
 
     @Mock
-    private org.hyperfit.http.Request hcRequestMock;
+    private org.hyperfit.net.Request hcRequestMock;
 
 
     @Mock
@@ -62,7 +62,7 @@ public class OkHttpHyperClientTest {
         okHttpHyperClient = new OkHttpHyperClient(this.mockOkHttpClient);
         HashSet<String> mediaTypeSet = new HashSet<String>();
         mediaTypeSet.add(ACCEPT_VALUE);
-        okHttpHyperClient.setAcceptedMediaTypes(mediaTypeSet);
+        okHttpHyperClient.setAcceptedContentTypes(mediaTypeSet);
 
         okRequestBuilder = new Request.Builder();
         okResponseBuilder = new Response.Builder();
@@ -107,7 +107,7 @@ public class OkHttpHyperClientTest {
     public void testExecuteAddsRequestBody() throws Exception {
 
 
-        org.hyperfit.http.Request requestFake = org.hyperfit.http.Request.builder()
+        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
             .setUrlTemplate(URL)
             .setMethod(Method.POST)
             .setContentBody(CONTENT_BODY)
@@ -122,7 +122,7 @@ public class OkHttpHyperClientTest {
 
     @Test
     public void testExecuteOmitsRequestBody() throws Exception {
-        org.hyperfit.http.Request requestFake = org.hyperfit.http.Request.builder()
+        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
@@ -135,7 +135,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testRequestMethods() throws Exception {
         for(Method m : Method.values()){
-            org.hyperfit.http.Request requestFake = org.hyperfit.http.Request.builder()
+            org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
                 .setUrlTemplate(URL)
                 .setMethod(m)
                 .build();
@@ -151,7 +151,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testExecuteAddsHeaders() throws Exception {
 
-        org.hyperfit.http.Request requestFake = org.hyperfit.http.Request.builder()
+        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
@@ -164,7 +164,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testExecuteOmitsHeaders() throws Exception {
 
-        org.hyperfit.http.Request requestFake = org.hyperfit.http.Request.builder()
+        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
@@ -213,7 +213,7 @@ public class OkHttpHyperClientTest {
 
 
 
-        org.hyperfit.http.Response response = okHttpHyperClient.doResponse(okResponseFake);
+        org.hyperfit.net.Response response = okHttpHyperClient.doResponse(okResponseFake);
 
         assertEquals(200, response.getCode());
         assertEquals(fakeContent, response.getBody());
@@ -254,13 +254,13 @@ public class OkHttpHyperClientTest {
             })
             .build();
 
-        org.hyperfit.http.Response response = okHttpHyperClient.doResponse(okResponseFake);
+        org.hyperfit.net.Response response = okHttpHyperClient.doResponse(okResponseFake);
 
         assertFalse(response.getHeaders().hasNext());
     }
 
 
-    @Test(expected = HyperClientException.class)
+    @Test(expected = HyperfitException.class)
     public void testExecuteResponseUnreadable() throws Exception {
 
         Request okRequestFake = okRequestBuilder

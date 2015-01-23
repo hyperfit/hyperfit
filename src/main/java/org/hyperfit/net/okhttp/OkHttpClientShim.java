@@ -1,4 +1,4 @@
-package org.hyperfit.http.okhttp;
+package org.hyperfit.net.okhttp;
 
 import org.hyperfit.message.Messages;
 import com.squareup.okhttp.*;

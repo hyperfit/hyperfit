@@ -1,4 +1,4 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

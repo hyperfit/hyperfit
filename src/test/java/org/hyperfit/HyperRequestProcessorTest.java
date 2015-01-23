@@ -1,10 +1,9 @@
 package org.hyperfit;
 
-import org.hyperfit.annotation.Link;
 import org.hyperfit.annotation.Profiles;
 import org.hyperfit.exception.ServiceException;
-import org.hyperfit.http.HttpHeader;
-import org.hyperfit.http.Response;
+import org.hyperfit.net.okhttp.HttpHeader;
+import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;

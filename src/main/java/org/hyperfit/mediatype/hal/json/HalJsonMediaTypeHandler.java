@@ -2,7 +2,7 @@ package org.hyperfit.mediatype.hal.json;
 
 
 import org.hyperfit.errorhandler.ResponseError;
-import org.hyperfit.http.Response;
+import org.hyperfit.net.Response;
 import org.hyperfit.mediatype.MediaTypeHandler;
 import org.hyperfit.message.Messages;
 import org.hyperfit.resource.HyperResource;
@@ -26,7 +26,7 @@ public class HalJsonMediaTypeHandler implements MediaTypeHandler {
     }
 
     /**
-     * @param response response {@link org.hyperfit.http.Response} to be handled
+     * @param response response {@link org.hyperfit.net.Response} to be handled
      * @return {@link org.hyperfit.resource.hal.json.HalJsonResource}
     */
     public HyperResource handleHyperResponse(Response response) {

@@ -1,13 +1,11 @@
 package org.hyperfit.resource;
 
 
-import org.hyperfit.exception.HyperClientException;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.hyperfit.TestHelpers.*;
-import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

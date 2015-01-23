@@ -1,4 +1,4 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
 /**
  * Intercept every request before it is executed in order to add additional data.

@@ -1,7 +1,7 @@
 package org.hyperfit.mediatype.hal.json;
 
-import org.hyperfit.exception.HyperClientException;
-import org.hyperfit.http.Response;
+import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.net.Response;
 import org.hyperfit.resource.hal.json.HalJsonResource;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -48,19 +48,19 @@ public class HalJsonMediaTypeHandlerTest {
                 new HalJsonResource(new ObjectMapper().reader(JsonNode.class).readTree(validHalJson)));
     }
 
-    @Test(expected = HyperClientException.class)
+    @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseNullBody() {
         when(responseMock.getBody()).thenReturn(null);
         halJsonMediaTypeHandler.handleHyperResponse(responseMock);
     }
 
-    @Test(expected = HyperClientException.class)
+    @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseEmptyBody() {
         when(responseMock.getBody()).thenReturn("");
         halJsonMediaTypeHandler.handleHyperResponse(responseMock);
     }
 
-    @Test(expected = HyperClientException.class)
+    @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseWrongBody() {
         when(responseMock.getBody()).thenReturn("{");
         halJsonMediaTypeHandler.handleHyperResponse(responseMock);

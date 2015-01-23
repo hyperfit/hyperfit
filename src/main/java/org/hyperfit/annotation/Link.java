@@ -1,7 +1,5 @@
 package org.hyperfit.annotation;
 
-import org.hyperfit.http.Method;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,20 +1,20 @@
-package org.hyperfit.http.okhttp;
+package org.hyperfit.net.okhttp;
 
 import java.net.CookieHandler;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.hyperfit.http.BaseHyperClient;
-import org.hyperfit.http.HyperClient;
-import org.hyperfit.http.Response;
+import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.net.BaseHyperClient;
+import org.hyperfit.net.HyperClient;
+import org.hyperfit.net.Response;
 import org.hyperfit.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.hyperfit.exception.HyperClientException;
 import org.hyperfit.message.Messages;
-import org.hyperfit.http.Request;
+import org.hyperfit.net.Request;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -60,7 +60,7 @@ public class OkHttpHyperClient extends BaseHyperClient {
 
     /**
      *
-     * @param request {@link org.hyperfit.http.Request}
+     * @param request {@link org.hyperfit.net.Request}
      * @return {@inheritDoc}
      */
     public Response execute(Request request) {
@@ -80,8 +80,8 @@ public class OkHttpHyperClient extends BaseHyperClient {
         return doResponse(doRequest(prepareRequest(request)));
     }
    
-    public OkHttpHyperClient setAcceptedMediaTypes(Set<String> mediaTypes) {
-        return (OkHttpHyperClient)super.setAcceptedMediaTypes(mediaTypes);
+    public OkHttpHyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
+        return (OkHttpHyperClient)super.setAcceptedContentTypes(acceptedContentTypes);
     }
 
     public HyperClient setCookieHandler(CookieHandler handler) {
@@ -91,7 +91,7 @@ public class OkHttpHyperClient extends BaseHyperClient {
 
     /**
      * Use the request builder to build the request to be executed in the future
-     * @param request {@link org.hyperfit.http.Request} includes url,method, headers information
+     * @param request {@link org.hyperfit.net.Request} includes url,method, headers information
      * @return {@link com.squareup.okhttp.Request}
      */
     protected com.squareup.okhttp.Request prepareRequest(Request request) {
@@ -106,7 +106,7 @@ public class OkHttpHyperClient extends BaseHyperClient {
                 .url(request.getUrl())
                 .method(request.getMethod().name(), requestBody)
                 .headers(extractHeadersFromRequest(request))
-                .addHeader(ACCEPT_HEADER, getAcceptHeader())
+                .addHeader(HttpHeader.ACCEPT, buildAcceptHeaderValue())
                 .build();
     }
 
@@ -122,14 +122,14 @@ public class OkHttpHyperClient extends BaseHyperClient {
         try {
             return okHttpClient.newCall(request).execute();
         } catch (Exception ex) {
-            throw new HyperClientException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
+            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
         }
     }
 
     /**
      * Build HyperMedia Response based on {@link com.squareup.okhttp.Response}
      * @param response
-     * @return {@link org.hyperfit.http.Response}
+     * @return {@link org.hyperfit.net.Response}
      */
     protected Response doResponse(com.squareup.okhttp.Response response) {
         Response.ResponseBuilder responseBuilder = Response.builder().addCode(response.code());
@@ -138,10 +138,14 @@ public class OkHttpHyperClient extends BaseHyperClient {
             responseBuilder.addHeader(headerName, response.header(headerName));
         }
 
+        //Set the content type explicitly, even though it comes from the headers.  Hyperfit needs to know this
+        //abstracted from the headers
+        responseBuilder.addContentType(response.header(HttpHeader.CONTENT_TYPE));
+
         try {
             responseBuilder.addBody(response.body().string());
         } catch (Exception ex) {
-            throw new HyperClientException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_RESPONSE_FAILURE, response);
+            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_RESPONSE_FAILURE, response);
         }
 
         LOG.trace(Messages.MSG_DEBUG_CLIENT_RESPONSE, response);
@@ -166,5 +170,24 @@ public class OkHttpHyperClient extends BaseHyperClient {
         }
 
         return headersBuilder.build();
+    }
+
+    /**
+     * Builds the HTTP accept header using the configured media types for the client.
+     * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
+     */
+    private String buildAcceptHeaderValue() {
+        Iterator<String> contentTypes = this.getAcceptedContentTypes().iterator();
+        StringBuilder builder =  new StringBuilder();
+        while(contentTypes.hasNext()){
+            builder.append(contentTypes.next());
+
+            if(contentTypes.hasNext()){
+                builder.append(",");
+            }
+        }
+
+        return builder.toString();
+
     }
 }

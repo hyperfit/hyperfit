@@ -1,4 +1,4 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
 /**
  * Enum for all possible methods when making a request

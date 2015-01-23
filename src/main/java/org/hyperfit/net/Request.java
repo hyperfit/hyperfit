@@ -1,6 +1,6 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.utils.StringUtils;
 import com.damnhandy.uri.template.UriTemplate;
@@ -64,7 +64,7 @@ public class Request {
     }
 
     /**
-     * Create {@link Request} using {@link org.hyperfit.http.Request.RequestBuilder}
+     * Create {@link Request} using {@link org.hyperfit.net.Request.RequestBuilder}
      *
      * @param builder
      */
@@ -85,7 +85,7 @@ public class Request {
 
             this.url = uriTemplateBuilder.expand();
         } catch (Exception e) {
-            throw new HyperClientException(e, Messages.MSG_ERROR_REQUEST_URL_CANNOT_BE_EXPANDED, urlTemplate, urlParams);
+            throw new HyperfitException(e, Messages.MSG_ERROR_REQUEST_URL_CANNOT_BE_EXPANDED, urlTemplate, urlParams);
         }
     }
 
@@ -121,7 +121,7 @@ public class Request {
      * Set method to POST in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder post(String httpUrlTemplate) {
         return builder().setMethod(Method.POST).setUrlTemplate(httpUrlTemplate);
@@ -131,7 +131,7 @@ public class Request {
      * Set method to PUT in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder put(String httpUrlTemplate) {
         return builder().setMethod(Method.PUT).setUrlTemplate(httpUrlTemplate);
@@ -141,7 +141,7 @@ public class Request {
      * Set method to DELETE in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder delete(String httpUrlTemplate) {
         return builder().setMethod(Method.DELETE).setUrlTemplate(httpUrlTemplate);
@@ -151,7 +151,7 @@ public class Request {
      * Set method to OPTIONS in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder options(String httpUrlTemplate) {
         return builder().setMethod(Method.OPTIONS).setUrlTemplate(httpUrlTemplate);
@@ -161,7 +161,7 @@ public class Request {
      * Set method to HEAD in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder head(String httpUrlTemplate) {
         return builder().setMethod(Method.HEAD).setUrlTemplate(httpUrlTemplate);
@@ -171,7 +171,7 @@ public class Request {
      * Set method to TRACE in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder trace(String httpUrlTemplate) {
         return builder().setMethod(Method.TRACE).setUrlTemplate(httpUrlTemplate);
@@ -181,7 +181,7 @@ public class Request {
      * Set method to CONNECT in RequestBuilder along with httpUrlTemplate
      *
      * @param httpUrlTemplate {@link String} Url Template
-     * @return {@link org.hyperfit.http.Request.RequestBuilder}
+     * @return {@link org.hyperfit.net.Request.RequestBuilder}
      */
     public static RequestBuilder connect(String httpUrlTemplate) {
         return builder().setMethod(Method.CONNECT).setUrlTemplate(httpUrlTemplate);

@@ -1,4 +1,4 @@
-package org.hyperfit.http;
+package org.hyperfit.net;
 
 import java.net.CookieHandler;
 import java.util.Set;
@@ -16,10 +16,10 @@ public interface HyperClient {
     Response execute(Request request);
 
     /**
-     * Set ordered mediatypes present in the Accept header of requests made by this client
-     * @param mediaTypes A {@link Set} of {@link String} represents mediaTypes
+     * Sets the content types that are listed as acceptable for any request
+     * @param contentTypes A {@link Set} of {@link String} represents contentTypes
      */
-    HyperClient setAcceptedMediaTypes(Set<String> mediaTypes);
+    HyperClient setAcceptedContentTypes(Set<String> contentTypes);
 
 
 

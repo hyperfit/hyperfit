@@ -3,17 +3,18 @@ package org.hyperfit;
 
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.http.HyperClient;
-import org.hyperfit.http.Request;
-import org.hyperfit.http.RequestInterceptor;
-import org.hyperfit.http.RequestInterceptors;
-import org.hyperfit.http.okhttp.OkHttpHyperClient;
+import org.hyperfit.net.HyperClient;
+import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestInterceptor;
+import org.hyperfit.net.RequestInterceptors;
+import org.hyperfit.net.okhttp.OkHttpHyperClient;
 import org.hyperfit.mediatype.MediaTypeHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;
+import org.hyperfit.utils.StringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import java.util.Map;
  */
 public class RootResourceBuilder {
 
-    private String endpoint = null;
     // TODO: determine cache strategy.
     //private HyperCacheStrategy hyperCache = new HyperCacheNoop();
     private HyperClient hyperClient = new OkHttpHyperClient();
@@ -34,10 +34,6 @@ public class RootResourceBuilder {
     private RequestInterceptors requestInterceptors = new RequestInterceptors();
     private ResourceRegistry resourceRegistry = new ResourceRegistry(new ProfileResourceRegistryIndexStrategy());
 
-    public RootResourceBuilder endpoint(String endpoint) {
-        this.endpoint = endpoint;
-        return this;
-    }
 
     public RootResourceBuilder addMediaTypeHandler(MediaTypeHandler mediaType) {
         this.mediaTypeHandlers.put(mediaType.getDefaultHandledMediaType(), mediaType);
@@ -133,10 +129,18 @@ public class RootResourceBuilder {
     }
 
 
-    public <T extends HyperResource> T build(Class<T> classToReturn) {
-        hyperClient.setAcceptedMediaTypes(this.mediaTypeHandlers.keySet());
+    public <T extends HyperResource> T build(Class<T> classToReturn, String endpointURL) {
+        if(StringUtils.isEmpty(endpointURL)){
+            throw new IllegalArgumentException("endpointURL can not be null or empty");
+        }
+
+        if(classToReturn == null){
+            throw new IllegalArgumentException("classToReturn can not be null");
+        }
+
+        hyperClient.setAcceptedContentTypes(this.mediaTypeHandlers.keySet());
         HyperRequestProcessor requestProcessor = new HyperRequestProcessor(this);
-        return requestProcessor.processRequest(classToReturn, Request.get(endpoint), null);
+        return requestProcessor.processRequest(classToReturn, Request.get(endpointURL), null);
     }
 
 

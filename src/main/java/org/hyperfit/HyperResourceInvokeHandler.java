@@ -1,12 +1,12 @@
 package org.hyperfit;
 
 import org.hyperfit.annotation.*;
-import org.hyperfit.exception.HyperClientException;
-import org.hyperfit.http.Request;
+import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.net.Request;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
-import org.hyperfit.http.Request.RequestBuilder;
+import org.hyperfit.net.Request.RequestBuilder;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
@@ -101,10 +101,10 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         try {
             return processInvoke(proxy, method, args);
-        } catch (HyperClientException hce) {
+        } catch (HyperfitException hce) {
             throw hce; //in case we threw it earlier
         } catch (Exception e) {
-            throw new HyperClientException(e, Messages.MSG_ERROR_PROXY_UNEXPECTED_ERROR, method, proxy, args);
+            throw new HyperfitException(e, Messages.MSG_ERROR_PROXY_UNEXPECTED_ERROR, method, proxy, args);
         }
     }
 
@@ -301,7 +301,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         }
 
-        throw new HyperClientException(Messages.MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION, method, proxy, args);
+        throw new HyperfitException(Messages.MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION, method, proxy, args);
     }
 
 

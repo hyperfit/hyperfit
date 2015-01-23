@@ -1,7 +1,7 @@
 package org.hyperfit.resource.hal.json;
 
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
@@ -777,7 +777,7 @@ public class HalJsonResourceTest {
         try{
             resource.resolveLinkLocal(relationship);
             fail("expected exception not thrown");
-        } catch (HyperClientException e ){
+        } catch (HyperfitException e ){
             //TODO: what should we test for?
         }
     }
@@ -800,7 +800,7 @@ public class HalJsonResourceTest {
         try {
             resource.resolveLinkLocal(relationship);
             fail("expected exception not thrown");
-        } catch (HyperClientException e ) {
+        } catch (HyperfitException e ) {
             //TODO: what should we test for?
         }
     }

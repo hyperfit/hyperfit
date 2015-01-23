@@ -1,6 +1,6 @@
 package org.hyperfit.cache;
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 
 /**
@@ -31,7 +31,7 @@ public class HyperCacheNoop implements HyperCacheStrategy {
         try {
             return action.execute(key);
         } catch (Exception ex) {
-            throw new HyperClientException(ex, Messages.MSG_ERROR_CACHE_ITEM_REFRESH, key);
+            throw new HyperfitException(ex, Messages.MSG_ERROR_CACHE_ITEM_REFRESH, key);
         }
     }
 

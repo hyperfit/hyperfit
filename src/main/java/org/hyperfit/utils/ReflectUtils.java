@@ -1,7 +1,7 @@
 package org.hyperfit.utils;
 
 
-import org.hyperfit.exception.HyperClientException;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 
 import java.lang.reflect.Array;
@@ -26,7 +26,7 @@ public class ReflectUtils {
         try {
             return clazz.cast(value);
         } catch (Exception ex) {
-            throw new HyperClientException(ex, Messages.MSG_ERROR_REFLECTION_CANNOT_CAST, value, clazz);
+            throw new HyperfitException(ex, Messages.MSG_ERROR_REFLECTION_CANNOT_CAST, value, clazz);
         }
     }
 
