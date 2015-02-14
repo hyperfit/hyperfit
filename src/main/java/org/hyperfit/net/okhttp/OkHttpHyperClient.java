@@ -3,6 +3,7 @@ package org.hyperfit.net.okhttp;
 import java.net.CookieHandler;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -178,7 +179,7 @@ public class OkHttpHyperClient extends BaseHyperClient {
      * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
      */
     private String buildAcceptHeaderValue(Set<String> requestAcceptedContentTypes) {
-        HashSet<String> allContentTypes =  new HashSet<String>(requestAcceptedContentTypes);
+        HashSet<String> allContentTypes =  new LinkedHashSet<String>(requestAcceptedContentTypes);
         allContentTypes.addAll(this.getAcceptedContentTypes());
 
         Iterator<String> contentTypes = allContentTypes.iterator();
