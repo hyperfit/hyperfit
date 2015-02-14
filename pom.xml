@@ -210,7 +210,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.8.1</version>
                 <configuration>
-                    <skipTests>false</skipTests>
                     <!-- Don't run the integration tests by default, opt in with integrationTest profile-->
                     <excludes>
                         <exclude>**/*IntegrationTest*.class</exclude>
@@ -240,7 +239,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.8.1</version>
                         <configuration>
-                            <skipTests>false</skipTests>
                             <includes>
                                 <include>**/*IntegrationTest*.class</include>
                             </includes>

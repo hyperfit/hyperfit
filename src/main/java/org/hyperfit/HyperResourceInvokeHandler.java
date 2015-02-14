@@ -50,14 +50,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         return new HyperLink(hyperLink) {
 
             @Override
-            public <R> R follow(TypeRef<R> typeRef) {
-
-                if (typeRef == null) {
-                    throw new IllegalArgumentException("type reference must be null");
-                }
-
-                Class<?> returnClass = typeRef.getClazz();
-                Type genericReturnType = typeRef.getType();
+            public <R> R follow(Class<R> returnClass, Type genericReturnType) {
 
                 String linkRelationship = this.getRel();
 
@@ -73,12 +66,11 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 //TODO: there's an edge case where if we have a link from a multilink relationship that only has 1 link
                 //and embedded has just 1, then we can return that link...but punting on this for  now.
                 if (!hyperResource.isMultiLink(linkRelationship) && hyperResource.canResolveLinkLocal(linkRelationship)) {
-                    return (R)requestProcessor.processResource(returnClass, hyperResource.resolveLinkLocal(linkRelationship), typeInfo.make(genericReturnType));
+                    return requestProcessor.processResource(returnClass, hyperResource.resolveLinkLocal(linkRelationship), typeInfo.make(genericReturnType));
                 }
 
                 RequestBuilder requestBuilder = this.toRequestBuilder();
-                //TODO: is there a way to get rid of this R?
-                return (R) requestProcessor.processRequest(returnClass, requestBuilder, typeInfo.make(genericReturnType));
+                return requestProcessor.processRequest(returnClass, requestBuilder, typeInfo.make(genericReturnType));
             }
         };
     }

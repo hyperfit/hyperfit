@@ -19,7 +19,7 @@ TypeRef<List<String>> x = new TypeRef<List<String>>() {};
 public abstract class TypeRef<T> {
 
     private final Type type;
-    private Class<?> clazz;
+    private Class<T> clazz;
 
     protected TypeRef() {
         Type superclass = getClass().getGenericSuperclass();
@@ -29,8 +29,9 @@ public abstract class TypeRef<T> {
         this.type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
 
         this.clazz = type instanceof Class<?>
-                ? (Class<?>) type
-                : (Class<?>) ((ParameterizedType) type).getRawType();
+                //NOTE: i'm really confused about this being ok or not..i like that it gives me types
+                ? (Class<T>) type
+                : (Class<T>) ((ParameterizedType) type).getRawType();
     }
 
     /**
@@ -40,7 +41,7 @@ public abstract class TypeRef<T> {
         return this.type;
     }
 
-    final public Class<?> getClazz() {
+    final public Class<T> getClazz() {
         return clazz;
     }
 

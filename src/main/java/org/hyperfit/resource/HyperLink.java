@@ -6,7 +6,8 @@ import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeRef;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.lang.reflect.Type;
 
 /**
  * Represents a hyper link for a HyperResource
@@ -97,12 +98,26 @@ public class HyperLink {
     }
 
     public <R> R follow(TypeRef<R> typeRef){
+
+        if (typeRef == null) {
+            throw new IllegalArgumentException("type reference must be null");
+        }
+
+            Class<R> returnClass = typeRef.getClazz();
+            Type genericReturnType = typeRef.getType();
+
+        return this.follow(returnClass, genericReturnType);
+
+    }
+
+    public <R> R follow(Class<R> classToReturn) {
+        return this.follow(classToReturn, classToReturn);
+    }
+
+    public <R> R follow(Class<R> classToReturn, Type genericType) {
         //TODO: really don't like this..but since HyperResource has the HyperLink getLink()
         //and thus ever resource type (HalJsonResource, etc) must be able to return a HyperLink
         //but they can't actually perform a follow..it needs to go through the proxy for that..
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
-
-
-
 }
