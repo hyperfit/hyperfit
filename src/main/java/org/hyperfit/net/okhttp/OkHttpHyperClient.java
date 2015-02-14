@@ -178,8 +178,8 @@ public class OkHttpHyperClient extends BaseHyperClient {
      * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
      */
     private String buildAcceptHeaderValue(Set<String> requestAcceptedContentTypes) {
-        HashSet<String> allContentTypes =  new HashSet<String>(this.getAcceptedContentTypes());
-        allContentTypes.addAll(requestAcceptedContentTypes);
+        HashSet<String> allContentTypes =  new HashSet<String>(requestAcceptedContentTypes);
+        allContentTypes.addAll(this.getAcceptedContentTypes());
 
         Iterator<String> contentTypes = allContentTypes.iterator();
 
