@@ -1,6 +1,7 @@
 package org.hyperfit.net.okhttp;
 
 import java.net.CookieHandler;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -106,7 +107,7 @@ public class OkHttpHyperClient extends BaseHyperClient {
                 .url(request.getUrl())
                 .method(request.getMethod().name(), requestBody)
                 .headers(extractHeadersFromRequest(request))
-                .addHeader(HttpHeader.ACCEPT, buildAcceptHeaderValue())
+                .addHeader(HttpHeader.ACCEPT, buildAcceptHeaderValue(request.getAcceptedContentTypes()))
                 .build();
     }
 
@@ -176,8 +177,12 @@ public class OkHttpHyperClient extends BaseHyperClient {
      * Builds the HTTP accept header using the configured media types for the client.
      * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
      */
-    private String buildAcceptHeaderValue() {
-        Iterator<String> contentTypes = this.getAcceptedContentTypes().iterator();
+    private String buildAcceptHeaderValue(Set<String> requestAcceptedContentTypes) {
+        HashSet<String> allContentTypes =  new HashSet<String>(this.getAcceptedContentTypes());
+        allContentTypes.addAll(requestAcceptedContentTypes);
+
+        Iterator<String> contentTypes = allContentTypes.iterator();
+
         StringBuilder builder =  new StringBuilder();
         while(contentTypes.hasNext()){
             builder.append(contentTypes.next());

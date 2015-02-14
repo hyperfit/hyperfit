@@ -45,6 +45,7 @@ public class Messages {
     public static final String MSG_ERROR_REQUEST_CONTENT_TYPE_EMPTY = "Request content type cannot be empty or null.";
     public static final String MSG_ERROR_REQUEST_CONTENT_BODY_NULL = "Request content body cannot be null.";
     public static final String MSG_ERROR_REQUEST_HEADER_NAME_EMPTY = "Request header cannot be empty or null.";
+    public static final String MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY = "Accepted content type cannot be empty or null.";
     public static final String MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY = "Request url parameter cannot be empty or null.";
 
     // -- RESPONSE RELATED --

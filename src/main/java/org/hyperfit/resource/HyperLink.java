@@ -2,6 +2,7 @@ package org.hyperfit.resource;
 
 
 import org.hyperfit.net.Request;
+import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeRef;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -86,7 +87,13 @@ public class HyperLink {
     }
 
     public Request.RequestBuilder toRequestBuilder() {
-        return Request.builder().setUrlTemplate(this.getHref());
+        Request.RequestBuilder builder = Request.builder().setUrlTemplate(this.getHref());
+
+        if(!StringUtils.isEmpty(this.getType())){
+            builder.addAcceptedContentType(this.getType());
+        }
+
+        return builder;
     }
 
     public <R> R follow(TypeRef<R> typeRef){

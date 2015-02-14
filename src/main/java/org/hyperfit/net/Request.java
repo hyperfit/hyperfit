@@ -7,9 +7,7 @@ import com.damnhandy.uri.template.UriTemplate;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 
@@ -26,6 +24,7 @@ public class Request {
     private final Method method;
     private final Map<String, String> urlParams;
     private final Map<String, String> headers;
+    private final Set<String> acceptedContentTypes;
 
     public String getUrl() {
         return url;
@@ -63,6 +62,10 @@ public class Request {
         return headers.entrySet().iterator();
     }
 
+    public Set<String> getAcceptedContentTypes() {
+        return acceptedContentTypes;
+    }
+
     /**
      * Create {@link Request} using {@link org.hyperfit.net.Request.RequestBuilder}
      *
@@ -75,6 +78,8 @@ public class Request {
         this.contentBody = builder.contentBody;
         this.headers = builder.headers;
         this.method = builder.method;
+        this.acceptedContentTypes = Collections.unmodifiableSet(builder.acceptedContentTypes);
+
 
         try {
             UriTemplate uriTemplateBuilder = UriTemplate.fromTemplate(urlTemplate);
@@ -207,6 +212,7 @@ public class Request {
         private Method method = Method.GET;
         private Map<String, String> urlParams = new HashMap<String, String>();
         private Map<String, String> headers = new HashMap<String, String>();
+        private Set<String> acceptedContentTypes = new HashSet<String>();
 
         private RequestBuilder() {
         }
@@ -255,6 +261,17 @@ public class Request {
             if (value != null) {
                 this.headers.put(name, value);
             }
+
+            return this;
+        }
+
+        //TODO: take a ContentType type instead of a string
+        public RequestBuilder addAcceptedContentType(String name) {
+            if (StringUtils.isEmpty(name)) {
+                throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY);
+            }
+
+            this.acceptedContentTypes.add(name);
 
             return this;
         }
