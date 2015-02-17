@@ -44,31 +44,28 @@ public class HalJsonMediaTypeHandlerTest {
 
         when(responseMock.getBody()).thenReturn(validHalJson);
         assertEquals(
-                halJsonMediaTypeHandler.handleHyperResponse(responseMock),
+                halJsonMediaTypeHandler.parseHyperResponse(responseMock),
                 new HalJsonResource(new ObjectMapper().reader(JsonNode.class).readTree(validHalJson)));
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseNullBody() {
         when(responseMock.getBody()).thenReturn(null);
-        halJsonMediaTypeHandler.handleHyperResponse(responseMock);
+        halJsonMediaTypeHandler.parseHyperResponse(responseMock);
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseEmptyBody() {
         when(responseMock.getBody()).thenReturn("");
-        halJsonMediaTypeHandler.handleHyperResponse(responseMock);
+        halJsonMediaTypeHandler.parseHyperResponse(responseMock);
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseWrongBody() {
         when(responseMock.getBody()).thenReturn("{");
-        halJsonMediaTypeHandler.handleHyperResponse(responseMock);
+        halJsonMediaTypeHandler.parseHyperResponse(responseMock);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testHandleHyperResponseNullResponse() {
-        halJsonMediaTypeHandler.handleHyperResponse(null);
-    }
+
 
 }

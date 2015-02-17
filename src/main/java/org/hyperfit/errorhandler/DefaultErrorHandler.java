@@ -2,47 +2,49 @@ package org.hyperfit.errorhandler;
 
 
 import org.hyperfit.exception.*;
+import org.hyperfit.mediatype.MediaTypeHandler;
+import org.hyperfit.net.Request;
+import org.hyperfit.net.Response;
+import org.hyperfit.resource.HyperResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.hyperfit.exception.ServiceException;
+import org.hyperfit.exception.ResponseException;
+
+import java.util.Map;
 
 /**
  * <p>Default implementation of HyperErrorHandler</p>
- * <p>Throws custom exceptions for error codes that are handled
- * and generic exception for any other one.</p>
+ * Throws a few general ResponseException types based upon the error code.
  * @see ErrorHandler
  */
 public class DefaultErrorHandler implements ErrorHandler {
     
     private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorHandler.class);
-    
-    /**
-     * {@inheritDoc}
-     */
-    public RuntimeException handleError(ResponseError error) {
-        if(error.getStatusCode() == 401) {
-            logErrorHandling(error.getStatusCode(), UnauthorizedException.class, error.getErrorMessage());
-            return new UnauthorizedException(error.getErrorMessage());
-        }
-        if(error.getStatusCode() == 403) {
-            logErrorHandling(error.getStatusCode(), ResourceUnavailableException.class, error.getErrorMessage());
-            return new ResourceUnavailableException(error.getErrorMessage());
-        }
-        if(error.getStatusCode() == 404) {
-            logErrorHandling(error.getStatusCode(), ResourceNotFoundException.class, error.getErrorMessage());
-            return new ResourceNotFoundException(error.getErrorMessage());
-        }
-        if(error.getStatusCode() == 501) {
-            logErrorHandling(error.getStatusCode(), ServiceUnavailableException.class, error.getErrorMessage());
-            return new ServiceUnavailableException(error.getErrorMessage());
-        }
-        
-        logErrorHandling(error.getStatusCode(), ServiceException.class, error.getErrorMessage());
-        return new ServiceException(error.getErrorMessage());
+
+
+    public HyperResource unhandledContentType(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface) {
+        throw new ResponseException(
+            String.format("Response from [%s] has unsupported content type [%s]", request.getUrl(), response.getContentType()),
+            request,
+            response
+        );
     }
-    
-    protected <T> void logErrorHandling(int errorCode, Class<T> exceptionClass, String message) {        
-        LOG.debug("Handling error code [{}] with exception class [{}], message: [{}]", errorCode, exceptionClass.getName(), message);        
+
+    public HyperResource contentParseError(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface, Exception parseException) {
+        throw new ResponseException(
+            parseException,
+            String.format("Response from [%s] could not be parsed into a hyper resource of content type [%s] because [%s]", request.getUrl(), response.getContentType(), parseException.getMessage()),
+            request,
+            response
+        );
+    }
+
+    public HyperResource notOKResponse(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface, HyperResource parsedResource) {
+        throw new ResponseException(
+            String.format("Response from [%s] had not OK status code of [%s]", request.getUrl(), response.getCode()),
+            request,
+            response
+        );
     }
 }

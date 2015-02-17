@@ -2,10 +2,8 @@ package org.hyperfit;
 
 
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.errorhandler.ResponseError;
 import org.hyperfit.net.*;
 import org.hyperfit.mediatype.MediaTypeHandler;
-import org.hyperfit.message.Messages;
 
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
@@ -18,6 +16,7 @@ import org.javatuples.Pair;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,33 +74,12 @@ public class HyperRequestProcessor {
 
     /**
      * <p>Obtains a specific resource by going directly to its source.</p>
-     * <p>The other way it's by fetching the root first and from there
-     * following the hyper links until reaching the desired resource.</p>
      *
      * @param classToReturn  the class that the resource should be returned as
      * @param requestBuilder request object
      * @return resource with same type specified in the resource class.
      */
     public <T> T processRequest(Class<T> classToReturn, Request.RequestBuilder requestBuilder, TypeInfo typeInfo) {
-        /*
-         * Handle Get and other methods differently. Retrieve from cache first for Get
-           and reload cache for any other methods. Keep the structure while removing cache for now.
-         */
-        // TODO: decide cache implementation.
-//        if (requestBuilder.getMethod() == Method.GET) {
-          return doProcessRequest(classToReturn, requestBuilder, typeInfo);
-//        }
-    }
-
-    /**
-     * Processes resource through proxy.
-     *
-     * @param requestBuilder request object
-     * @return resource with same type specified in the resource class.
-     * Keep the place holder of reload to future cache implementation
-     * TODO: determine cache implementation so we reload when reload=true.
-     */
-    protected <T> T doProcessRequest(Class<T> classToReturn, Request.RequestBuilder requestBuilder, TypeInfo typeInfo) {
 
         requestInterceptors.intercept(requestBuilder);
 
@@ -109,14 +87,17 @@ public class HyperRequestProcessor {
 
         Response response = hyperClient.execute(request);
 
+        //Special case, if what they want is the Response in a raw format...well they can have it!
         if (Response.class.isAssignableFrom(classToReturn)) {
             return (T) response;
         }
+
+        //Another special case, if what they want is a string we give them response body
         if (String.class.isAssignableFrom(classToReturn)) {
             return (T) response.getBody();
         }
 
-        return processResource(classToReturn, buildHyperResource(response), typeInfo);
+        return processResource(classToReturn, buildHyperResource(request, response, classToReturn), typeInfo);
     }
 
     /**
@@ -128,18 +109,23 @@ public class HyperRequestProcessor {
      */
     public <T> T processResource(Class<T> classToReturn, HyperResource hyperResource, TypeInfo typeInfo) {
 
+        //This can happen if they ask for the String of an embedded resource...not sure that i like that we parse it before
+        //But it makes sense.  Note that if we made a request they don't get here because the String case is caught above
+        //to skip the parsing of the response into a mediatype
         if (String.class.isAssignableFrom(classToReturn)) {
             return (T) hyperResource.toString();
         }
+
 
         InvocationHandler handler = new HyperResourceInvokeHandler(hyperResource, this, this.resourceMethodInfoCache.get(classToReturn), typeInfo);
 
         classToReturn = convertToSubClass(classToReturn, hyperResource);
 
         Object proxy = Proxy.newProxyInstance(
-                classToReturn.getClassLoader(),
-                new Class<?>[]{classToReturn},
-                handler);
+            classToReturn.getClassLoader(),
+            new Class<?>[]{classToReturn},
+            handler
+        );
 
         return ReflectUtils.cast(classToReturn, proxy);
     }
@@ -155,40 +141,58 @@ public class HyperRequestProcessor {
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected HyperResource buildHyperResource(Response response) {
+    protected <T> HyperResource buildHyperResource(Request request, Response response, Class<T> expectedResourceInterface) {
+
+        //STAGE 1 - There's response, let's see if we understand the content type!
 
         String contentType = response.getContentType();
-
-        ResponseError hyperError = null;
-
-        if (contentType != null) {
-            /*Get required response handler according to response content type header.
-            Here we are cleaning the content type removing the charset so it doesn't
-            reject responses where charset is added (i.e. application/hal+json;charset=utf-8)
-            Should we care more about charset???*/
-            MediaTypeHandler mediaTypeHandler = this.mediaTypeHandlers.get(
-                MediaTypeHelper.getContentTypeWithoutCharset(contentType));
-
-            if (mediaTypeHandler != null) { // If we have an available handler for the response type.
-                if (response.isOK()) { // If response is OK (200 status)
-                    // Handle response.
-                    return mediaTypeHandler.handleHyperResponse(response);
-                } else { // Response is not OK (error code returned).
-                    hyperError = mediaTypeHandler.parseError(response);
-                }
-
-            } else {
-                hyperError = new ResponseError(response.getCode(), Messages.MSG_ERROR_HYPER_MEDIA_TYPE_HANDLER_NOT_FOUND_FOR_CONTENT_TYPE, contentType);
-            }
-        } else {
-            hyperError = new ResponseError(response.getCode(), Messages.MSG_ERROR_NO_CONTENT_TYPE);
+        //TODO COMAPI-1749 - this selection should be more rigorous and treat contentType not as a string
+        contentType = MediaTypeHelper.getContentTypeWithoutCharset(contentType);
+        //See if we have a content type, if not throw
+        if(contentType == null || !this.mediaTypeHandlers.containsKey(contentType)){
+            //We don't understand the content type, let's ask the error handler what to do!
+            return this.errorHandler.unhandledContentType(
+                request,
+                response,
+                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                expectedResourceInterface
+            );
         }
 
-        if (hyperError == null) {
-            hyperError = new ResponseError(response.getCode(), Messages.MSG_ERROR_RESOURCE_CANNOT_BE_BUILT);
+
+        //STAGE 2 - There's a content type we understand, let's try to parse the response!
+
+        MediaTypeHandler mediaTypeHandler = this.mediaTypeHandlers.get(contentType);
+        HyperResource resource;
+        try{
+            resource = mediaTypeHandler.parseHyperResponse(response);
+            //TODO: should we check for null here and throw?
+        } catch (Exception e){
+            //Something went wrong parsing the response, let's ask the error handler what to do!
+            return this.errorHandler.contentParseError(
+                request,
+                response,
+                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                expectedResourceInterface,
+                e
+            );
         }
 
-        throw this.errorHandler.handleError(hyperError);
+
+        //STAGE 3 - we were able to parse the response into a HyperResponse, let's make sure it's a OK response
+        if(!response.isOK()){
+            return this.errorHandler.notOKResponse(
+                request,
+                response,
+                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                expectedResourceInterface,
+                resource
+            );
+        }
+
+
+        //Everything with the resource worked out, let's return it
+        return resource;
     }
 
 }

@@ -1,7 +1,8 @@
 package org.hyperfit;
 
 import org.hyperfit.annotation.Profiles;
-import org.hyperfit.exception.ServiceException;
+import org.hyperfit.exception.ResponseException;
+import org.hyperfit.net.Request;
 import org.hyperfit.net.okhttp.HttpHeader;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
@@ -58,20 +59,24 @@ public class HyperRequestProcessorTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = ServiceException.class)
+    @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeException() {
         HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(new RootResourceBuilder());
         Response response = new Response.ResponseBuilder().build();
-        hyperRequestProcessor.buildHyperResource(response);
+        Request request = Request.builder().setUrlTemplate("http://here.com").build();
+
+        hyperRequestProcessor.buildHyperResource(request, response, HyperResource.class);
     }
 
-    @Test(expected = ServiceException.class)
+    @Test(expected = ResponseException.class)
     public void testBuildResourceNoHyperMediaTypeHandlerException() {
         HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(new RootResourceBuilder());
         Response response = new Response.ResponseBuilder().
             addHeader(HttpHeader.CONTENT_TYPE, "someType").
             build();
-        hyperRequestProcessor.buildHyperResource(response);
+        Request request = Request.builder().setUrlTemplate("http://here.com").build();
+
+        hyperRequestProcessor.buildHyperResource(request, response, HyperResource.class);
     }
 
     @Test

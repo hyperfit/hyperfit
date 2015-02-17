@@ -94,7 +94,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         try {
             return processInvoke(proxy, method, args);
         } catch (HyperfitException hce) {
-            throw hce; //in case we threw it earlier
+            throw hce; //don't wrap up hyperfit exceptions
         } catch (Exception e) {
             throw new HyperfitException(e, Messages.MSG_ERROR_PROXY_UNEXPECTED_ERROR, method, proxy, args);
         }

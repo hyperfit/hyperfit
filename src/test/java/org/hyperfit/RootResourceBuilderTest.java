@@ -56,7 +56,7 @@ public class RootResourceBuilderTest {
         when(mockMediaTypeHandler.getDefaultHandledMediaType())
             .thenReturn(fakeContentType);
 
-        when(mockMediaTypeHandler.handleHyperResponse(this.mockResponse))
+        when(mockMediaTypeHandler.parseHyperResponse(this.mockResponse))
             .thenReturn(this.mockHyperResource);
 
         builder.hyperClient(this.mockHyperClient)

@@ -1,6 +1,5 @@
 package org.hyperfit.mediatype;
 
-import org.hyperfit.errorhandler.ResponseError;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 
@@ -27,7 +26,6 @@ public interface MediaTypeHandler {
      * @param response response {@link org.hyperfit.net.Response} to be handled
      * @return {@link org.hyperfit.resource.HyperResource}
      */
-    HyperResource handleHyperResponse(Response response);
-    
-    ResponseError parseError(Response response);
+    HyperResource parseHyperResponse(Response response);
+
 }

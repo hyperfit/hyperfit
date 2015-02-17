@@ -7,7 +7,7 @@ import org.slf4j.helpers.MessageFormatter;
  * parameterized types.</p>
  *
  */
-public class ParameterizedTypeException extends RuntimeException {
+public class ParameterizedTypeException extends HyperfitException {
 
     public ParameterizedTypeException(String message) {
         super(message);

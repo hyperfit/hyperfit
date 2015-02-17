@@ -8,6 +8,10 @@ public class MediaTypeHelper {
     private MediaTypeHelper() { }
     
     public static String getContentTypeWithoutCharset(String contentTypeHeader) {
+        if(contentTypeHeader == null){
+            return null;
+        }
+
         String mediaTypeWithoutCharset = null;
         
         MediaType mediaType = MediaType.parse(contentTypeHeader);
