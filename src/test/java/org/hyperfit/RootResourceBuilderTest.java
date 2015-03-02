@@ -1,10 +1,11 @@
 package org.hyperfit;
 
 import facets.RootResource;
+import org.hyperfit.content.ContentType;
 import org.hyperfit.net.HyperClient;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
-import org.hyperfit.mediatype.MediaTypeHandler;
+import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class RootResourceBuilderTest {
     protected Response mockResponse;
 
     @Mock
-    protected MediaTypeHandler mockMediaTypeHandler;
+    protected ContentTypeHandler mockContentTypeHandler;
 
     @Mock
     protected HyperResource mockHyperResource;
@@ -42,25 +43,26 @@ public class RootResourceBuilderTest {
     public void testBuildAResource(){
         RootResourceBuilder builder = new RootResourceBuilder();
 
-        String fakeContentType = "application/hal+json";
+        String fakeContentTypeString = "application/hal+json";
+        ContentType fakeContentType = ContentType.parse(fakeContentTypeString);
 
         when(mockHyperClient.execute(isA(Request.class)))
             .thenReturn(this.mockResponse);
 
         when(mockResponse.getContentType())
-            .thenReturn(fakeContentType);
+            .thenReturn(fakeContentTypeString);
 
         when(mockResponse.isOK())
             .thenReturn(true);
 
-        when(mockMediaTypeHandler.getDefaultHandledMediaType())
+        when(mockContentTypeHandler.getDefaultContentType())
             .thenReturn(fakeContentType);
 
-        when(mockMediaTypeHandler.parseHyperResponse(this.mockResponse))
+        when(mockContentTypeHandler.parseResponse(this.mockResponse))
             .thenReturn(this.mockHyperResource);
 
         builder.hyperClient(this.mockHyperClient)
-            .addMediaTypeHandler(mockMediaTypeHandler);
+            .addContentTypeHandler(mockContentTypeHandler);
 
         String url = "http://example.com";
         RootResource result = builder.build(RootResource.class, url);

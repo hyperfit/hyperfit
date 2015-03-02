@@ -1,4 +1,4 @@
-package org.hyperfit.mediatype;
+package org.hyperfit.content;
 
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
@@ -11,21 +11,20 @@ import org.hyperfit.resource.HyperResource;
  *     <li>HAL</li>
  *     <li>Siren</li>
  * </ul>
- *In this version of client, only HAL type is handled
  */
-public interface MediaTypeHandler {
+public interface ContentTypeHandler {
 
     /**
      *
      * @return {@link String} media type the handler will handle
      */
-    String getDefaultHandledMediaType();
+    ContentType getDefaultContentType();
 
     /**
      *
      * @param response response {@link org.hyperfit.net.Response} to be handled
      * @return {@link org.hyperfit.resource.HyperResource}
      */
-    HyperResource parseHyperResponse(Response response);
+    HyperResource parseResponse(Response response);
 
 }

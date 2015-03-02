@@ -1,6 +1,8 @@
 package org.hyperfit;
 
 
+import org.hyperfit.content.ContentRegistry;
+import org.hyperfit.content.ContentType;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.net.HyperClient;
@@ -8,7 +10,7 @@ import org.hyperfit.net.Request;
 import org.hyperfit.net.RequestInterceptor;
 import org.hyperfit.net.RequestInterceptors;
 import org.hyperfit.net.okhttp.OkHttpHyperClient;
-import org.hyperfit.mediatype.MediaTypeHandler;
+import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
@@ -28,36 +30,37 @@ public class RootResourceBuilder {
     // TODO: determine cache strategy.
     //private HyperCacheStrategy hyperCache = new HyperCacheNoop();
     private HyperClient hyperClient = new OkHttpHyperClient();
-    protected final Map<String, MediaTypeHandler> mediaTypeHandlers = new HashMap<String, MediaTypeHandler>();
+    private final ContentRegistry contentRegistry = new ContentRegistry();
     private ErrorHandler errorHandler = new DefaultErrorHandler();
     private ResourceMethodInfoCache resourceMethodInfoCache = new ConcurrentHashMapResourceMethodInfoCache();
     private RequestInterceptors requestInterceptors = new RequestInterceptors();
     private ResourceRegistry resourceRegistry = new ResourceRegistry(new ProfileResourceRegistryIndexStrategy());
 
 
-    public RootResourceBuilder addMediaTypeHandler(MediaTypeHandler mediaType) {
-        this.mediaTypeHandlers.put(mediaType.getDefaultHandledMediaType(), mediaType);
+    public RootResourceBuilder addContentTypeHandler(ContentTypeHandler handler) {
+        this.contentRegistry.add(handler);
         return this;
     }
 
-    public RootResourceBuilder removeMediaTypeHandler(MediaTypeHandler mediaType) {
-        this.mediaTypeHandlers.remove(mediaType.getDefaultHandledMediaType());
+    public RootResourceBuilder removeContentTypeHandler(ContentTypeHandler handler) {
+        this.contentRegistry.remove(handler);
         return this;
     }
 
-    public RootResourceBuilder addMediaTypeHandler(String mediaType, MediaTypeHandler mediaTypeHandler) {
-        this.mediaTypeHandlers.put(mediaType, mediaTypeHandler);
+    public RootResourceBuilder addContentTypeHandler(ContentTypeHandler handler, ContentType...types) {
+        this.contentRegistry.add(handler, types);
         return this;
     }
 
-    public RootResourceBuilder removeMediaTypeHandler(String mediaType) {
-        this.mediaTypeHandlers.remove(mediaType);
+    public RootResourceBuilder removeContentType(ContentType type) {
+        this.contentRegistry.remove(type);
         return this;
     }
 
-    public MediaTypeHandler getMediaTypeHandler(String mediaType) {
-        return mediaTypeHandlers.get(mediaType);
+    public ContentRegistry getContentRegistry() {
+        return this.contentRegistry;
     }
+
 
     public RootResourceBuilder hyperClient(HyperClient hyperClient) {
         this.hyperClient = hyperClient;
@@ -138,7 +141,7 @@ public class RootResourceBuilder {
             throw new IllegalArgumentException("classToReturn can not be null");
         }
 
-        hyperClient.setAcceptedContentTypes(this.mediaTypeHandlers.keySet());
+        hyperClient.setAcceptedContentTypes(this.contentRegistry.getHandledContentTypes());
         HyperRequestProcessor requestProcessor = new HyperRequestProcessor(this);
         return requestProcessor.processRequest(classToReturn, Request.get(endpointURL), null);
     }

@@ -1,6 +1,7 @@
 package org.hyperfit.errorhandler;
 
-import org.hyperfit.mediatype.MediaTypeHandler;
+import org.hyperfit.content.ContentRegistry;
+import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
@@ -30,13 +31,13 @@ public interface ErrorHandler {
 
 
 
-    HyperResource unhandledContentType(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface);
+    HyperResource unhandledContentType(Request request, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface);
 
 
-    HyperResource contentParseError(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface, Exception parseException);
+    HyperResource contentParseError(Request request, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, Exception parseException);
 
 
-    HyperResource notOKResponse(Request request, Response response, Map<String, MediaTypeHandler> contentTypeHandlers, Class<?> expectedResourceInterface, HyperResource parsedResource);
+    HyperResource notOKResponse(Request request, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, HyperResource parsedResource);
 
 
     //TODO: handle this situation

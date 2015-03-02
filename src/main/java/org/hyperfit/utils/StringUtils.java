@@ -4,7 +4,7 @@ package org.hyperfit.utils;
 //also android complains a bit during compile
 public class StringUtils {
     public static boolean isEmpty(String string) {
-        return string == null || string.length() == 0;
+        return string == null || string.length() == 0 || string.trim().length() == 0;
     }
 
     public static boolean equals(String left, String right) {

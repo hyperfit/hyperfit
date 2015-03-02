@@ -1,24 +1,24 @@
 package org.hyperfit;
 
 
+import org.hyperfit.content.ContentRegistry;
+import org.hyperfit.content.ContentType;
 import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.net.*;
-import org.hyperfit.mediatype.MediaTypeHandler;
+import org.hyperfit.content.ContentTypeHandler;
 
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryRetrievalStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;
-import org.hyperfit.mediatype.MediaTypeHelper;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Processes a request returning a type specified by the
@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class HyperRequestProcessor {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HyperRequestProcessor.class);
+
     private static final ProfileResourceRegistryRetrievalStrategy PROFILE_RESOURCE_REGISTRY_RETRIEVAL_STRATEGY =
             new ProfileResourceRegistryRetrievalStrategy();
 
@@ -34,7 +36,7 @@ public class HyperRequestProcessor {
     private final RequestInterceptors requestInterceptors;
     private final HyperClient hyperClient;
     private final ResourceMethodInfoCache resourceMethodInfoCache;
-    private final Map<String, MediaTypeHandler> mediaTypeHandlers = new HashMap<String, MediaTypeHandler>();
+    private final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
 
     public HyperRequestProcessor(RootResourceBuilder rootResourceBuilder) {
@@ -55,7 +57,7 @@ public class HyperRequestProcessor {
         }
 
         //Copy the over so nobody can put more in there using the builder
-        this.mediaTypeHandlers.putAll(rootResourceBuilder.mediaTypeHandlers);
+        this.contentRegistry = new ContentRegistry(rootResourceBuilder.getContentRegistry());
 
 
         //TODO: this should be cloned/frozen so it's immutable and nobody can add stuff to the registry after all this is figured out
@@ -145,16 +147,20 @@ public class HyperRequestProcessor {
 
         //STAGE 1 - There's response, let's see if we understand the content type!
 
-        String contentType = response.getContentType();
-        //TODO COMAPI-1749 - this selection should be more rigorous and treat contentType not as a string
-        contentType = MediaTypeHelper.getContentTypeWithoutCharset(contentType);
+        ContentType responseContentType = null;
+        try {
+            responseContentType = ContentType.parse(response.getContentType());
+        } catch (Exception e){
+            LOG.warn("Error parsing content type of response.  errorHandler:unhandledContentType will be called", e);
+        }
+
         //See if we have a content type, if not throw
-        if(contentType == null || !this.mediaTypeHandlers.containsKey(contentType)){
+        if(responseContentType == null || !this.contentRegistry.canHandler(responseContentType)){
             //We don't understand the content type, let's ask the error handler what to do!
             return this.errorHandler.unhandledContentType(
                 request,
                 response,
-                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                this.contentRegistry,
                 expectedResourceInterface
             );
         }
@@ -162,17 +168,17 @@ public class HyperRequestProcessor {
 
         //STAGE 2 - There's a content type we understand, let's try to parse the response!
 
-        MediaTypeHandler mediaTypeHandler = this.mediaTypeHandlers.get(contentType);
+        ContentTypeHandler contentTypeHandler = this.contentRegistry.getHandler(responseContentType);
         HyperResource resource;
         try{
-            resource = mediaTypeHandler.parseHyperResponse(response);
+            resource = contentTypeHandler.parseResponse(response);
             //TODO: should we check for null here and throw?
         } catch (Exception e){
             //Something went wrong parsing the response, let's ask the error handler what to do!
             return this.errorHandler.contentParseError(
                 request,
                 response,
-                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                this.contentRegistry,
                 expectedResourceInterface,
                 e
             );
@@ -184,7 +190,7 @@ public class HyperRequestProcessor {
             return this.errorHandler.notOKResponse(
                 request,
                 response,
-                Collections.unmodifiableMap(this.mediaTypeHandlers),
+                this.contentRegistry,
                 expectedResourceInterface,
                 resource
             );
