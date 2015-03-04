@@ -1,5 +1,6 @@
 package org.hyperfit.content;
 
+import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 
@@ -26,5 +27,8 @@ public interface ContentTypeHandler {
      * @return {@link org.hyperfit.resource.HyperResource}
      */
     HyperResource parseResponse(Response response);
+
+
+    void encodeRequest(Request.RequestBuilder request, Object resource);
 
 }

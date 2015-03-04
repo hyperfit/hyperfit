@@ -166,7 +166,7 @@ public class RequestTest {
     public void testGetContentBody() {
         assertEquals(Request.builder().
                         setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                        setContentBody("{test:\"ok\"}").build().getContentBody(),
+        setContent("{test:\"ok\"}").build().getContent(),
                 "{test:\"ok\"}");
     }
 
@@ -174,14 +174,14 @@ public class RequestTest {
     public void testGetContentBodyNull() {
         Request.builder().
                 setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                setContentBody(null).build().getContentBody();
+        setContent(null).build().getContent();
     }
 
     @Test
     public void testGetContentType() {
         assertEquals(Request.builder().
                         setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                        setContentBody("application/json").build().getContentBody(),
+        setContent("application/json").build().getContent(),
                 "application/json");
     }
 
@@ -189,7 +189,7 @@ public class RequestTest {
     public void testGetContentTypeNull() {
         Request.builder().
                 setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                setContentBody(null).build().getContentBody();
+        setContent(null).build().getContent();
     }
 
     @Test

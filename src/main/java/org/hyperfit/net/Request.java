@@ -20,7 +20,7 @@ public class Request {
     private final String url;
     private final String urlTemplate;
     private final String contentType;
-    private final String contentBody;
+    private final String content;
     private final Method method;
     private final Map<String, String> urlParams;
     private final Map<String, String> headers;
@@ -34,8 +34,8 @@ public class Request {
         return urlTemplate;
     }
 
-    public String getContentBody() {
-        return contentBody;
+    public String getContent() {
+        return content;
     }
 
     public String getContentType() {
@@ -75,7 +75,7 @@ public class Request {
         this.urlParams = builder.urlParams;
         this.urlTemplate = builder.urlTemplate;
         this.contentType = builder.contentType;
-        this.contentBody = builder.contentBody;
+        this.content = builder.content;
         this.headers = builder.headers;
         this.method = builder.method;
         this.acceptedContentTypes = Collections.unmodifiableSet(builder.acceptedContentTypes);
@@ -101,7 +101,7 @@ public class Request {
 
         Request that = (Request) o;
 
-        if (contentBody != null ? !contentBody.equals(that.contentBody) : that.contentBody != null) return false;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
         if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
         if (!headers.equals(that.headers)) return false;
         if (method != that.method) return false;
@@ -208,7 +208,7 @@ public class Request {
 
         private String urlTemplate = null;
         private String contentType = null;
-        private String contentBody = null;
+        private String content = null;
         private Method method = Method.GET;
         private Map<String, String> urlParams = new HashMap<String, String>();
         private Map<String, String> headers = new HashMap<String, String>();
@@ -244,12 +244,12 @@ public class Request {
             return this;
         }
 
-        public RequestBuilder setContentBody(String contentBody) {
-            if (contentBody == null) {
+        public RequestBuilder setContent(String content) {
+            if (content == null) {
                 throw new NullPointerException(Messages.MSG_ERROR_REQUEST_CONTENT_BODY_NULL);
             }
 
-            this.contentBody = contentBody;
+            this.content = content;
             return this;
         }
 
@@ -296,8 +296,8 @@ public class Request {
             return contentType;
         }
 
-        public String getContentBody() {
-            return contentBody;
+        public String getContent() {
+            return content;
         }
 
         public Method getMethod() {

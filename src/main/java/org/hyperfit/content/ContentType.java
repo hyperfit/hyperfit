@@ -191,6 +191,14 @@ public class ContentType {
         return this.toString;
     }
 
+    public String toString(boolean includeParams) {
+        if(includeParams){
+            return this.toString();
+        }
+
+        return type + "/" + subType;
+    }
+
     public final double getQualifier() {
         return qualifier;
     }

@@ -36,7 +36,8 @@ public class HyperRequestProcessor {
     private final RequestInterceptors requestInterceptors;
     private final HyperClient hyperClient;
     private final ResourceMethodInfoCache resourceMethodInfoCache;
-    private final ContentRegistry contentRegistry;
+    //TODO: make this protected hack non-sense go away...something is wrong with our class layout
+    protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
 
     public HyperRequestProcessor(RootResourceBuilder rootResourceBuilder) {

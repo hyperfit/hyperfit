@@ -2,6 +2,7 @@ package org.hyperfit.content.hal.json;
 
 
 import org.hyperfit.content.ContentType;
+import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.resource.HyperResource;
@@ -30,6 +31,10 @@ public class HalJsonContentTypeHandler implements ContentTypeHandler {
     public HyperResource parseResponse(Response response) {
 
         return new HalJsonResource(response);
+    }
+
+    public void encodeRequest(Request.RequestBuilder request, Object resource) {
+        throw new UnsupportedOperationException();
     }
 
 

@@ -1,6 +1,8 @@
 package org.hyperfit;
 
 import org.hyperfit.annotation.*;
+import org.hyperfit.content.ContentType;
+import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Request;
 import org.hyperfit.message.Messages;
@@ -309,7 +311,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         if (methodCallParams != null) {
             for (int i = 0; i < methodCallParams.length; i++) {
                 if (methodCallParams[i] != null) {
-                    assignAnnotatedValues(requestBuilder, annotationsPerParams[i], methodCallParams[i].toString());
+                    assignAnnotatedValues(requestBuilder, annotationsPerParams[i], methodCallParams[i]);
                 }
             }
         }
@@ -322,14 +324,23 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      * @param annotationsPerParams Param annotations
      * @param value                param value
      */
-    protected void assignAnnotatedValues(Request.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, String value) {
+    protected void assignAnnotatedValues(Request.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, Object value) {
         for (Annotation annotation : annotationsPerParams) {
             if (Param.class.isInstance(annotation)) {
-                requestBuilder.setUrlParam(ReflectUtils.cast(Param.class, annotation).value(), value);
+                requestBuilder.setUrlParam(ReflectUtils.cast(Param.class, annotation).value(), value.toString());
             }
 
             if (Header.class.isInstance(annotation)) {
-                requestBuilder.addHeader(ReflectUtils.cast(Header.class, annotation).value(), value);
+                requestBuilder.addHeader(ReflectUtils.cast(Header.class, annotation).value(), value.toString());
+            }
+
+            if(Content.class.isInstance(annotation)){
+                //this seems dangerous...should we force a default value?
+                ContentType contentType = ContentType.parse(Content.class.cast(annotation).value());
+
+                //TODO: make this protected hack non-sense go away...something is wrong with our class layout if we need to do this
+                ContentTypeHandler contentEncoder = this.requestProcessor.contentRegistry.getHandler(contentType);
+                contentEncoder.encodeRequest(requestBuilder, value);
             }
 
         }

@@ -100,8 +100,8 @@ public class OkHttpHyperClient extends BaseHyperClient {
 
         RequestBody requestBody = null;
 
-        if (request.getContentType() != null && request.getContentBody() != null) {
-            requestBody = RequestBody.create(MediaType.parse(request.getContentType()), request.getContentBody());
+        if (request.getContentType() != null && request.getContent() != null) {
+            requestBody = RequestBody.create(MediaType.parse(request.getContentType()), request.getContent());
         }
       
         return new com.squareup.okhttp.Request.Builder()

@@ -110,7 +110,7 @@ public class OkHttpHyperClientTest {
         org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
             .setUrlTemplate(URL)
             .setMethod(Method.POST)
-            .setContentBody(CONTENT_BODY)
+            .setContent(CONTENT_BODY)
             .setContentType(CONTENT_TYPE)
             .build();
 
