@@ -29,7 +29,7 @@ public class FormUrlEncodedContentTypeHandlerTest {
     }
 
 
-    static class RequestData {
+    static final class RequestData {
 
         private String stringVal = "StringVal";
         private String stringWithChars = "!@#$%^&*()";
@@ -55,7 +55,7 @@ public class FormUrlEncodedContentTypeHandlerTest {
         handler.prepareRequest(builder, content);
 
         assertEquals(handler.getDefaultContentType().toString(false), builder.getContentType());
-       
+
 
         assertEquals("stringVal=StringVal&stringWithChars=%21%40%23%24%25%5E%26*%28%29&stringUrl=http%3A%2F%2Fhost%2Fpath%3Fxxx%3Dyy%26bbb&DoubleValue=66.77&doubleValue=55.77&IntegerValue=66&intValue=55&BooleanValue=false&booleanValue=true", builder.getContent());
     }

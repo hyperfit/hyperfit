@@ -34,15 +34,23 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
         Field[] fields = content.getClass().getDeclaredFields();
         for(int i = 0; i < fields.length; i++){
             Field f = fields[i];
+            if(f.isSynthetic()){
+                //Skip these for jacoco builds see http://www.eclemma.org/jacoco/trunk/doc/faq.html
+                //q: My code uses reflection. Why does it fail when I execute it with JaCoCo?
+                continue;
+            }
             f.setAccessible(true);
+
+            if(i > 0){
+                body.append("&");
+            }
+
             try {
                 body.append(encode(f.getName())).append("=").append(encode(f.get(content).toString()));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("error generating request body for param " + f.getName(), e);
             }
-            if(i+1 < fields.length){
-                body.append("&");
-            }
+
         }
 
         request.setContent(body.toString());
