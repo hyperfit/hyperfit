@@ -13,8 +13,7 @@ import static org.mockito.Mockito.*;
 
 public class FormUrlEncodedContentTypeHandlerTest {
 
-    @Mock
-    Request.RequestBuilder mockReqBuilder;
+
 
     FormURLEncodedContentTypeHandler handler;
 
@@ -51,12 +50,14 @@ public class FormUrlEncodedContentTypeHandlerTest {
     @Test
     public void testEncodeRequest(){
         RequestData content = new RequestData();
+        Request.RequestBuilder builder = Request.builder();
 
-        handler.prepareRequest(mockReqBuilder, content);
+        handler.prepareRequest(builder, content);
 
-        verify(mockReqBuilder).setContentType(handler.getDefaultContentType().toString(false));
+        assertEquals(handler.getDefaultContentType().toString(false), builder.getContentType());
+       
 
-        verify(mockReqBuilder).setContent("stringVal=StringVal&stringWithChars=%21%40%23%24%25%5E%26*%28%29&stringUrl=http%3A%2F%2Fhost%2Fpath%3Fxxx%3Dyy%26bbb&DoubleValue=66.77&doubleValue=55.77&IntegerValue=66&intValue=55&BooleanValue=false&booleanValue=true");
+        assertEquals("stringVal=StringVal&stringWithChars=%21%40%23%24%25%5E%26*%28%29&stringUrl=http%3A%2F%2Fhost%2Fpath%3Fxxx%3Dyy%26bbb&DoubleValue=66.77&doubleValue=55.77&IntegerValue=66&intValue=55&BooleanValue=false&booleanValue=true", builder.getContent());
     }
 
 
