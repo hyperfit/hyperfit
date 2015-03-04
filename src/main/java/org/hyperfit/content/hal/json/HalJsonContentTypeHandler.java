@@ -33,8 +33,16 @@ public class HalJsonContentTypeHandler implements ContentTypeHandler {
         return new HalJsonResource(response);
     }
 
-    public void encodeRequest(Request.RequestBuilder request, Object resource) {
+    public boolean canParseResponse() {
+        return true;
+    }
+
+    public void prepareRequest(Request.RequestBuilder request, Object content) {
         throw new UnsupportedOperationException();
+    }
+
+    public boolean canPrepareRequest() {
+        return false;
     }
 
 

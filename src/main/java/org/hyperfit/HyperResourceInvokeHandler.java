@@ -1,6 +1,7 @@
 package org.hyperfit;
 
 import org.hyperfit.annotation.*;
+import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
@@ -15,7 +16,6 @@ import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
-import org.hyperfit.utils.TypeRef;
 import org.javatuples.Pair;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -339,8 +339,8 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 ContentType contentType = ContentType.parse(Content.class.cast(annotation).value());
 
                 //TODO: make this protected hack non-sense go away...something is wrong with our class layout if we need to do this
-                ContentTypeHandler contentEncoder = this.requestProcessor.contentRegistry.getHandler(contentType);
-                contentEncoder.encodeRequest(requestBuilder, value);
+                ContentTypeHandler contentEncoder = this.requestProcessor.contentRegistry.getHandler(contentType, ContentRegistry.Purpose.PREPARE_REQUEST);
+                contentEncoder.prepareRequest(requestBuilder, value);
             }
 
         }

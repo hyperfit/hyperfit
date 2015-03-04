@@ -5,7 +5,11 @@ import org.javatuples.Pair;
 import java.util.*;
 
 public class ContentRegistry {
-
+    public static enum Purpose {
+        PARSE_RESPONSE,
+        PREPARE_REQUEST
+        ;
+    }
 
     private final List<Pair<ContentType, ContentTypeHandler>> typeRegistry = new ArrayList<Pair<ContentType, ContentTypeHandler>>();
 
@@ -70,14 +74,16 @@ public class ContentRegistry {
      * @param type
      * @return
      */
-    public ContentTypeHandler getHandler(ContentType type){
+    public ContentTypeHandler getHandler(ContentType type, Purpose purpose){
         if(type == null){
             throw new IllegalArgumentException("type cannot be null");
         }
 
         for(Pair<ContentType,ContentTypeHandler> entry : typeRegistry){
-            if(entry.getValue0().compatibleWith(type)){
-                return entry.getValue1();
+            if((entry.getValue1().canParseResponse() && purpose == Purpose.PARSE_RESPONSE) || (entry.getValue1().canPrepareRequest() && purpose == Purpose.PREPARE_REQUEST)){
+                if(entry.getValue0().compatibleWith(type)) {
+                    return entry.getValue1();
+                }
             }
         }
 
@@ -85,25 +91,21 @@ public class ContentRegistry {
     }
 
 
-    public boolean canHandler(ContentType type){
+    public boolean canHandler(ContentType type, Purpose purpose){
         if(type == null){
             throw new IllegalArgumentException("type cannot be null");
         }
 
-        for(Pair<ContentType,ContentTypeHandler> entry : typeRegistry){
-            if(entry.getValue0().compatibleWith(type)){
-                return true;
-            }
-        }
-
-        return false;
+        return getHandler(type, purpose) != null;
     }
 
-    public Set<String> getHandledContentTypes(){
+    public Set<String> getResponseParsingContentTypes(){
         Set<String> result = new HashSet<String>();
 
         for(Pair<ContentType,ContentTypeHandler> entry : typeRegistry){
-            result.add(entry.getValue0().toString());
+            if(entry.getValue1().canParseResponse()) {
+                result.add(entry.getValue0().toString());
+            }
         }
 
         return result;

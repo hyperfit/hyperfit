@@ -156,7 +156,7 @@ public class HyperRequestProcessor {
         }
 
         //See if we have a content type, if not throw
-        if(responseContentType == null || !this.contentRegistry.canHandler(responseContentType)){
+        if(responseContentType == null || !this.contentRegistry.canHandler(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE)){
             //We don't understand the content type, let's ask the error handler what to do!
             return this.errorHandler.unhandledContentType(
                 request,
@@ -169,7 +169,7 @@ public class HyperRequestProcessor {
 
         //STAGE 2 - There's a content type we understand, let's try to parse the response!
 
-        ContentTypeHandler contentTypeHandler = this.contentRegistry.getHandler(responseContentType);
+        ContentTypeHandler contentTypeHandler = this.contentRegistry.getHandler(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE);
         HyperResource resource;
         try{
             resource = contentTypeHandler.parseResponse(response);

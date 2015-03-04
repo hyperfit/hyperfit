@@ -28,7 +28,11 @@ public interface ContentTypeHandler {
      */
     HyperResource parseResponse(Response response);
 
+    boolean canParseResponse();
 
-    void encodeRequest(Request.RequestBuilder request, Object resource);
+
+    void prepareRequest(Request.RequestBuilder request, Object content);
+
+    boolean canPrepareRequest();
 
 }

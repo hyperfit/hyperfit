@@ -52,7 +52,7 @@ public class FormUrlEncodedContentTypeHandlerTest {
     public void testEncodeRequest(){
         RequestData content = new RequestData();
 
-        handler.encodeRequest(mockReqBuilder, content);
+        handler.prepareRequest(mockReqBuilder, content);
 
         verify(mockReqBuilder).setContentType(handler.getDefaultContentType().toString(false));
 

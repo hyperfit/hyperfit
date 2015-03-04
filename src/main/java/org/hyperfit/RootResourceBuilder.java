@@ -19,8 +19,6 @@ import org.hyperfit.resource.registry.ResourceRegistry;
 import org.hyperfit.utils.StringUtils;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Builder class for constructing HyperClient.
@@ -141,7 +139,7 @@ public class RootResourceBuilder {
             throw new IllegalArgumentException("classToReturn can not be null");
         }
 
-        hyperClient.setAcceptedContentTypes(this.contentRegistry.getHandledContentTypes());
+        hyperClient.setAcceptedContentTypes(this.contentRegistry.getResponseParsingContentTypes());
         HyperRequestProcessor requestProcessor = new HyperRequestProcessor(this);
         return requestProcessor.processRequest(classToReturn, Request.get(endpointURL), null);
     }

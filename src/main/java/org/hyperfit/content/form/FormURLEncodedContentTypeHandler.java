@@ -22,17 +22,21 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
         throw new UnsupportedOperationException();
     }
 
-    public void encodeRequest(Request.RequestBuilder request, Object resource) {
+    public boolean canParseResponse() {
+        return false;
+    }
+
+    public void prepareRequest(Request.RequestBuilder request, Object content) {
         request.setContentType(type.toString(false));
 
         StringBuilder body = new StringBuilder();
 
-        Field[] fields = resource.getClass().getDeclaredFields();
+        Field[] fields = content.getClass().getDeclaredFields();
         for(int i = 0; i < fields.length; i++){
             Field f = fields[i];
             f.setAccessible(true);
             try {
-                body.append(encode(f.getName())).append("=").append(encode(f.get(resource).toString()));
+                body.append(encode(f.getName())).append("=").append(encode(f.get(content).toString()));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("error generating request body for param " + f.getName(), e);
             }
@@ -44,6 +48,10 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
         request.setContent(body.toString());
 
 
+    }
+
+    public boolean canPrepareRequest() {
+        return true;
     }
 
     private static String encode(String s){

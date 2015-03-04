@@ -55,6 +55,9 @@ public class RootResourceBuilderTest {
         when(mockResponse.isOK())
             .thenReturn(true);
 
+        when(mockContentTypeHandler.canParseResponse())
+        .thenReturn(true);
+
         when(mockContentTypeHandler.getDefaultContentType())
             .thenReturn(fakeContentType);
 
