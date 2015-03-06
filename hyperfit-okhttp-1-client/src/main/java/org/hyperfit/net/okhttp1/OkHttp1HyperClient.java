@@ -75,6 +75,8 @@ public class OkHttp1HyperClient extends BaseHyperClient {
         return this;
     }
 
+
+    @SuppressWarnings("deprecation")
     protected HttpURLConnection openConnection(Request request) throws IOException {
         return okHttpClient.open(new URL(request.getUrl()));
     }
