@@ -13,66 +13,6 @@
     <packaging>jar</packaging>
     <name>Hyperfit OkHttp 1.x Client</name>
 
-    <!-- BBCOM DEPENDENCY HANDLING -->
-    <distributionManagement>
-        <repository>
-            <id>bbcom</id>
-            <name>bbcom-releases</name>
-            <url>http://artifactory/libs-release-local</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>bbcom</id>
-            <name>bbcom-snapshots</name>
-            <url>http://artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>bbcom</id>
-            <name>bbcom-releases</name>
-            <url>http://artifactory/libs-release-local</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>remote</id>
-            <name>remote-repos</name>
-            <url>http://artifactory/remote-repos</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>bbcom</id>
-            <name>bbcom-snapshots</name>
-            <url>http://artifactory/local-repos</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>remote</id>
-            <name>remote-repos</name>
-            <url>http://artifactory/remote-repos</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
