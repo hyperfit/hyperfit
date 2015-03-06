@@ -12,6 +12,7 @@
 
     <modules>
         <module>hyperfit-core</module>
+        <module>hyperfit-okhttp-client</module>
         <module>hyperfit-okhttp-1-client</module>
     </modules>
 
