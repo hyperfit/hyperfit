@@ -5,10 +5,7 @@ import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.net.HyperClient;
-import org.hyperfit.net.Request;
-import org.hyperfit.net.RequestInterceptor;
-import org.hyperfit.net.RequestInterceptors;
+import org.hyperfit.net.*;
 import org.hyperfit.net.okhttp.OkHttpHyperClient;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
@@ -141,7 +138,7 @@ public class RootResourceBuilder {
 
         hyperClient.setAcceptedContentTypes(this.contentRegistry.getResponseParsingContentTypes());
         HyperRequestProcessor requestProcessor = new HyperRequestProcessor(this);
-        return requestProcessor.processRequest(classToReturn, Request.get(endpointURL), null);
+        return requestProcessor.processRequest(classToReturn, RFC6570RequestBuilder.get(endpointURL), null);
     }
 
 

@@ -5,5 +5,5 @@ package org.hyperfit.net;
  */
 public interface RequestInterceptor {
 
-    void intercept(Request.RequestBuilder requestBuilder);
+    void intercept(RequestBuilder requestBuilder);
 }

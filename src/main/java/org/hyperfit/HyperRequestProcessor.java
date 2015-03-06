@@ -82,7 +82,7 @@ public class HyperRequestProcessor {
      * @param requestBuilder request object
      * @return resource with same type specified in the resource class.
      */
-    public <T> T processRequest(Class<T> classToReturn, Request.RequestBuilder requestBuilder, TypeInfo typeInfo) {
+    public <T> T processRequest(Class<T> classToReturn, RequestBuilder requestBuilder, TypeInfo typeInfo) {
 
         requestInterceptors.intercept(requestBuilder);
 

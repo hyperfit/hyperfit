@@ -57,11 +57,11 @@ public class RequestInterceptors {
     }
 
     //intercept the request applying all the interceptors
-    public RequestInterceptors intercept(Request.RequestBuilder requestBuilder) {
+    public RequestInterceptors intercept(RequestBuilder requestBuilder) {
         for (RequestInterceptor requestInterceptor : requestInterceptorSet) {
 
             requestInterceptor.intercept(requestBuilder);
-            LOG.trace("Request intercepted. Url: {}", requestBuilder.getUrlTemplate());
+            LOG.trace("Request intercepted. Url: {}", requestBuilder.buildURL());
         }
         return this;
     }

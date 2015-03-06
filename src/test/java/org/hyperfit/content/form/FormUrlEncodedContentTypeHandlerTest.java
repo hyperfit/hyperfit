@@ -1,14 +1,14 @@
 package org.hyperfit.content.form;
 
 import org.hyperfit.content.ContentType;
+import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 
 public class FormUrlEncodedContentTypeHandlerTest {
@@ -50,7 +50,7 @@ public class FormUrlEncodedContentTypeHandlerTest {
     @Test
     public void testEncodeRequest(){
         RequestData content = new RequestData();
-        Request.RequestBuilder builder = Request.builder();
+        RequestBuilder builder = new RFC6570RequestBuilder();
 
         handler.prepareRequest(builder, content);
 

@@ -1,6 +1,6 @@
 package org.hyperfit.content;
 
-import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 
@@ -31,7 +31,7 @@ public interface ContentTypeHandler {
     boolean canParseResponse();
 
 
-    void prepareRequest(Request.RequestBuilder request, Object content);
+    void prepareRequest(RequestBuilder request, Object content);
 
     boolean canPrepareRequest();
 

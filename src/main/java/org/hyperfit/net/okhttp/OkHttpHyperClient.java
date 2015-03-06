@@ -162,12 +162,12 @@ public class OkHttpHyperClient extends BaseHyperClient {
      */
     protected Headers extractHeadersFromRequest(Request request) {
         Headers.Builder headersBuilder = new Headers.Builder();
-        Iterator<Entry<String, String>> headersIterator = request.getHeaders();
+        Iterable<Entry<String,String>> headers = request.getHeaders();
 
-        if (null != headersIterator) {
-            while (headersIterator.hasNext()) {
-                Entry<String, String> headerEntry = headersIterator.next();
-                headersBuilder.add(headerEntry.getKey(), headerEntry.getValue());
+
+        if (null != headers) {
+            for(Entry<String,String> h : headers){
+                headersBuilder.add(h.getKey(), h.getValue());
             }
         }
 

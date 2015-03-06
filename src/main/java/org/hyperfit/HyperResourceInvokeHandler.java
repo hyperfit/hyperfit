@@ -5,11 +5,11 @@ import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.Request;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
-import org.hyperfit.net.Request.RequestBuilder;
+import org.hyperfit.net.RFC6570RequestBuilder;
+import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
@@ -307,7 +307,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      * @param annotationsPerParams Param annotations
      * @param methodCallParams     parameters values
      */
-    protected void assignAnnotatedValues(Request.RequestBuilder requestBuilder, Annotation[][] annotationsPerParams, Object[] methodCallParams) {
+    protected void assignAnnotatedValues(org.hyperfit.net.RequestBuilder requestBuilder, Annotation[][] annotationsPerParams, Object[] methodCallParams) {
         if (methodCallParams != null) {
             for (int i = 0; i < methodCallParams.length; i++) {
                 if (methodCallParams[i] != null) {
@@ -324,10 +324,10 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      * @param annotationsPerParams Param annotations
      * @param value                param value
      */
-    protected void assignAnnotatedValues(Request.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, Object value) {
+    protected void assignAnnotatedValues(org.hyperfit.net.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, Object value) {
         for (Annotation annotation : annotationsPerParams) {
             if (Param.class.isInstance(annotation)) {
-                requestBuilder.setUrlParam(ReflectUtils.cast(Param.class, annotation).value(), value.toString());
+                requestBuilder.setParam(ReflectUtils.cast(Param.class, annotation).value(), value.toString());
             }
 
             if (Header.class.isInstance(annotation)) {

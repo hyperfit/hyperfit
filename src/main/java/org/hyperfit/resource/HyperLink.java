@@ -1,7 +1,9 @@
 package org.hyperfit.resource;
 
 
+import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeRef;
 import lombok.EqualsAndHashCode;
@@ -87,8 +89,9 @@ public class HyperLink {
         return title;
     }
 
-    public Request.RequestBuilder toRequestBuilder() {
-        Request.RequestBuilder builder = Request.builder().setUrlTemplate(this.getHref());
+    public RequestBuilder toRequestBuilder() {
+        //TODO: this is a total hack..but it's the only request builder we have right now.
+        RFC6570RequestBuilder builder = new RFC6570RequestBuilder().setUrlTemplate(this.getHref());
 
         if(!StringUtils.isEmpty(this.getType())){
             builder.addAcceptedContentType(this.getType());

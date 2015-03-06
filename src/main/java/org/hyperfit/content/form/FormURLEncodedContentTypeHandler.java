@@ -2,7 +2,7 @@ package org.hyperfit.content.form;
 
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
-import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 
@@ -26,7 +26,7 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
         return false;
     }
 
-    public void prepareRequest(Request.RequestBuilder request, Object content) {
+    public void prepareRequest(RequestBuilder request, Object content) {
         request.setContentType(type.toString(false));
 
         StringBuilder body = new StringBuilder();

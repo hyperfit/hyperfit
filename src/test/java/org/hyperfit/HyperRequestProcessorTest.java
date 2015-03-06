@@ -2,6 +2,7 @@ package org.hyperfit;
 
 import org.hyperfit.annotation.Profiles;
 import org.hyperfit.exception.ResponseException;
+import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.okhttp.HttpHeader;
 import org.hyperfit.net.Response;
@@ -63,7 +64,7 @@ public class HyperRequestProcessorTest {
     public void testBuildResourceNoContentTypeException() {
         HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(new RootResourceBuilder());
         Response response = new Response.ResponseBuilder().build();
-        Request request = Request.builder().setUrlTemplate("http://here.com").build();
+        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
 
         hyperRequestProcessor.buildHyperResource(request, response, HyperResource.class);
     }
@@ -74,7 +75,7 @@ public class HyperRequestProcessorTest {
         Response response = new Response.ResponseBuilder().
             addHeader(HttpHeader.CONTENT_TYPE, "someType").
             build();
-        Request request = Request.builder().setUrlTemplate("http://here.com").build();
+        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
 
         hyperRequestProcessor.buildHyperResource(request, response, HyperResource.class);
     }

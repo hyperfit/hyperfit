@@ -4,9 +4,7 @@ package org.hyperfit;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.FirstLink;
 import org.hyperfit.annotation.Link;
-import org.hyperfit.net.Method;
-import org.hyperfit.net.Request;
-import org.hyperfit.net.Response;
+import org.hyperfit.net.*;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperLink;
@@ -437,7 +435,7 @@ public class HyperResourceInvokeHandlerTest{
 
         DataResource mockDataResource = mock(DataResource.class);
 
-        Request.RequestBuilder expectedHyperRequest = Request.builder()
+        RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
                 .setUrlTemplate(expectedLink.getHref());
 
@@ -459,7 +457,7 @@ public class HyperResourceInvokeHandlerTest{
 
         String expectedStr = UUID.randomUUID().toString();
 
-        Request.RequestBuilder expectedHyperRequest = Request.builder()
+        RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
                 .setUrlTemplate(expectedLink.getHref());
 
@@ -484,7 +482,7 @@ public class HyperResourceInvokeHandlerTest{
                 addBody("body").
                 addCode(200).build();
 
-        Request.RequestBuilder expectedHyperRequest = Request.builder()
+        RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
                 .setUrlTemplate(expectedLink.getHref());
 
@@ -503,7 +501,7 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink expectedLink = makeLink(rel);
         when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
-        Request.RequestBuilder expectedHyperRequest = Request.builder()
+        RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
                 .setUrlTemplate(expectedLink.getHref());
 
@@ -525,7 +523,7 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink[] expectedLinks = {makeLink(rel), makeLink(rel), makeLink(rel)};
         when(mockHyperResource.getLinks(rel)).thenReturn(expectedLinks);
 
-        Request.RequestBuilder expectedHyperRequest = Request.builder()
+        RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
                 .setUrlTemplate("whatever");
 
@@ -570,7 +568,7 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink fakeLink = makeLink(relationship);
         when(mockHyperResource.getLink(relationship)).thenReturn(fakeLink);
         HyperLink hyperLink = linkResource.getLink(relationship);
-        when(mockRequestProcessor.processRequest(eq(DataResource.class), any(Request.RequestBuilder.class), any(TypeInfo.class)))
+        when(mockRequestProcessor.processRequest(eq(DataResource.class), any(RFC6570RequestBuilder.class), any(TypeInfo.class)))
             .thenReturn(expected);
         DataResource actual2 = hyperLink.follow(new TypeRef<DataResource>() {});
 

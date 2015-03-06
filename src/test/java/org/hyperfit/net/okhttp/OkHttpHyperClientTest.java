@@ -107,7 +107,7 @@ public class OkHttpHyperClientTest {
     public void testExecuteAddsRequestBody() throws Exception {
 
 
-        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
+        org.hyperfit.net.Request requestFake = new RFC6570RequestBuilder()
             .setUrlTemplate(URL)
             .setMethod(Method.POST)
             .setContent(CONTENT_BODY)
@@ -122,7 +122,7 @@ public class OkHttpHyperClientTest {
 
     @Test
     public void testExecuteOmitsRequestBody() throws Exception {
-        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
+        org.hyperfit.net.Request requestFake = new RFC6570RequestBuilder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
@@ -135,7 +135,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testRequestMethods() throws Exception {
         for(Method m : Method.values()){
-            org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
+            org.hyperfit.net.Request requestFake = new RFC6570RequestBuilder()
                 .setUrlTemplate(URL)
                 .setMethod(m)
                 .build();
@@ -151,7 +151,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testExecuteAddsHeaders() throws Exception {
 
-        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
+        org.hyperfit.net.Request requestFake = new RFC6570RequestBuilder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
@@ -164,7 +164,7 @@ public class OkHttpHyperClientTest {
     @Test
     public void testExecuteOmitsHeaders() throws Exception {
 
-        org.hyperfit.net.Request requestFake = org.hyperfit.net.Request.builder()
+        org.hyperfit.net.Request requestFake = new RFC6570RequestBuilder()
             .setUrlTemplate(URL)
             .setMethod(Method.GET)
             .build();
