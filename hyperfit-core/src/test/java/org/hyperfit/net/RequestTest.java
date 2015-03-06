@@ -8,7 +8,8 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-import org.hyperfit.net.okhttp.HttpHeader;
+
+import org.hyperfit.net.HttpHeader;
 import org.junit.Test;
 
 

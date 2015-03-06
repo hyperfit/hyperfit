@@ -1,4 +1,4 @@
-package org.hyperfit.net.okhttp;
+package org.hyperfit.net;
 
 /**
  * A placeholder for http header constants
