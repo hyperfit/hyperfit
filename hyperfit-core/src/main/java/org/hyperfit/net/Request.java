@@ -112,6 +112,19 @@ public class Request {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = url != null ? url.hashCode() : 0;
+        result = 31 * result + (urlTemplate != null ? urlTemplate.hashCode() : 0);
+        result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (method != null ? method.hashCode() : 0);
+        result = 31 * result + (urlParams != null ? urlParams.hashCode() : 0);
+        result = 31 * result + (headers != null ? headers.hashCode() : 0);
+        result = 31 * result + (acceptedContentTypes.hashCode());
+        return result;
+    }
+
     /**
      * Set method to GET in RequestBuilder along with httpUrlTemplate
      *
