@@ -25,7 +25,7 @@
         </repository>
 
         <snapshotRepository>
-            <id>bbcom-snap</id>
+            <id>bbcom</id>
             <name>bbcom-snapshots</name>
             <url>http://artifactory/libs-snapshot-local</url>
         </snapshotRepository>
