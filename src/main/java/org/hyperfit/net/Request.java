@@ -1,9 +1,6 @@
 package org.hyperfit.net;
 
 import lombok.EqualsAndHashCode;
-import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
-import com.damnhandy.uri.template.UriTemplate;
 import lombok.ToString;
 
 import java.util.*;
@@ -63,7 +60,7 @@ public class Request {
         this.headers = builder.getHeaders();
         this.method = builder.getMethod();
         this.acceptedContentTypes = Collections.unmodifiableSet(builder.getAcceptedContentTypes());
-        this.url = builder.buildURL();
+        this.url = builder.getURL();
 
     }
 

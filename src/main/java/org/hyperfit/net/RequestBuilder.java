@@ -6,7 +6,7 @@ import java.util.Set;
 public interface RequestBuilder {
     RequestBuilder setContentType(String contentType);
 
-    RFC6570RequestBuilder setMethod(Method method);
+    RequestBuilder setMethod(Method method);
 
     RequestBuilder setContent(String content);
 
@@ -33,7 +33,7 @@ public interface RequestBuilder {
 
     Set<String> getAcceptedContentTypes();
 
-    String buildURL();
+    String getURL();
 
     Request build();
 }

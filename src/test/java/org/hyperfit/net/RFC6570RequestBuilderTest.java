@@ -130,7 +130,7 @@ public class RFC6570RequestBuilderTest {
         String actual = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
             .setParam("param", "1")
-            .buildURL();
+            .getURL();
 
         assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=1", actual);
 
@@ -141,18 +141,18 @@ public class RFC6570RequestBuilderTest {
         String actual = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
             .setParam("param", null)
-            .buildURL();
+            .getURL();
 
         assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
 
     }
 
     @Test
-    public void testBuildURLEmptyParamVAlue() {
+    public void testBuildURLEmptyParamValue() {
         String actual = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
             .setParam("param", "")
-            .buildURL();
+            .getURL();
 
         assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=", actual);
 

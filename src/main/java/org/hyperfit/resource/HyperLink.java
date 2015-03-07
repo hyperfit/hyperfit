@@ -1,8 +1,6 @@
 package org.hyperfit.resource;
 
-
-import org.hyperfit.net.RFC6570RequestBuilder;
-import org.hyperfit.net.Request;
+import org.hyperfit.net.BoringRequestBuilder;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeRef;
@@ -17,8 +15,9 @@ import java.lang.reflect.Type;
  */
 @ToString
 @EqualsAndHashCode
-public class HyperLink {
+public abstract class HyperLink {
 
+    //TODO: i'm not sure if any of these should be considered HAL only...they are all pretty generic/abstract.
     private final String href;
     private final String rel;
     private final boolean templated;
@@ -90,8 +89,8 @@ public class HyperLink {
     }
 
     public RequestBuilder toRequestBuilder() {
-        //TODO: this is a total hack..but it's the only request builder we have right now.
-        RFC6570RequestBuilder builder = new RFC6570RequestBuilder().setUrlTemplate(this.getHref());
+
+        BoringRequestBuilder builder = new BoringRequestBuilder().setUrl(this.getHref());
 
         if(!StringUtils.isEmpty(this.getType())){
             builder.addAcceptedContentType(this.getType());

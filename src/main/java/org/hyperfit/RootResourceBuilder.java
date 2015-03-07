@@ -138,7 +138,7 @@ public class RootResourceBuilder {
 
         hyperClient.setAcceptedContentTypes(this.contentRegistry.getResponseParsingContentTypes());
         HyperRequestProcessor requestProcessor = new HyperRequestProcessor(this);
-        return requestProcessor.processRequest(classToReturn, RFC6570RequestBuilder.get(endpointURL), null);
+        return requestProcessor.processRequest(classToReturn, BoringRequestBuilder.get(endpointURL), null);
     }
 
 

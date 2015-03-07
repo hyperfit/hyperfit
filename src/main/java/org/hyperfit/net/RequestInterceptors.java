@@ -61,7 +61,7 @@ public class RequestInterceptors {
         for (RequestInterceptor requestInterceptor : requestInterceptorSet) {
 
             requestInterceptor.intercept(requestBuilder);
-            LOG.trace("Request intercepted. Url: {}", requestBuilder.buildURL());
+            LOG.trace("Request intercepted. Url: {}", requestBuilder.getURL());
         }
         return this;
     }

@@ -11,6 +11,7 @@ import org.hyperfit.methodinfo.MethodInfoCache;
 import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperLink;
+import org.hyperfit.resource.HyperLinkWrapper;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.utils.ReflectUtils;
@@ -49,7 +50,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     }
 
     protected HyperLink extendHyperLink(HyperLink hyperLink) {
-        return new HyperLink(hyperLink) {
+        return new HyperLinkWrapper(hyperLink) {
 
             @Override
             public <R> R follow(Class<R> returnClass, Type genericReturnType) {

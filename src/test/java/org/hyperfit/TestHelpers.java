@@ -17,7 +17,7 @@ public class TestHelpers {
     }
 
     public static HyperLink makeLink(String rel, String name) {
-        return new HyperLink("http://host/" + UUID.randomUUID().toString(), rel, false, null, null, name, null, null, null);
+        return new HyperLink("http://host/" + UUID.randomUUID().toString(), rel, false, null, null, name, null, null, null){};
     }
 
     public static LinkedHashSet<String> makeSet(String... strings){

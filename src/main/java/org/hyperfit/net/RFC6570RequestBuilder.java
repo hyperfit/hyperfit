@@ -52,7 +52,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setContentType(String contentType) {
+    public RFC6570RequestBuilder setContentType(String contentType) {
         if (StringUtils.isEmpty(contentType)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_CONTENT_TYPE_EMPTY);
         }
@@ -70,7 +70,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setContent(String content) {
+    public RFC6570RequestBuilder setContent(String content) {
         if (content == null) {
             throw new NullPointerException(Messages.MSG_ERROR_REQUEST_CONTENT_BODY_NULL);
         }
@@ -79,7 +79,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public RequestBuilder addHeader(String name, String value) {
+    public RFC6570RequestBuilder addHeader(String name, String value) {
         if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_HEADER_NAME_EMPTY);
         }
@@ -92,7 +92,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
     }
 
     //TODO: take a ContentType type instead of a string
-    public RequestBuilder addAcceptedContentType(String name) {
+    public RFC6570RequestBuilder addAcceptedContentType(String name) {
         if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY);
         }
@@ -102,7 +102,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setParam(String name, String value) {
+    public RFC6570RequestBuilder setParam(String name, String value) {
         if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY);
         }
@@ -142,7 +142,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return new Request(this);
     }
 
-    public String buildURL() {
+    public String getURL() {
 
 
         try {

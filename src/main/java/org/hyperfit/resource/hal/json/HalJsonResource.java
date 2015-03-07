@@ -222,7 +222,7 @@ public class HalJsonResource extends BaseHyperResource {
             throw new IllegalArgumentException("Malformed HAL link node. href field not present in json: " + node.toString());
         }
 
-        return new HyperLink(
+        return new HalHyperLink(
             href.textValue(),
             relationship,
             template.asBoolean(false),
