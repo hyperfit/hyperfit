@@ -133,12 +133,14 @@ public class OkHttp1HyperClient extends BaseHyperClient {
 
         for (Map.Entry<String, List<String>> field : connection.getHeaderFields().entrySet()) {
             String name = field.getKey();
-            for (String value : field.getValue()) {
+            if (!Strings.isNullOrEmpty(name)) {
+                for (String value : field.getValue()) {
 
-                // TODO - Need to Review this design with CHRIS D.
-                //          I think there's a bug here, since a we can get multiple headers
-                //          with the same name.  In this code, last one wins!
-                responseBuilder.addHeader(name, value);
+                    // TODO - Need to Review this design with CHRIS D.
+                    //          I think there's a bug here, since a we can get multiple headers
+                    //          with the same name.  In this code, last one wins!
+                    responseBuilder.addHeader(name, value);
+                }
             }
         }
 
