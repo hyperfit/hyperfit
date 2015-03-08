@@ -113,11 +113,6 @@
                 <version>1.2</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>18.0</version>
-            </dependency>
 
 
             <!-- TESTING BUNDLE -->
@@ -151,10 +146,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
 
         <!-- Global Test Dependencies -->
         <dependency>
@@ -171,6 +162,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
         </dependency>
+
 
     </dependencies>
 
