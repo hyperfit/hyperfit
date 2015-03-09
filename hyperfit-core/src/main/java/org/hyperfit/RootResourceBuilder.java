@@ -3,13 +3,15 @@ package org.hyperfit;
 
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
+import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.net.*;
-import org.hyperfit.net.okhttp.OkHttpHyperClient;
-import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
+import org.hyperfit.net.HyperClient;
+import org.hyperfit.net.Request;
+import org.hyperfit.net.RequestInterceptor;
+import org.hyperfit.net.RequestInterceptors;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;
@@ -24,13 +26,16 @@ public class RootResourceBuilder {
 
     // TODO: determine cache strategy.
     //private HyperCacheStrategy hyperCache = new HyperCacheNoop();
-    private HyperClient hyperClient = new OkHttpHyperClient();
+    private HyperClient hyperClient;
     private final ContentRegistry contentRegistry = new ContentRegistry();
     private ErrorHandler errorHandler = new DefaultErrorHandler();
     private ResourceMethodInfoCache resourceMethodInfoCache = new ConcurrentHashMapResourceMethodInfoCache();
     private RequestInterceptors requestInterceptors = new RequestInterceptors();
     private ResourceRegistry resourceRegistry = new ResourceRegistry(new ProfileResourceRegistryIndexStrategy());
 
+    public RootResourceBuilder(HyperClient hyperClient) {
+        this.hyperClient = hyperClient;
+    }
 
     public RootResourceBuilder addContentTypeHandler(ContentTypeHandler handler) {
         this.contentRegistry.add(handler);
@@ -128,6 +133,10 @@ public class RootResourceBuilder {
 
 
     public <T extends HyperResource> T build(Class<T> classToReturn, String endpointURL) {
+        if (hyperClient == null){
+            throw new IllegalStateException("hyperClient cannot be null");
+        }
+
         if(StringUtils.isEmpty(endpointURL)){
             throw new IllegalArgumentException("endpointURL can not be null or empty");
         }

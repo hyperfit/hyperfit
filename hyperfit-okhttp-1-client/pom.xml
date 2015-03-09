@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hyperfit-okhttp1-client</artifactId>
+
+    <parent>
+        <groupId>org.hyperfit</groupId>
+        <artifactId>hyperfit-root</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
+    </parent>
+
+    <packaging>jar</packaging>
+    <name>Hyperfit OkHttp 1.x Client</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hyperfit</groupId>
+            <artifactId>hyperfit</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>okhttp</artifactId>
+                    <groupId>com.squareup.okhttp</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>okhttp-urlconnection</artifactId>
+                    <groupId>com.squareup.okhttp</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -41,7 +41,7 @@ public class RootResourceBuilderTest {
 
     @Test
     public void testBuildAResource(){
-        RootResourceBuilder builder = new RootResourceBuilder();
+        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
 
         String fakeContentTypeString = "application/hal+json";
         ContentType fakeContentType = ContentType.parse(fakeContentTypeString);
@@ -84,19 +84,19 @@ public class RootResourceBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullEndpoint(){
-        RootResourceBuilder builder = new RootResourceBuilder();
+        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
         builder.build(RootResource.class, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingEmptyEndpoint(){
-        RootResourceBuilder builder = new RootResourceBuilder();
+        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
         builder.build(RootResource.class, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullClass(){
-        RootResourceBuilder builder = new RootResourceBuilder();
+        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
 
         builder.build(null, "http://host.com");
     }

@@ -8,15 +8,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.BaseHyperClient;
-import org.hyperfit.net.HyperClient;
-import org.hyperfit.net.Response;
+import org.hyperfit.net.*;
 import org.hyperfit.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.hyperfit.message.Messages;
-import org.hyperfit.net.Request;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;

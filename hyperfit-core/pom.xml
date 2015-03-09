@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hyperfit</artifactId>
+
+    <parent>
+        <groupId>org.hyperfit</groupId>
+        <artifactId>hyperfit-root</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
+    </parent>
+
+    <packaging>jar</packaging>
+    <name>Hyperfit</name>
+
+    <dependencies>
+
+        <!--  ENTITY UTILS (@ToString) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.14.8</version>
+            <!--see http://projectlombok.org/mavenrepo/index.html no need to bundle this for runtime -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSON PARSER -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+
+        <!-- URI Template Handler -->
+        <dependency>
+            <groupId>com.damnhandy</groupId>
+            <artifactId>handy-uri-templates</artifactId>
+        </dependency>
+
+        <!--tuples-->
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+        </dependency>
+
+        <!--  LOG IMPLEMENTATION FOR TESTING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- PROPERTIES DEFINITION -->
+    <properties>
+        <test.console.level>WARN</test.console.level>
+    </properties>
+
+    <build>
+        <!-- MERGE TEST RESOURCES WITH PROPERTIES DEFINED IN PROFILE -->
+        <testResources>
+            <testResource>
+                <filtering>true</filtering>
+                <directory>${project.basedir}/src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
+
+    <profiles>
+
+        <profile>
+            <id>integrationTests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.8.1</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*IntegrationTest*.class</include>
+                            </includes>
+                            <excludes>
+                                <!-- you have to remove the exclusions of integration tests from above-->
+                                <exclude>none</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>
