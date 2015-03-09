@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hyperfit.TestHelpers.*;
 
-public class RootResourceBuilderTest {
+public class HyperResourceInvocationContextTest {
 
     @Mock
     protected HyperClient mockHyperClient;
@@ -41,7 +41,11 @@ public class RootResourceBuilderTest {
 
     @Test
     public void testBuildAResource(){
-        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
+        HyperResourceInvocationContext invocationContext;
+        invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .build();
+
 
         String fakeContentTypeString = "application/hal+json";
         ContentType fakeContentType = ContentType.parse(fakeContentTypeString);
@@ -64,11 +68,13 @@ public class RootResourceBuilderTest {
         when(mockContentTypeHandler.parseResponse(this.mockResponse))
             .thenReturn(this.mockHyperResource);
 
-        builder.hyperClient(this.mockHyperClient)
-            .addContentTypeHandler(mockContentTypeHandler);
+        invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .addContentTypeHandler(mockContentTypeHandler)
+                .build();
 
         String url = "http://example.com";
-        RootResource result = builder.build(RootResource.class, url);
+        RootResource result = invocationContext.invoke(RootResource.class, url);
 
 
         //Need to verify the proxied result is wrapping the mocked underlying resource
@@ -84,20 +90,28 @@ public class RootResourceBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullEndpoint(){
-        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
-        builder.build(RootResource.class, null);
+        HyperResourceInvocationContext invocationContext =
+                HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .build();
+        invocationContext.invoke(RootResource.class, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingEmptyEndpoint(){
-        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
-        builder.build(RootResource.class, "");
+        HyperResourceInvocationContext invocationContext =
+                HyperResourceInvocationContext.builder()
+                        .hyperClient(mockHyperClient)
+                        .build();
+        invocationContext.invoke(RootResource.class, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullClass(){
-        RootResourceBuilder builder = new RootResourceBuilder(mockHyperClient);
+        HyperResourceInvocationContext builder = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .build();
 
-        builder.build(null, "http://host.com");
+        builder.invoke(null, "http://host.com");
     }
 }

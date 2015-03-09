@@ -40,37 +40,37 @@ public class HyperRequestProcessor {
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
 
-    public HyperRequestProcessor(RootResourceBuilder rootResourceBuilder) {
+    public HyperRequestProcessor(HyperResourceInvocationContext invocationContext) {
 
-        this.hyperClient = rootResourceBuilder.getHyperClient();
+        this.hyperClient = invocationContext.getHyperClient();
         if (this.hyperClient == null) {
             throw new IllegalArgumentException("Hyper Client must be provided");
         }
 
-        this.errorHandler = rootResourceBuilder.getErrorHandler();
+        this.errorHandler = invocationContext.getErrorHandler();
         if (this.errorHandler == null) {
             throw new IllegalArgumentException("Error Handler must be provided");
         }
 
-        this.resourceMethodInfoCache = rootResourceBuilder.getResourceMethodInfoCache();
+        this.resourceMethodInfoCache = invocationContext.getResourceMethodInfoCache();
         if (this.resourceMethodInfoCache == null) {
             throw new IllegalArgumentException("Hyper Client must be provided");
         }
 
         //Copy the over so nobody can put more in there using the builder
-        this.contentRegistry = new ContentRegistry(rootResourceBuilder.getContentRegistry());
+        this.contentRegistry = new ContentRegistry(invocationContext.getContentRegistry());
 
 
         //TODO: this should be cloned/frozen so it's immutable and nobody can add stuff to the registry after all this is figured out
-        this.resourceRegistry = rootResourceBuilder.getResourceRegistry();
+        this.resourceRegistry = invocationContext.getResourceRegistry();
         if (this.resourceRegistry == null) {
             throw new IllegalArgumentException("Root Resource Builder must be provided");
         }
 
-        if (rootResourceBuilder.getRequestInterceptors() == null) {
+        if (invocationContext.getRequestInterceptors() == null) {
             throw new IllegalArgumentException("Request Interceptors must be provided");
         }
-        this.requestInterceptors = new RequestInterceptors(rootResourceBuilder.getRequestInterceptors());
+        this.requestInterceptors = new RequestInterceptors(invocationContext.getRequestInterceptors());
 
 
     }

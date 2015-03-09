@@ -62,7 +62,10 @@ public class HyperRequestProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeException() {
-        HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(new RootResourceBuilder(mockHyperClient));
+        HyperResourceInvocationContext invocationContext = HyperResourceInvocationContext.builder()
+                                                                .hyperClient(mockHyperClient)
+                                                                .build();
+        HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(invocationContext);
         Response response = new Response.ResponseBuilder().build();
         Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
 
@@ -71,7 +74,10 @@ public class HyperRequestProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoHyperMediaTypeHandlerException() {
-        HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(new RootResourceBuilder(mockHyperClient));
+        HyperResourceInvocationContext invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .build();
+        HyperRequestProcessor hyperRequestProcessor = new HyperRequestProcessor(invocationContext);
         Response response = new Response.ResponseBuilder().
             addHeader(HttpHeader.CONTENT_TYPE, "someType").
             build();
@@ -87,7 +93,12 @@ public class HyperRequestProcessorTest {
         profiles.add("/a/b/c/profile-resource-1");
         when(mockHyperResource.getProfiles()).thenReturn(profiles);
 
-        HyperRequestProcessor processor = new HyperRequestProcessor(new RootResourceBuilder(mockHyperClient).resourceRegistry(this.resourceRegistry));
+        HyperResourceInvocationContext invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .resourceRegistry(resourceRegistry)
+                .build();
+
+        HyperRequestProcessor processor = new HyperRequestProcessor(invocationContext);
 
         BaseProfileResource result = processor.processResource(BaseProfileResource.class, mockHyperResource, null);
 
@@ -108,7 +119,12 @@ public class HyperRequestProcessorTest {
         profiles.add("/a/b/c/multiple-profile-resource-b");
         when(mockHyperResource.getProfiles()).thenReturn(profiles);
 
-        HyperRequestProcessor processor = new HyperRequestProcessor(new RootResourceBuilder(mockHyperClient).resourceRegistry(this.resourceRegistry));
+        HyperResourceInvocationContext invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .resourceRegistry(resourceRegistry)
+                .build();
+
+        HyperRequestProcessor processor = new HyperRequestProcessor(invocationContext);
         BaseProfileResource result = processor.processResource(BaseProfileResource.class, mockHyperResource, null);
 
         assertFalse(result instanceof ProfileResource1);
@@ -127,7 +143,12 @@ public class HyperRequestProcessorTest {
         profiles.add(profileNotInRegistry);
         when(mockHyperResource.getProfiles()).thenReturn(profiles);
 
-        HyperRequestProcessor processor = new HyperRequestProcessor(new RootResourceBuilder(mockHyperClient).resourceRegistry(this.resourceRegistry));
+        HyperResourceInvocationContext invocationContext = HyperResourceInvocationContext.builder()
+                .hyperClient(mockHyperClient)
+                .resourceRegistry(this.resourceRegistry)
+                .build();
+
+        HyperRequestProcessor processor = new HyperRequestProcessor(invocationContext);
 
         BaseProfileResource result = processor.processResource(BaseProfileResource.class, mockHyperResource, null);
 
