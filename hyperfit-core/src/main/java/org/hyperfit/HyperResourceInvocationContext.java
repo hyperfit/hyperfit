@@ -40,7 +40,19 @@ public class HyperResourceInvocationContext {
         resourceRegistry = firstNonNull(builder.resourceRegistry, new ResourceRegistry(new ProfileResourceRegistryIndexStrategy()));
     }
 
-    public <T extends HyperResource> T invoke(Class<T> classToReturn, String endpointURL) {
+    /**
+     * Calls the passed endpoing and deserializes the result and returns as requested class
+     *
+     * @param endpointURL
+     *          URL to request
+     * @param classToReturn
+     *          Type of HyperResource to Return
+     * @param <T>
+     *          Type of HyperResource
+     * @return
+     *          Hydrated hyper resource
+     */
+    public <T extends HyperResource> T invoke(String endpointURL, Class<T> classToReturn) {
 
         if(StringUtils.isEmpty(endpointURL)){
             throw new IllegalArgumentException("endpointURL can not be null or empty");
