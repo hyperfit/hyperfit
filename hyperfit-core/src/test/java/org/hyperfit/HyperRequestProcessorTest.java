@@ -2,10 +2,7 @@ package org.hyperfit;
 
 import org.hyperfit.annotation.Profiles;
 import org.hyperfit.exception.ResponseException;
-import org.hyperfit.net.RFC6570RequestBuilder;
-import org.hyperfit.net.Request;
-import org.hyperfit.net.HttpHeader;
-import org.hyperfit.net.Response;
+import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;

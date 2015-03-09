@@ -98,12 +98,12 @@ public class OkHttp1HyperClient extends BaseHyperClient {
     }
 
     protected void prepareHeaders(HttpURLConnection connection, Request request) {
-        if (request.getHeaders() == null || !request.getHeaders().hasNext()){
+        if (request.getHeaders() == null){
             return;
         }
 
-        for (Iterator<Map.Entry<String, String>> headers = request.getHeaders(); headers.hasNext();){
-            Map.Entry<String, String> header = headers.next();
+
+        for (Map.Entry<String, String> header: request.getHeaders()){
             connection.addRequestProperty(header.getKey(), header.getValue());
         }
 

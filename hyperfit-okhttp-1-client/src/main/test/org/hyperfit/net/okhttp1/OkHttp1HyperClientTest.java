@@ -7,6 +7,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
+import org.hyperfit.net.BoringRequestBuilder;
 import org.hyperfit.net.Method;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
@@ -113,9 +114,9 @@ public class OkHttp1HyperClientTest {
 
         String url = server.getUrl("/foo").toString();
 
-        Request request = Request.builder()
-                .setUrlTemplate(url)
-                .build();
+        Request request = new BoringRequestBuilder()
+                            .setUrl(url)
+                            .build();
 
         HttpURLConnection connection = client.openConnection(request);
 
@@ -126,8 +127,8 @@ public class OkHttp1HyperClientTest {
 
     @Test
     public void testPrepareRequest() throws Exception {
-        Request request = Request.builder()
-                .setUrlTemplate("/Foo")
+        Request request = new BoringRequestBuilder()
+                .setUrl("/Foo")
                 .setMethod(Method.CONNECT)
                 .setContentType("text/html")
                 .setContent("MY CONTENT")
@@ -201,7 +202,7 @@ public class OkHttp1HyperClientTest {
         headerMap.put("entry3", "value3");
 
         Request request = mock(Request.class);
-        when(request.getHeaders()).thenReturn(headerMap.entrySet().iterator());
+        when(request.getHeaders()).thenReturn(headerMap.entrySet());
         HttpURLConnection connection = mock(HttpURLConnection.class);
 
         client.prepareHeaders(connection, request);

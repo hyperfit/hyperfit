@@ -1,14 +1,14 @@
 package org.hyperfit.net;
 
 
-import org.hyperfit.net.okhttp.HttpHeader;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 
 public class RFC6570RequestBuilderTest {
