@@ -29,16 +29,6 @@
         <dependency>
             <groupId>org.hyperfit</groupId>
             <artifactId>hyperfit</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>okhttp</artifactId>
-                    <groupId>com.squareup.okhttp</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>okhttp-urlconnection</artifactId>
-                    <groupId>com.squareup.okhttp</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 

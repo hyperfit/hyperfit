@@ -1,4 +1,4 @@
-package org.hyperfit.net.okhttp;
+package org.hyperfit.net.okhttp2;
 
 import java.net.CookieHandler;
 import java.util.HashSet;
@@ -23,21 +23,21 @@ import com.squareup.okhttp.RequestBody;
  *Implementation of hypermedia provider, making http request using OKHTTP Client
  *
  */
-public class OkHttpHyperClient extends BaseHyperClient {
+public class OkHttp2HyperClient extends BaseHyperClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(HyperClient.class);
 
-    private final OkHttpClientShim okHttpClient;
+    private final OkHttp2ClientShim okHttpClient;
 
-    public OkHttpHyperClient() {
-        this.okHttpClient = new OkHttpClientShim(new OkHttpClient());
+    public OkHttp2HyperClient() {
+        this.okHttpClient = new OkHttp2ClientShim(new OkHttpClient());
     }
 
     /**
      * Set OKHTTP Client for the Hyper provider
      * @param okHttpClient {@link com.squareup.okhttp.OkHttpClient}
      */
-    public OkHttpHyperClient(OkHttpClientShim okHttpClient) {
+    public OkHttp2HyperClient(OkHttp2ClientShim okHttpClient) {
         if (okHttpClient == null) {
             throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
         }
@@ -49,12 +49,12 @@ public class OkHttpHyperClient extends BaseHyperClient {
      * Set OKHTTP Client for the Hyper provider
      * @param okHttpClient {@link com.squareup.okhttp.OkHttpClient}
      */
-    public OkHttpHyperClient(OkHttpClient okHttpClient) {
+    public OkHttp2HyperClient(OkHttpClient okHttpClient) {
         if (okHttpClient == null) {
             throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
         }
 
-        this.okHttpClient = new OkHttpClientShim(okHttpClient);
+        this.okHttpClient = new OkHttp2ClientShim(okHttpClient);
     }
 
     /**
@@ -79,8 +79,8 @@ public class OkHttpHyperClient extends BaseHyperClient {
         return doResponse(doRequest(prepareRequest(request)));
     }
    
-    public OkHttpHyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
-        return (OkHttpHyperClient)super.setAcceptedContentTypes(acceptedContentTypes);
+    public OkHttp2HyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
+        return (OkHttp2HyperClient)super.setAcceptedContentTypes(acceptedContentTypes);
     }
 
     public HyperClient setCookieHandler(CookieHandler handler) {

@@ -1,4 +1,4 @@
-package org.hyperfit.content.hal.json;
+package org.hyperfit.http.okhttp.json;
 
 import org.hyperfit.content.ContentType;
 import org.hyperfit.exception.HyperfitException;

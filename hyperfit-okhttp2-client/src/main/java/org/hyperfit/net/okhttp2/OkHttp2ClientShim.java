@@ -1,4 +1,4 @@
-package org.hyperfit.net.okhttp;
+package org.hyperfit.net.okhttp2;
 
 import org.hyperfit.message.Messages;
 import com.squareup.okhttp.*;
@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * A shim that wraps OkHttpClient for easier testing
  */
-public class OkHttpClientShim {
+public class OkHttp2ClientShim {
 
     private final OkHttpClient wrappedClient;
 
-    public OkHttpClientShim(OkHttpClient wrappedClient){
+    public OkHttp2ClientShim(OkHttpClient wrappedClient){
         if (wrappedClient == null) {
             throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
         }

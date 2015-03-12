@@ -11,9 +11,10 @@
     <url>http://hyperfit.org</url>
 
     <modules>
-        <module>hyperfit-core</module>
-        <module>hyperfit-okhttp-client</module>
-        <module>hyperfit-okhttp-1-client</module>
+        <module>hyperfit</module>
+        <module>hyperfit-okhttp1-client</module>
+        <module>hyperfit-okhttp2-client</module>
+        <module>hyperfit-hal</module>
     </modules>
 
     <!-- BBCOM DEPENDENCY HANDLING -->
@@ -90,13 +91,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.5</version>
-            </dependency>
-
-            <!-- JSON PARSER -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.2.3</version>
             </dependency>
 
             <!-- URI Template Handler -->
