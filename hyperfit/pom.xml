@@ -24,7 +24,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- URI Template Handler -->
         <dependency>
             <groupId>com.damnhandy</groupId>
@@ -51,13 +50,8 @@
             <version>18.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
-    <!-- PROPERTIES DEFINITION -->
-    <properties>
-        <test.console.level>WARN</test.console.level>
-    </properties>
 
     <build>
         <plugins>
@@ -72,39 +66,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!-- MERGE TEST RESOURCES WITH PROPERTIES DEFINED IN PROFILE -->
-        <testResources>
-            <testResource>
-                <filtering>true</filtering>
-                <directory>${project.basedir}/src/test/resources</directory>
-            </testResource>
-        </testResources>
     </build>
-
-    <profiles>
-
-        <profile>
-            <id>integrationTests</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.8.1</version>
-                        <configuration>
-                            <includes>
-                                <include>**/*IntegrationTest*.class</include>
-                            </includes>
-                            <excludes>
-                                <!-- you have to remove the exclusions of integration tests from above-->
-                                <exclude>none</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
 
 </project>
