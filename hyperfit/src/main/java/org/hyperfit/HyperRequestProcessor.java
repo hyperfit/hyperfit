@@ -232,7 +232,7 @@ public class HyperRequestProcessor {
         private  ErrorHandler errorHandler;
         private  ResourceMethodInfoCache resourceMethodInfoCache;
         private  RequestInterceptors requestInterceptors = new RequestInterceptors();
-        private  ResourceRegistry resourceRegistry;
+        private  ResourceRegistry resourceRegistry = new ResourceRegistry(new ProfileResourceRegistryIndexStrategy());
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.add(handler);
