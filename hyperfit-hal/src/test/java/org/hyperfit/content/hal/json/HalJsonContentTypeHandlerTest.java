@@ -1,6 +1,7 @@
-package org.hyperfit.http.okhttp.json;
+package org.hyperfit.content.hal.json;
 
 import org.hyperfit.content.ContentType;
+import org.hyperfit.content.hal.json.HalJsonContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.hal.json.HalJsonResource;
