@@ -98,7 +98,7 @@ public class HyperResourceInvocationContext {
         private  HyperClient hyperClient;
         private  ErrorHandler errorHandler;
         private  ResourceMethodInfoCache resourceMethodInfoCache;
-        private  RequestInterceptors requestInterceptors;
+        private  RequestInterceptors requestInterceptors = new RequestInterceptors();
         private  ResourceRegistry resourceRegistry;
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
