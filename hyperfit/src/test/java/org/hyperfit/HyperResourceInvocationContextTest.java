@@ -74,7 +74,7 @@ public class HyperResourceInvocationContextTest {
                 .build();
 
         String url = "http://example.com";
-        RootResource result = invocationContext.invoke(url, RootResource.class);
+        RootResource result = invocationContext.invoke(RootResource.class, url);
 
 
         //Need to verify the proxied result is wrapping the mocked underlying resource
@@ -94,7 +94,7 @@ public class HyperResourceInvocationContextTest {
                 HyperResourceInvocationContext.builder()
                 .hyperClient(mockHyperClient)
                 .build();
-        invocationContext.invoke(null, RootResource.class);
+        invocationContext.invoke(RootResource.class, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -103,7 +103,7 @@ public class HyperResourceInvocationContextTest {
                 HyperResourceInvocationContext.builder()
                         .hyperClient(mockHyperClient)
                         .build();
-        invocationContext.invoke("", RootResource.class);
+        invocationContext.invoke(RootResource.class, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -112,6 +112,6 @@ public class HyperResourceInvocationContextTest {
                 .hyperClient(mockHyperClient)
                 .build();
 
-        builder.invoke("http://host.com", null);
+        builder.invoke(null, "http://host.com");
     }
 }
