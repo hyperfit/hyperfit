@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
-import static org.hyperfit.TestHelpers.makeSet;
+import static org.hyperfit.Helpers.makeSet;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 

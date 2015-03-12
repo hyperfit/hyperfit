@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 
-public class TestHelpers {
+public class Helpers {
     public static HyperLink makeLink(String rel) {
         return makeLink(rel, null);
     }
