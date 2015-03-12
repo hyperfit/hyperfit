@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.hyperfit.TestHelpers.*;
+import static org.hyperfit.Helpers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

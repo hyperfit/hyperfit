@@ -23,7 +23,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hyperfit.TestHelpers.*;
+import static org.hyperfit.Helpers.*;
 
 public class HyperResourceInvokeHandlerTest{
 
