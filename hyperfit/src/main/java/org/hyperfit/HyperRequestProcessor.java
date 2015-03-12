@@ -3,14 +3,17 @@ package org.hyperfit;
 
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
-import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.net.*;
 import org.hyperfit.content.ContentTypeHandler;
-
+import org.hyperfit.errorhandler.DefaultErrorHandler;
+import org.hyperfit.errorhandler.ErrorHandler;
+import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
+import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
+import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
 import org.hyperfit.resource.registry.ProfileResourceRegistryRetrievalStrategy;
 import org.hyperfit.resource.registry.ResourceRegistry;
+import org.hyperfit.utils.Preconditions;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
@@ -19,6 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
+
+import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
 /**
  * Processes a request returning a type specified by the
@@ -40,40 +46,30 @@ public class HyperRequestProcessor {
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
 
-    public HyperRequestProcessor(HyperResourceInvocationContext invocationContext) {
+    private HyperRequestProcessor(Builder builder) {
 
-        this.hyperClient = invocationContext.getHyperClient();
-        if (this.hyperClient == null) {
-            throw new IllegalArgumentException("Hyper Client must be provided");
-        }
+        contentRegistry = Preconditions.checkNotNull(builder.contentRegistry);
+        hyperClient = Preconditions.checkNotNull(builder.hyperClient, "HyperClient cannot be null");
+        errorHandler = firstNonNull(builder.errorHandler, new DefaultErrorHandler());
+        resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
+        requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
+        resourceRegistry = firstNonNull(builder.resourceRegistry, new ResourceRegistry(new ProfileResourceRegistryIndexStrategy()));
 
-        this.errorHandler = invocationContext.getErrorHandler();
-        if (this.errorHandler == null) {
-            throw new IllegalArgumentException("Error Handler must be provided");
-        }
-
-        this.resourceMethodInfoCache = invocationContext.getResourceMethodInfoCache();
-        if (this.resourceMethodInfoCache == null) {
-            throw new IllegalArgumentException("Hyper Client must be provided");
-        }
-
-        //Copy the over so nobody can put more in there using the builder
-        this.contentRegistry = new ContentRegistry(invocationContext.getContentRegistry());
-
-
-        //TODO: this should be cloned/frozen so it's immutable and nobody can add stuff to the registry after all this is figured out
-        this.resourceRegistry = invocationContext.getResourceRegistry();
-        if (this.resourceRegistry == null) {
-            throw new IllegalArgumentException("Root Resource Builder must be provided");
-        }
-
-        if (invocationContext.getRequestInterceptors() == null) {
-            throw new IllegalArgumentException("Request Interceptors must be provided");
-        }
-        this.requestInterceptors = new RequestInterceptors(invocationContext.getRequestInterceptors());
-
-
+        hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
     }
+
+
+    /**
+     * <p>Obtains a specific resource by going directly to its source.</p>
+     *
+     * @param classToReturn  the class that the resource should be returned as
+     * @param endpointUrl endpont url for the request
+     * @return resource with same type specified in the resource class.
+     */
+    public <T> T processRequest(Class<T> classToReturn, String endpointUrl){
+        return processRequest(classToReturn, BoringRequestBuilder.get(endpointUrl));
+    }
+
 
     /**
      * <p>Obtains a specific resource by going directly to its source.</p>
@@ -82,7 +78,28 @@ public class HyperRequestProcessor {
      * @param requestBuilder request object
      * @return resource with same type specified in the resource class.
      */
+    public <T> T processRequest(Class<T> classToReturn, RequestBuilder requestBuilder){
+        return processRequest(classToReturn, requestBuilder, null);
+    }
+
+
+    /**
+     * <p>Obtains a specific resource by going directly to its source.</p>
+     *
+     * @param classToReturn  the class that the resource should be returned as
+     * @param requestBuilder request object
+     * @return resource with same type specified in the resource class.
+     */
+    @SuppressWarnings("unchecked")
     public <T> T processRequest(Class<T> classToReturn, RequestBuilder requestBuilder, TypeInfo typeInfo) {
+
+        if(requestBuilder == null){
+            throw new IllegalArgumentException("requestBuilder can not be null");
+        }
+
+        if(classToReturn == null){
+            throw new IllegalArgumentException("classToReturn can not be null");
+        }
 
         requestInterceptors.intercept(requestBuilder);
 
@@ -202,4 +219,86 @@ public class HyperRequestProcessor {
         return resource;
     }
 
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+
+    public static class Builder {
+
+        private  ContentRegistry contentRegistry = new ContentRegistry();
+        private  HyperClient hyperClient;
+        private  ErrorHandler errorHandler;
+        private  ResourceMethodInfoCache resourceMethodInfoCache;
+        private  RequestInterceptors requestInterceptors = new RequestInterceptors();
+        private  ResourceRegistry resourceRegistry;
+
+        public Builder addContentTypeHandler(ContentTypeHandler handler) {
+            this.contentRegistry.add(handler);
+            return this;
+        }
+
+        public Builder removeContentTypeHandler(ContentTypeHandler handler) {
+            this.contentRegistry.remove(handler);
+            return this;
+        }
+
+        public Builder addContentTypeHandler(ContentTypeHandler handler, ContentType...types) {
+            this.contentRegistry.add(handler, types);
+            return this;
+        }
+
+        public Builder removeContentType(ContentType type) {
+            this.contentRegistry.remove(type);
+            return this;
+        }
+
+        public Builder hyperClient(HyperClient hyperClient) {
+            this.hyperClient = hyperClient;
+            return this;
+        }
+
+        public Builder errorHandler(ErrorHandler errorHandler) {
+            this.errorHandler = errorHandler;
+            return this;
+        }
+
+        public Builder resourceMethodInfoCache(ResourceMethodInfoCache resourceMethodInfoCache) {
+            this.resourceMethodInfoCache = resourceMethodInfoCache;
+            return this;
+        }
+
+        public Builder addRequestInterceptor(RequestInterceptor requestInterceptor) {
+            this.requestInterceptors.add(requestInterceptor);
+            return this;
+        }
+
+        public Builder removeRequestInterceptors(RequestInterceptor... requestInterceptor) {
+            this.requestInterceptors.remove(requestInterceptor);
+            return this;
+        }
+
+        public Builder clearInterceptors() {
+            this.requestInterceptors.clear();
+            return this;
+        }
+        public Builder resourceRegistry(ResourceRegistry resourceRegistry) {
+            this.resourceRegistry = resourceRegistry;
+            return this;
+        }
+
+        public Builder registerResources(Collection<Class<? extends HyperResource>> classes) {
+            this.resourceRegistry.add(classes);
+            return this;
+        }
+
+        public HyperRequestProcessor build() {
+            return new HyperRequestProcessor(this);
+        }
+    }
+
 }
+
+
+

@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hyperfit.Helpers.*;
 
-public class HyperResourceInvocationContextTest {
+public class HyperRequestProcessorBuilderTest {
 
     @Mock
     protected HyperClient mockHyperClient;
@@ -41,8 +41,8 @@ public class HyperResourceInvocationContextTest {
 
     @Test
     public void testBuildAResource(){
-        HyperResourceInvocationContext invocationContext;
-        invocationContext = HyperResourceInvocationContext.builder()
+        HyperRequestProcessor requestProcessor;
+        requestProcessor = HyperRequestProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
 
@@ -68,13 +68,13 @@ public class HyperResourceInvocationContextTest {
         when(mockContentTypeHandler.parseResponse(this.mockResponse))
             .thenReturn(this.mockHyperResource);
 
-        invocationContext = HyperResourceInvocationContext.builder()
+        requestProcessor = HyperRequestProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .addContentTypeHandler(mockContentTypeHandler)
                 .build();
 
         String url = "http://example.com";
-        RootResource result = invocationContext.invoke(RootResource.class, url);
+        RootResource result = requestProcessor.processRequest(RootResource.class, url);
 
 
         //Need to verify the proxied result is wrapping the mocked underlying resource
@@ -90,28 +90,29 @@ public class HyperResourceInvocationContextTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullEndpoint(){
-        HyperResourceInvocationContext invocationContext =
-                HyperResourceInvocationContext.builder()
+        HyperRequestProcessor requestProcessor =
+                HyperRequestProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
-        invocationContext.invoke(RootResource.class, null);
+        String foo = null;
+        requestProcessor.processRequest(RootResource.class, foo);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingEmptyEndpoint(){
-        HyperResourceInvocationContext invocationContext =
-                HyperResourceInvocationContext.builder()
+        HyperRequestProcessor requestProcessor =
+                HyperRequestProcessor.builder()
                         .hyperClient(mockHyperClient)
                         .build();
-        invocationContext.invoke(RootResource.class, "");
+        requestProcessor.processRequest(RootResource.class, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullClass(){
-        HyperResourceInvocationContext builder = HyperResourceInvocationContext.builder()
+        HyperRequestProcessor requestProcessor = HyperRequestProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
 
-        builder.invoke(null, "http://host.com");
+        requestProcessor.processRequest(null, "http://host.com");
     }
 }
