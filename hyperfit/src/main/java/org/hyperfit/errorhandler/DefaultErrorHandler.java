@@ -25,7 +25,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     public HyperResource unhandledContentType(Request request, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface) {
         throw new ResponseException(
-            String.format("Response from [%s] has unsupported content type [%s]", request.getUrl(), response.getContentType()),
+            String.format("Response from [%s] with code [%s] has unsupported content type [%s]", request.getUrl(), response.getCode(), response.getContentType()),
             request,
             response
         );
@@ -34,7 +34,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     public HyperResource contentParseError(Request request, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, Exception parseException) {
         throw new ResponseException(
             parseException,
-            String.format("Response from [%s] could not be parsed into a hyper resource of content type [%s] because [%s]", request.getUrl(), response.getContentType(), parseException.getMessage()),
+            String.format("Response from [%s] with code [%s] could not be parsed into a hyper resource of content type [%s] because [%s]", request.getUrl(), response.getCode(), response.getContentType(), parseException.getMessage()),
             request,
             response
         );
