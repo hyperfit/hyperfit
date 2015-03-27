@@ -308,7 +308,7 @@ public class OkHttp1HyperClientTest {
 
         Response response = responseBuilder.build();
         Map<String, String> headers = Maps.newHashMap();
-        for (Iterator<Map.Entry<String, String>> responseHeaders = response.getHeaders(); responseHeaders.hasNext(); ){
+        for (Iterator<Map.Entry<String, String>> responseHeaders = response.getHeaders().iterator(); responseHeaders.hasNext(); ){
             Map.Entry<String, String> header = responseHeaders.next();
             headers.put(header.getKey(), header.getValue());
         }
