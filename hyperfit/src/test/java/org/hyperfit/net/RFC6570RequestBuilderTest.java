@@ -1,29 +1,22 @@
 package org.hyperfit.net;
 
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.*;
 
 
 public class RFC6570RequestBuilderTest {
 
-
-    public int count(Iterable i) {
-        int count = 0;
-
-        Iterator it = i.iterator();
-        while (it.hasNext()) {
-            count++;
-        }
-
-        return count;
-    }
 
 
     @Test(expected = IllegalArgumentException.class)
@@ -219,10 +212,12 @@ public class RFC6570RequestBuilderTest {
                         setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
         setParam("param", null).getParam("param"),
                 null);
-        assertEquals(count(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
-        setParam("param", null).getParams().keySet()),
-                0);
+
+        RFC6570RequestBuilder request = new RFC6570RequestBuilder().
+        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
+        setParam("param", null);
+
+        assertEquals(0, (request.getParams().keySet().size()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -241,22 +236,37 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeader() {
-        assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                        addHeader(HttpHeader.ACCEPT, "application/json").build().getHeader(HttpHeader.ACCEPT),
-                "application/json");
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
+
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = UUID.randomUUID().toString();
+
+        Request request = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        assertEquals(header1Value, request.getHeader(header1Name));
     }
 
     @Test
     public void testGetHeaderNullValue() {
-        assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                        addHeader(HttpHeader.ACCEPT, null).build().getHeader(HttpHeader.ACCEPT),
-                null);
-        assertEquals(count(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                        addHeader(HttpHeader.ACCEPT, null).build().getHeaders()),
-                0);
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = null;
+
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = UUID.randomUUID().toString();
+
+        Request request = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+
+        assertNull(request.getHeader(header1Name));
 
     }
 
@@ -323,49 +333,74 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeaders() {
-        Request request = new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                addHeader(HttpHeader.ACCEPT, "application/json").
-                addHeader(HttpHeader.CONTENT_TYPE, "text/html").
-                build();
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
 
-        int count = 0;
-        for (Map.Entry<String,String> entry : request.getHeaders()) {
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = UUID.randomUUID().toString();
 
-            if (entry.getKey().equals(HttpHeader.ACCEPT)) {
-                assertEquals(entry.getValue(), "application/json");
-                count++;
+        Request request = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+
+
+        ImmutableList<String> keys = FluentIterable.from(request.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getKey();
             }
+        })
+        .toList();
 
-            if (entry.getKey().equals(HttpHeader.CONTENT_TYPE)) {
-                assertEquals(entry.getValue(), "text/html");
-                count++;
+        assertThat(keys, containsInAnyOrder(header1Name, header2Name));
+
+        ImmutableList<String> values = FluentIterable.from(request.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getValue();
             }
-        }
-        assertEquals(count, 2);
+        })
+        .toList();
+
+        assertThat(values, containsInAnyOrder(header1Value, header2Value));
     }
 
     @Test
     public void testGetHeadersNullHeader() {
-        Request request = new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
-                addHeader(HttpHeader.ACCEPT, "application/json").
-                addHeader(HttpHeader.CONTENT_TYPE, null).
-                build();
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
 
-        int count = 0;
-        for (Map.Entry<String,String> entry : request.getHeaders()) {
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = null;
 
-            if (entry.getKey().equals(HttpHeader.ACCEPT)) {
-                assertEquals(entry.getValue(), "application/json");
-                count++;
+        Request request = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        ImmutableList<String> keys = FluentIterable.from(request.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getKey();
             }
+        })
+        .toList();
 
-            if (entry.getKey().equals(HttpHeader.CONTENT_TYPE)) {
-                count++;
+        assertThat(keys, contains(header1Name));
+
+        ImmutableList<String> values = FluentIterable.from(request.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getValue();
             }
-        }
-        assertEquals(count, 1);
+        })
+        .toList();
+
+        assertThat(values, contains(header1Value));
     }
 
     @Test

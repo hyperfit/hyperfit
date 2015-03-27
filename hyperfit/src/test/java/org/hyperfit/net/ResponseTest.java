@@ -77,7 +77,7 @@ public class ResponseTest {
         })
         .toList();
 
-        assertThat(keys, contains(header1Name, header2Name));
+        assertThat(keys, containsInAnyOrder(header1Name, header2Name));
 
         ImmutableList<String> values = FluentIterable.from(response.getHeaders())
         .transform(new Function<Map.Entry<String, String>, String>() {
@@ -87,7 +87,7 @@ public class ResponseTest {
         })
         .toList();
 
-        assertThat(values, contains(header1Value, header2Value));
+        assertThat(values, containsInAnyOrder(header1Value, header2Value));
 
     }
 
