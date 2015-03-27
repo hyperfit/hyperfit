@@ -10,13 +10,13 @@ Hyperfit is a client library for RESTful Applications &amp; Hypermedia APIs insp
 
 ## releases
 Releases are published to artifactory.  For maven projects you can add the dependency as
-
+```
    <dependency>
         <groupId>org.hyperfit</groupId>
         <artifactId>hyperfit</artifactId>
         <version>1.4.0-SNAPSHOT</version>
     </dependency>
-
+```
 See latest [snaps](http://artifactory/simple/libs-snapshot-local/org/hyperfit/hyperfit/) & [releases](http://artifactory/simple/libs-release-local/org/hyperfit/hyperfit/)
 
 ## release history
