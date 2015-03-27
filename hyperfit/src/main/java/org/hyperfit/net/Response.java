@@ -1,6 +1,8 @@
 package org.hyperfit.net;
 
 import org.hyperfit.message.Messages;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,8 +38,8 @@ public class Response {
         return body;
     }
 
-    public Iterator<Map.Entry<String, String>> getHeaders() {
-        return headers.entrySet().iterator();
+    public Iterable<Map.Entry<String, String>> getHeaders() {
+        return Collections.unmodifiableSet(headers.entrySet());
     }
 
     public String getContentType() {

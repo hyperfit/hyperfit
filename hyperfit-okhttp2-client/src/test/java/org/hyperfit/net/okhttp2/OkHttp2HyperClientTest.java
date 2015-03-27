@@ -257,7 +257,7 @@ public class OkHttp2HyperClientTest {
 
         org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
-        assertFalse(response.getHeaders().hasNext());
+        assertFalse(response.getHeaders().iterator().hasNext());
         assertSame(hyperfitRequestMock, response.getRequest());
     }
 

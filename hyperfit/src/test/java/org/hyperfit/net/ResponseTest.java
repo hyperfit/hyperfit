@@ -1,104 +1,165 @@
 package org.hyperfit.net;
 
-import java.util.Iterator;
 import java.util.Map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.UUID;
 
-import org.hyperfit.net.HttpHeader;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 
 public class ResponseTest {
 
+    @Mock
+    protected Request mockRequest;
 
-    public int count(Iterator it) {
-        int count = 0;
-
-        while (it.hasNext()) {
-            count++;
-        }
-
-        return count;
+    @Before
+    public void setUp(){
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testGetCode() {
-        assertEquals(Response.builder().addCode(500).build().getCode(), 500);
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addCode(500)
+            .build();
+
+        assertEquals(response.getCode(), 500);
     }
 
     @Test
     public void testGetBody() {
-        assertEquals(Response.builder().addBody("{}").build().getBody(), "{}");
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addBody("{}")
+            .build();
+
+        assertEquals(response.getBody(), "{}");
     }
 
     @Test
     public void testGetBodyNull() {
-        assertEquals(Response.builder().addBody(null).build().getBody(), null);
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addBody(null)
+            .build();
+
+        assertEquals(response.getBody(), null);
     }
 
     @Test
     public void testGetHeaders() {
-        Response response = Response.builder().
-                addHeader(HttpHeader.ACCEPT, "application/json").
-                addHeader(HttpHeader.CONTENT_TYPE, "text/html").
-                build();
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
 
-        int count = 0;
-        for (Iterator<Map.Entry<String, String>> it = response.getHeaders(); it.hasNext();) {
-            Map.Entry<String, String> entry = it.next();
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = UUID.randomUUID().toString();
 
-            if (entry.getKey().equals(HttpHeader.ACCEPT)) {
-                assertEquals(entry.getValue(), "application/json");
-                count++;
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        ImmutableList<String> keys = FluentIterable.from(response.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getKey();
             }
+        })
+        .toList();
 
-            if (entry.getKey().equals(HttpHeader.CONTENT_TYPE)) {
-                assertEquals(entry.getValue(), "text/html");
-                count++;
+        assertThat(keys, contains(header1Name, header2Name));
+
+        ImmutableList<String> values = FluentIterable.from(response.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getValue();
             }
-        }
-        assertEquals(count, 2);
+        })
+        .toList();
+
+        assertThat(values, contains(header1Value, header2Value));
+
     }
 
     @Test
     public void testGetHeadersNullHeader() {
-        Response response = Response.builder().
-                addHeader(HttpHeader.ACCEPT, "application/json").
-                addHeader(HttpHeader.CONTENT_TYPE, null).
-                build();
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
 
-        int count = 0;
-        for (Iterator<Map.Entry<String, String>> it = response.getHeaders(); it.hasNext();) {
-            Map.Entry<String, String> entry = it.next();
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = null;
 
-            if (entry.getKey().equals(HttpHeader.ACCEPT)) {
-                assertEquals(entry.getValue(), "application/json");
-                count++;
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        ImmutableList<String> keys = FluentIterable.from(response.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getKey();
             }
+        })
+        .toList();
 
-            if (entry.getKey().equals(HttpHeader.CONTENT_TYPE)) {
-                count++;
+        assertThat(keys, contains(header1Name));
+
+        ImmutableList<String> values = FluentIterable.from(response.getHeaders())
+        .transform(new Function<Map.Entry<String, String>, String>() {
+            public String apply(Map.Entry<String, String> input) {
+                return input.getValue();
             }
-        }
-        assertEquals(count, 1);
+        })
+        .toList();
+
+        assertThat(values, contains(header1Value));
     }
 
     @Test
     public void testGetHeader() {
-        assertEquals(Response.builder().
-                addHeader(HttpHeader.ACCEPT, "application/json").build().getHeader(HttpHeader.ACCEPT),
-                "application/json");
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
+
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = UUID.randomUUID().toString();
+
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        assertEquals(header1Value, response.getHeader(header1Name));
     }
 
     @Test
     public void testGetHeaderNullValue() {
-        assertEquals(Response.builder().
-                addHeader(HttpHeader.ACCEPT, null).build().getHeader(HttpHeader.ACCEPT),
-                null);
-        assertEquals(count(Response.builder().
-                addHeader(HttpHeader.ACCEPT, null).build().getHeaders()),
-                0);
+        String header1Name = UUID.randomUUID().toString();
+        String header1Value = UUID.randomUUID().toString();
+
+        String header2Name = UUID.randomUUID().toString();
+        String header2Value = null;
+
+        Response response = Response.builder()
+            .addRequest(mockRequest)
+            .addHeader(header1Name, header1Value)
+            .addHeader(header2Name, header2Value)
+            .build();
+
+        assertNull(response.getHeader(header2Name));
+
+
 
     }
 

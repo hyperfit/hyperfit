@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.LinkedHashSet;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -57,7 +55,7 @@ public class HyperfitProcessorTest {
     }
 
     @Test(expected = ResponseException.class)
-    public void testBuildResourceNoHyperMediaTypeHandlerException() {
+    public void testBuildResourceNoContentTypeHandlerException() {
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -65,7 +63,7 @@ public class HyperfitProcessorTest {
         Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
         Response response = new Response.ResponseBuilder()
             .addRequest(request)
-            .addHeader(HttpHeader.CONTENT_TYPE, "someType")
+            .addContentType("someType")
             .build();
 
         hyperfitProcessor.buildHyperResource(response, HyperResource.class);
