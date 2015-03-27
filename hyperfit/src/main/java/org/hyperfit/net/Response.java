@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import lombok.ToString;
+import org.hyperfit.utils.Preconditions;
 import org.hyperfit.utils.StringUtils;
 
 /**
@@ -17,13 +18,14 @@ public class Response {
     private final Map<String, String> headers;
     private final String body;
     private final String contentType;
-
+    private final Request request;
 
     private Response(ResponseBuilder builder) {
         this.body = builder.body;
         this.code = builder.code;
         this.headers = builder.headers;
         this.contentType = builder.contentType;
+        this.request = Preconditions.checkNotNull(builder.request, "request can not be null");
     }
 
     public int getCode() {
@@ -46,13 +48,16 @@ public class Response {
         return headers.get(key);
     }
 
-    public static ResponseBuilder builder() {
-        return new ResponseBuilder();
+    public Request getRequest() {
+        return request;
+    }
 
-    }   
-    
     public boolean isOK() {
         return (this.code == 200);
+    }
+
+    public static ResponseBuilder builder() {
+        return new ResponseBuilder();
     }
 
     /**
@@ -64,6 +69,7 @@ public class Response {
         private String body;
         private Map<String, String> headers = new HashMap<String, String>();
         private String contentType;
+        private Request request;
 
         public ResponseBuilder() {
         }
@@ -92,6 +98,11 @@ public class Response {
 
         public ResponseBuilder addContentType(String contentType) {
             this.contentType = contentType;
+            return this;
+        }
+
+        public ResponseBuilder addRequest(Request req){
+            this.request = req;
             return this;
         }
 

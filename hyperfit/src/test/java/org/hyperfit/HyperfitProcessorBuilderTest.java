@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hyperfit.Helpers.*;
 
-public class HyperRequestProcessorBuilderTest {
+public class HyperfitProcessorBuilderTest {
 
     @Mock
     protected HyperClient mockHyperClient;
@@ -41,8 +41,8 @@ public class HyperRequestProcessorBuilderTest {
 
     @Test
     public void testBuildAResource(){
-        HyperRequestProcessor requestProcessor;
-        requestProcessor = HyperRequestProcessor.builder()
+        HyperfitProcessor requestProcessor;
+        requestProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
 
@@ -68,7 +68,7 @@ public class HyperRequestProcessorBuilderTest {
         when(mockContentTypeHandler.parseResponse(this.mockResponse))
             .thenReturn(this.mockHyperResource);
 
-        requestProcessor = HyperRequestProcessor.builder()
+        requestProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .addContentTypeHandler(mockContentTypeHandler)
                 .build();
@@ -90,8 +90,8 @@ public class HyperRequestProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullEndpoint(){
-        HyperRequestProcessor requestProcessor =
-                HyperRequestProcessor.builder()
+        HyperfitProcessor requestProcessor =
+                HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
         String foo = null;
@@ -100,8 +100,8 @@ public class HyperRequestProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingEmptyEndpoint(){
-        HyperRequestProcessor requestProcessor =
-                HyperRequestProcessor.builder()
+        HyperfitProcessor requestProcessor =
+                HyperfitProcessor.builder()
                         .hyperClient(mockHyperClient)
                         .build();
         requestProcessor.processRequest(RootResource.class, "");
@@ -109,7 +109,7 @@ public class HyperRequestProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullClass(){
-        HyperRequestProcessor requestProcessor = HyperRequestProcessor.builder()
+        HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
 

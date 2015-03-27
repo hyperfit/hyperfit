@@ -76,7 +76,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
             throw new IllegalArgumentException(Messages.MSG_ERROR_CLIENT_REQUEST_URL_NULL);
         }
 
-        return doResponse(doRequest(prepareRequest(request)));
+        return doResponse(doRequest(prepareRequest(request)), request);
     }
    
     public OkHttp2HyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
@@ -130,8 +130,13 @@ public class OkHttp2HyperClient extends BaseHyperClient {
      * @param response
      * @return {@link org.hyperfit.net.Response}
      */
-    protected Response doResponse(com.squareup.okhttp.Response response) {
-        Response.ResponseBuilder responseBuilder = Response.builder().addCode(response.code());
+    protected Response doResponse(com.squareup.okhttp.Response response, Request request) {
+        Response.ResponseBuilder responseBuilder = Response.builder()
+            .addCode(response.code())
+            //TODO: decide if this is ok..or should we build a request from the request
+            //available at okhttp.Response.getRequest()?
+            .addRequest(request)
+        ;
 
         for (String headerName : response.headers().names()) {
             responseBuilder.addHeader(headerName, response.header(headerName));

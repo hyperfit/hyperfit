@@ -91,7 +91,7 @@ public class ContentRegistry {
     }
 
 
-    public boolean canHandler(ContentType type, Purpose purpose){
+    public boolean canHandle(ContentType type, Purpose purpose){
         if(type == null){
             throw new IllegalArgumentException("type cannot be null");
         }

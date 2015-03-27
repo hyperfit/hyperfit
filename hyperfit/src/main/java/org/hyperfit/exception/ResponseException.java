@@ -15,24 +15,18 @@ public class ResponseException extends HyperfitException {
 
     private static final long serialVersionUID = 4040328974398364920L;
 
-    private final Request request;
     private final Response response;
 
-    public ResponseException(String message, Request request, Response response) {
+    public ResponseException(String message, Response response) {
         super(message);
-        this.request = request;
         this.response = response;
     }
 
-    public ResponseException(Exception e, String message, Request request, Response response) {
+    public ResponseException(Exception e, String message, Response response) {
         super(e, message);
-        this.request = request;
         this.response = response;
     }
 
-    public Request getRequest() {
-        return request;
-    }
 
     public Response getResponse() {
         return response;

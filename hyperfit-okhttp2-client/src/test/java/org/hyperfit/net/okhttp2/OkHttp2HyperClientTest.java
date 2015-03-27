@@ -40,7 +40,7 @@ public class OkHttp2HyperClientTest {
     };
 
     @Mock
-    private org.hyperfit.net.Request hcRequestMock;
+    private org.hyperfit.net.Request hyperfitRequestMock;
 
 
     @Mock
@@ -77,24 +77,24 @@ public class OkHttp2HyperClientTest {
     @Test(expected = NullPointerException.class)
     public void testExecuteNullMethod() {
 
-        when(hcRequestMock.getMethod()).thenReturn(null);
-        okHttp2HyperClient.execute(hcRequestMock);
+        when(hyperfitRequestMock.getMethod()).thenReturn(null);
+        okHttp2HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteEmptyUrl() {
 
 
-        when(hcRequestMock.getMethod()).thenReturn(Method.GET);
-        when(hcRequestMock.getUrl()).thenReturn("");
-        okHttp2HyperClient.execute(hcRequestMock);
+        when(hyperfitRequestMock.getMethod()).thenReturn(Method.GET);
+        when(hyperfitRequestMock.getUrl()).thenReturn("");
+        okHttp2HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullUrl() {
-        when(hcRequestMock.getMethod()).thenReturn(Method.GET);
-        when(hcRequestMock.getUrl()).thenReturn(null);
-        okHttp2HyperClient.execute(hcRequestMock);
+        when(hyperfitRequestMock.getMethod()).thenReturn(Method.GET);
+        when(hyperfitRequestMock.getUrl()).thenReturn(null);
+        okHttp2HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = NullPointerException.class)
@@ -213,11 +213,12 @@ public class OkHttp2HyperClientTest {
 
 
 
-        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake);
+        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
         assertEquals(200, response.getCode());
         assertEquals(fakeContent, response.getBody());
         assertEquals(fakeHeaderValue, response.getHeader(fakeHeader));
+        assertSame(hyperfitRequestMock, response.getRequest());
     }
 
     @Test
@@ -254,9 +255,10 @@ public class OkHttp2HyperClientTest {
             })
             .build();
 
-        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake);
+        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
         assertFalse(response.getHeaders().hasNext());
+        assertSame(hyperfitRequestMock, response.getRequest());
     }
 
 
@@ -276,7 +278,7 @@ public class OkHttp2HyperClientTest {
             .build();
 
 
-        okHttp2HyperClient.doResponse(okResponseFake);
+        okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
     }
 

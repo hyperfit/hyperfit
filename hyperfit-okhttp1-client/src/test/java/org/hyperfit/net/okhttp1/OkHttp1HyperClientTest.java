@@ -218,7 +218,8 @@ public class OkHttp1HyperClientTest {
 
         HttpURLConnection connection = mock(HttpURLConnection.class);
 
-        Response.ResponseBuilder responseBuilder = Response.builder();
+        Request mockRequest = mock(Request.class);
+
         String body = "body";
 
         doNothing().when(client).addHeadersToResponse(eq(connection), any(Response.ResponseBuilder.class));
@@ -229,12 +230,13 @@ public class OkHttp1HyperClientTest {
         String contentType = "bar/foo";
         when(connection.getContentType()).thenReturn(contentType);
 
-        Response actual = client.readResponse(connection);
+        Response actual = client.readResponse(connection, mockRequest);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getCode()).isEqualTo(returnCode);
         assertThat(actual.getContentType()).isEqualTo(contentType);
         assertThat(actual.getBody()).isEqualTo(body);
+        assertThat(actual.getRequest()).isSameAs(mockRequest);
 
     }
 
@@ -284,8 +286,12 @@ public class OkHttp1HyperClientTest {
 
     @Test
     public void testAddHeadersToResponse() throws Exception {
+        Request mockRequest = mock(Request.class);
+
+
         Response.ResponseBuilder responseBuilder = Response.builder()
                 .addCode(500)
+                .addRequest(mockRequest)
                 .addContentType("text/html")
                 .addBody("foo");
 

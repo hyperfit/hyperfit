@@ -153,7 +153,7 @@ public class HyperResourceInvokeHandlerTest{
     private HyperResource mockHyperResource;
 
     @Mock
-    private HyperRequestProcessor mockRequestProcessor;
+    private HyperfitProcessor mockRequestProcessor;
 
     private ResourceMethodInfoCache resourceMethodInfoCache;
 

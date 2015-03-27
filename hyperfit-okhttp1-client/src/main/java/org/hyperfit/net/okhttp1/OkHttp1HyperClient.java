@@ -63,7 +63,7 @@ public class OkHttp1HyperClient extends BaseHyperClient {
         try {
             HttpURLConnection connection = openConnection(request);
             prepareRequest(connection, request);
-            return readResponse(connection);
+            return readResponse(connection, request);
         } catch (IOException ex) {
             log.debug("Unable to Execute Request", ex);
             throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
@@ -109,13 +109,14 @@ public class OkHttp1HyperClient extends BaseHyperClient {
 
     }
 
-    protected Response readResponse(HttpURLConnection connection) throws IOException {
+    protected Response readResponse(HttpURLConnection connection, Request request) throws IOException {
         Response.ResponseBuilder responseBuilder = Response.builder();
 
         addHeadersToResponse(connection, responseBuilder);
         String body = convertResponseBodyToString(connection);
 
         Response response = responseBuilder
+                .addRequest(request)
                 .addCode(connection.getResponseCode())
                 .addContentType(connection.getContentType())
                 .addBody(body)

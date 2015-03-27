@@ -8,7 +8,6 @@ import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
-import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperLinkWrapper;
@@ -35,12 +34,12 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     private static final String MESSAGE_EXCEPTION_SOLVING_MULTI_LINK = "Cannot resolve a multi link resource";
 
     private final HyperResource hyperResource;
-    private final HyperRequestProcessor requestProcessor;
+    private final HyperfitProcessor requestProcessor;
 
     private final MethodInfoCache methodInfoCache;
     private TypeInfo typeInfo;
 
-    public HyperResourceInvokeHandler(HyperResource hyperResource, HyperRequestProcessor requestProcessor, MethodInfoCache methodInfoCache, TypeInfo typeInfo) {
+    public HyperResourceInvokeHandler(HyperResource hyperResource, HyperfitProcessor requestProcessor, MethodInfoCache methodInfoCache, TypeInfo typeInfo) {
         this.hyperResource = hyperResource;
         this.requestProcessor = requestProcessor;
 

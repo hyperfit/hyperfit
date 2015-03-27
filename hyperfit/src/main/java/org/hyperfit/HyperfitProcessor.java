@@ -10,19 +10,16 @@ import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
-import org.hyperfit.resource.registry.ProfileResourceRegistryIndexStrategy;
-import org.hyperfit.resource.registry.ProfileResourceRegistryRetrievalStrategy;
-import org.hyperfit.resource.registry.ResourceRegistry;
+import org.hyperfit.resource.InterfaceSelectionStrategy;
+import org.hyperfit.resource.SimpleInterfaceSelectionStrategy;
 import org.hyperfit.utils.Preconditions;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.TypeInfo;
-import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.Collection;
 
 import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
@@ -31,29 +28,28 @@ import static org.hyperfit.utils.MoreObjects.firstNonNull;
  * classToReturn parameter in #processRequest by proxifying
  * the resulting hyper resource
  */
-public class HyperRequestProcessor {
+public class HyperfitProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HyperRequestProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HyperfitProcessor.class);
 
-    private static final ProfileResourceRegistryRetrievalStrategy PROFILE_RESOURCE_REGISTRY_RETRIEVAL_STRATEGY =
-            new ProfileResourceRegistryRetrievalStrategy();
 
-    private final ResourceRegistry resourceRegistry;
     private final RequestInterceptors requestInterceptors;
     private final HyperClient hyperClient;
     private final ResourceMethodInfoCache resourceMethodInfoCache;
     //TODO: make this protected hack non-sense go away...something is wrong with our class layout
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
+    private final InterfaceSelectionStrategy interfaceSelectionStrategy;
 
-    private HyperRequestProcessor(Builder builder) {
+
+    private HyperfitProcessor(Builder builder) {
 
         contentRegistry = Preconditions.checkNotNull(builder.contentRegistry);
         hyperClient = Preconditions.checkNotNull(builder.hyperClient, "HyperClient cannot be null");
         errorHandler = firstNonNull(builder.errorHandler, new DefaultErrorHandler());
         resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
         requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
-        resourceRegistry = firstNonNull(builder.resourceRegistry, new ResourceRegistry(new ProfileResourceRegistryIndexStrategy()));
+        interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
 
         hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
     }
@@ -105,7 +101,14 @@ public class HyperRequestProcessor {
 
         Request request = requestBuilder.build();
 
+        //TODO: return the request if that's what they want
+
         Response response = hyperClient.execute(request);
+
+        return processResponse(classToReturn, response, typeInfo);
+    }
+
+    public <T> T processResponse(Class<T> classToReturn, Response response, TypeInfo typeInfo) {
 
         //Special case, if what they want is the Response in a raw format...well they can have it!
         if (Response.class.isAssignableFrom(classToReturn)) {
@@ -113,11 +116,16 @@ public class HyperRequestProcessor {
         }
 
         //Another special case, if what they want is a string we give them response body
+        //before we process it
         if (String.class.isAssignableFrom(classToReturn)) {
             return (T) response.getBody();
         }
 
-        return processResource(classToReturn, buildHyperResource(request, response, classToReturn), typeInfo);
+        HyperResource resource = buildHyperResource(response, classToReturn);
+
+        //TODO: if they just want a hyper resource, give it to them
+
+        return processResource(classToReturn, resource, typeInfo);
     }
 
     /**
@@ -139,11 +147,10 @@ public class HyperRequestProcessor {
 
         InvocationHandler handler = new HyperResourceInvokeHandler(hyperResource, this, this.resourceMethodInfoCache.get(classToReturn), typeInfo);
 
-        classToReturn = convertToSubClass(classToReturn, hyperResource);
 
         Object proxy = Proxy.newProxyInstance(
             classToReturn.getClassLoader(),
-            new Class<?>[]{classToReturn},
+            interfaceSelectionStrategy.determineInterfaces(classToReturn, hyperResource),
             handler
         );
 
@@ -151,17 +158,11 @@ public class HyperRequestProcessor {
     }
 
 
-    /**
-     * converts a class to one of its sub classes, which is obtained from the last profile in the hyper resource
-     */
-    private <T> Class<T> convertToSubClass(Class<T> type, HyperResource hyperResource) {
-        Class possibleSubClass = resourceRegistry.getResourceClass(PROFILE_RESOURCE_REGISTRY_RETRIEVAL_STRATEGY, Pair.with(type, hyperResource));
-        return (possibleSubClass == null) ? type : possibleSubClass;
-    }
+
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource buildHyperResource(Request request, Response response, Class<T> expectedResourceInterface) {
+    protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
 
         //STAGE 1 - There's response, let's see if we understand the content type!
 
@@ -173,10 +174,10 @@ public class HyperRequestProcessor {
         }
 
         //See if we have a content type, if not throw
-        if(responseContentType == null || !this.contentRegistry.canHandler(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE)){
+        if(responseContentType == null || !this.contentRegistry.canHandle(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE)){
             //We don't understand the content type, let's ask the error handler what to do!
             return this.errorHandler.unhandledContentType(
-                request,
+                this,
                 response,
                 this.contentRegistry,
                 expectedResourceInterface
@@ -194,7 +195,7 @@ public class HyperRequestProcessor {
         } catch (Exception e){
             //Something went wrong parsing the response, let's ask the error handler what to do!
             return this.errorHandler.contentParseError(
-                request,
+                this,
                 response,
                 this.contentRegistry,
                 expectedResourceInterface,
@@ -206,7 +207,7 @@ public class HyperRequestProcessor {
         //STAGE 3 - we were able to parse the response into a HyperResponse, let's make sure it's a OK response
         if(!response.isOK()){
             return this.errorHandler.notOKResponse(
-                request,
+                this,
                 response,
                 this.contentRegistry,
                 expectedResourceInterface,
@@ -227,12 +228,12 @@ public class HyperRequestProcessor {
 
     public static class Builder {
 
-        private  ContentRegistry contentRegistry = new ContentRegistry();
-        private  HyperClient hyperClient;
-        private  ErrorHandler errorHandler;
-        private  ResourceMethodInfoCache resourceMethodInfoCache;
-        private  RequestInterceptors requestInterceptors = new RequestInterceptors();
-        private  ResourceRegistry resourceRegistry = new ResourceRegistry(new ProfileResourceRegistryIndexStrategy());
+        private ContentRegistry contentRegistry = new ContentRegistry();
+        private HyperClient hyperClient;
+        private ErrorHandler errorHandler;
+        private ResourceMethodInfoCache resourceMethodInfoCache;
+        private RequestInterceptors requestInterceptors = new RequestInterceptors();
+        private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.add(handler);
@@ -283,18 +284,16 @@ public class HyperRequestProcessor {
             this.requestInterceptors.clear();
             return this;
         }
-        public Builder resourceRegistry(ResourceRegistry resourceRegistry) {
-            this.resourceRegistry = resourceRegistry;
+
+        public Builder interfaceSelectionStrategy(InterfaceSelectionStrategy selectionStrategy) {
+            this.interfaceSelectionStrategy = selectionStrategy;
             return this;
         }
 
-        public Builder registerResources(Collection<Class<? extends HyperResource>> classes) {
-            this.resourceRegistry.add(classes);
-            return this;
-        }
 
-        public HyperRequestProcessor build() {
-            return new HyperRequestProcessor(this);
+
+        public HyperfitProcessor build() {
+            return new HyperfitProcessor(this);
         }
     }
 
