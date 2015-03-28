@@ -3,6 +3,8 @@
 ## 1.0.1-SNAPSHOT - 2015-01-25
 * Initial release version
 
+* All resources interfaces now must extend the HyperResource base interface, this exposes the useful hasLink method to check for arbitrary link presence as well as some other lower level stuff to retrieve as needed.
+
 * HyperLink type added withe following fields
   * href:String
   * rel:String
@@ -65,51 +67,11 @@ hasLink(String relationship, String name) (see notes about embedded affecting ha
 * Note to developers: getLinks is very safe and calls to hasLink are not needed before calling it.  
 * getLink is less safe and hasLink should be called prior to calling getLink if you are not sure the link is present (consult link relationship docs to know about conditional presence of links). Note that partial representation of resources means that hasLink should almost always be called prior to getLink
 * getLink should only be used in cases where the link is known to be a single link by contract.
-
- 
-
-* Embedded resources are now retrieved via the Links annotation.  If the link is not in the embedded collection then the request to the remote server is made.
-* The link annotation now takes just 1 parameter, the link relationship value.  It's also the value of the annotation so no need to specify the param.  IE @Link("bb:promotions") 
-* Any method annotated with a Link that returns a boolean is treated as a has Link request.  When true the link is present (either as a link or as embedded) when false the link is not present (either as a link or as embedded)
-* The Data annotation now uses value() to set the path, explicitly passing the param as path is not needed.
-* any parameter that is provided as null is ignored.
-* All resources interfaces now must extend the HyperResource base interface, this exposes the useful hasLink method to check for arbitrary link presence as well as some other lower level stuff to retrieve as needed.
-
- * HyperLink's have the following fields (which match the HAL spec's Link Object currently, but new fields outside HAL may be added):
-
-
 * HyperLink getLink(relationship) method throws an exception if the relationship is a multi link relationship.
-* HyperLink[] getLinks(relationship) added that returns all links of a multi link relationship.
-* hasLink(relationship) returns true if one or more link objects exists for the given relationship.
- * If relationship is a multi link relationship with no links present (ala an empty array) this method returns false.
- * When following a relationship in the client (usually via the a Link annotated method) the client will throw an exception if it detects the relationship was a multi link relationship and that relationship was not embedded.
- * Multi-link relationship navigation may be supported in future
- * Embedded multi link relationships will be successfully resolved.
-* HyperLink has a new follow(TypeRef<T>, HyperLink) method that can be used to follow arbitrary hyperlinks retrieved from the getLink or getLinks methods.  This technique is very useful for cases where the return type of a link relationship is not consistent between resources.  For example the primary and secondary targets of Promotions.  The TypeRef is a super type token as explained at http://gafter.blogspot.com/2006/12/super-type-tokens.html.  Example usage:
-HyperLink shopByLink = root.getLink("bb:shopby");
-Page<Shopby> shopbyPage = root.follow(new TypeRef<Page<Shopby>>(){}, shopByLink);
-* the follow method has been moved to the HyperLink type, as it is the link you're following anyways.  It now works like:
-HyperLink shopByLink = root.getLink("bb:shopby");
-Page<Shopby> shopbyPage = shopByLink.follow(new TypeRef<Page<Shopby>>(){});
-* Lombak dependency was switched to provided scope so that it need not be included by projects depending on this package (like if you were to import this with gradle)
-* commons-lang3 dependency was removed
-* If you do not want to suffer the overhead of JSON parsing  prefer to get the entire Response you can do that as well
-//On interface
-@Link("bb:reviews")
-HyperResponse reviews();
- 
-//In calling code
-HyperResponse reviewsResponse = product.reviews();
- 
-//Using HyperLink's follow
-HyperResponse reviewsResponse = product.getLink("bb:reviews").follow(new TypeRef<HyperResponse>{});
-* A new interface RequestInterceptor has been added that allows arbitrary modifications of outgoing Requests prior to sending them
-Interceptors are registered during build phase of the hyper client.  See Interceptors in Code Examples below.
-* New interfaces ResourceMethodInfoCache and MethodInfoCache added to allow caching method metadata, such as annotations, instead of retrieving it every time. 
-A default implementation based on a ConcurrentHashMap has been included
-Clients may override the default by implementing their own and settings it during build phase.  See Configuring the client.
-* Resource interface methods that return HyperLink or HyperLink[] and are annotated with the @Link annotation are now supported.  These are functionally equivalent shortcuts for the HyperResource#getLink(String rel) and HyperResource#getLinks(String rel) methods and can be followed.  Given the following resource interface:
-Class code
+* When working with HAL hasLink(String relationship, String name) will never return true based on the presence of a link embedded using the Hyper Text Cache Pattern.  This is because HAL's implemenation of embedded links does not allow specifying the name field of the link.
+
+* Resource interface methods that return HyperLink or HyperLink[] and are annotated with the @Link annotation are now supported.  These are functionally equivalent shortcuts for the HyperResource#getLink(String rel) and HyperResource#getLinks(String rel) methods.  An example resource interface:
+```
 public class Foo {
     ...
     @Link("bb:single")
@@ -118,31 +80,81 @@ public class Foo {
     @Link("bb:multi")
     HyperLink[] getMultiLinks();   
 }
+```
 
-The CHA specifically guarantees that links present as single link relationship (no array in the JSON) are contractually obligated to remain as single link relationships unless backwards compatibility is broken during a major version change.  (Note: versioning with the CHA is still an outstanding issue).
-Resource interface methods annotated with @Link that return a HyperResource, String, or HyperResponse use getLink to find the link relationship currently.
-When working with HAL hasLink(String relationship, String name) will never return true based on the presence of a link embedded using the Hyper Text Cache Pattern.  This is because this pattern does not allow specifying the name field of the link.
-In various places the CHA uses a convention of appending -[name] to the link relationship when embedding...but this is not a standard and the commerce hyper client does not work with this behaviour.  This may change in the future once the client allows convention extensions.
-hasLink(String relationship) does take into consideration present of a link embedded using the Hyper Text Cache Pattern.
-The HyperClient class has been removed and HyperClientBuilder has been replaced with RootResourceBuilder, whose #build takes a Class<T extends HyperResource> to return the right resource interface (equivalent to the old HyperClient#fetchRoot). See  Configuring the client.  You can still jump directly to a deeper resource as needed...but this is effectively considered the root resource of a different API.
-TypeInfo class added, which caches method return type information by wrapping the previous Map<String, Type> typeParamsLookup, which is used by HyperResourceInvokeHandler.
-Complex properties of Resource Interfaces are now implemented as simple POJOs deserialized from the response.  Previously complex properties were proxified and treated much like full HyperResource implementations.  Examples of complex properties in the Commerce Hyper API include: Flag, GiftInfo, Inventory, PriceInfo, Rating and Violator
-The Rating complex property method getRating which returns the value of the rating has been renamed getValue
-The LinkedHashSet<String> HyperResoruce::getProfiles method was added to return an ordered set of profiles the resource claims to implement per the RFC6909 spec
-* "Hyper" prefix removed from most class names and variables.  Some examples:
-HyperResponse is now Response
-HyperRequest is now Request
-HyperMediaTypeHandler is now MediaTypeHandler
-There are many other examples
-HyperClientException was moved to the exception namespace
-The HyperClient class now has a setCookieHandler method that takes a cookie handler to be used when working with requests and responses
-HyperResourcePart has been removed.
-HyperResource::getPathAs added to return data casted to types.  This is the engine behind @Data annotations now.
-HyperResourceType was no longer needed and removed
-The ability to return a List<? extends HyperResource> for @Link annotated methods was removed as it was not being used and not considered core functionality.  A plugin architecture will be introduced to allows this to be added back in a future version.
-HyperResource:resolveLinkLocal now returns a HyperResource
-HyperResource:resolveLinksLocal added.  It is the equivalent of Hyperresource:resolveLinkLocal for multi link relationships.  It returns a HyperResource[]
-HyperResource:isMultiLink(relationship) was updated to return true if the relationship is embedded AND is multilink
+* HyperLink has a follow(TypeRef<T>) method that follows the link and returns the resulting resource with the given interface.    * The TypeRef is a super type token as explained at http://gafter.blogspot.com/2006/12/super-type-tokens.html.  Example usage:
+ * This works the same an @Link annotated method on a resource interface
+* A code example using a super type token:
+```
+HyperLink shopByLink = root.getLink("bb:shopby");
+Page<Shopby> shopbyPage = shopByLink.follow(new TypeRef<Page<Shopby>>(){});
+```
+
+
+* A @Link annotated resource interface method can be considered short hand for a call to getLink with a subsequent call to follow underneath the covers.
+* The @Link annotation now takes just 1 parameter, the link relationship value.  It's also the value of the annotation so no need to specify the param.  IE @Link("bb:promotions") 
+* Any method annotated with a @Link(relationship) that returns a boolean is executed as a hasLink(relationship) invokcation.  When true the link is present (either as a link or as embedded) when false the link is not present (either as a link or as embedded)
+
+
+
+* The @Data annotation now uses value() to set the path, explicitly passing the param as path is not needed.
+* any parameter that is provided as null is ignored.
+* Complex properties (properties that have sub-properites, but no hypermedia controls) of resources are now retrievable as simple POJOs deserialized from the response.  Previously complex properties were considered a Resource with no hypermedia controls and required all the overhead of resources interfaces.
+* HyperResource::getPathAs added to return data casted to types.  This is the engine behind @Data annotations now.
+
+
+* Embedded resource links, like HAL's _embedded or Siren's entities, are now supported when using a HyperLink's follow method along with @Link annotated methods.
+ * A new method on the HyperResource canResolveLocal(String relationhip) powers this logic
+ * When requesting the following of a link, either by a HyperLink's follow method or a @Link annotated method on a resource interface, a check to see if the link is resolvable locally using the canResolveLocal is made.  If the link cannot be resolved locally, than a request to the remote server is made.
+ * HyperResource:resolveLinkLocal now returns a HyperResource
+ * HyperResource:resolveLinksLocal added.  It is the equivalent of Hyperresource:resolveLinkLocal for multi link relationships.  It returns a HyperResource[]
+ * HyperResource:isMultiLink(relationship) was updated to return true if the relationship is embedded AND is multilink
+
+
+* When calling an @Link annotated resource interface method an exception is thrown if it detects the relationship was a multi link relationship and that relationship was not embedded.
+ * This is because making a request for every matching link object sequentially could require a lot of I/O wait time and doing it in parallel is overly complicated in Java 6
+ * Multi-link relationship navigation may be supported in future
+ * Embedded multi link relationships will be successfully resolved.
+ *
+
+* Dependency Cleanup to make Hyperfit a smaller footprint in your project
+** Lombak dependency was switched to provided scope so that it need not be included by projects depending on this package (like if you were to import this with gradle)
+** commons-lang3 dependency was removed
+
+* If you do not want to suffer the overhead of JSON parsing and prefer to work with the raw Reponse you can now do that by specifying Response as the expected return type either as the return of a resource interface method or as the type in a call to HyperLink's follow().  For example
+```
+//On interface
+@Link("bb:reviews")
+Response reviews();
+ 
+//In calling code
+Response reviewsResponse = product.reviews();
+ 
+//Using HyperLink's follow
+Response reviewsResponse = product.getLink("bb:reviews").follow(new TypeRef<Response>{});
+```
+
+* A new interface RequestInterceptor has been added that allows arbitrary modifications of outgoing Requests prior to sending them
+ * Interceptors are registered during build phase.
+* New interfaces ResourceMethodInfoCache and MethodInfoCache added to allow caching method metadata, such as annotations, instead of retrieving it every time. 
+ * A default implementation based on a ConcurrentHashMap has been included
+ * Developers may override the default by implementing their own and settings it during build phase.  See Configuring the client.
+* TypeInfo class added, which caches method return type information by wrapping all the generic information from the previous context.
+* The LinkedHashSet<String> HyperResoruce::getProfiles method was added to return an ordered set of profiles the resource claims to implement per the RFC6909 spec
+* HyperClientException was moved to the exception namespace
+
+* The "Hyper" prefix is no longer present in most class names and variables.  Some examples:
+ * The HyperClient class has been removed and HyperClientBuilder has been replaced with RootResourceBuilder, whose #build takes a Class<T extends HyperResource> to return the right resource interface (equivalent to the old HyperClient#fetchRoot). See  Configuring the client.  You can still jump directly to a deeper resource as needed...but this is effectively considered the root resource of a different API.
+ * HyperResponse is now Response
+ * HyperRequest is now Request
+ * HyperMediaTypeHandler is now MediaTypeHandler
+ * HyperResourcePart has been removed.
+ * HyperResourceType was no longer needed and removed
+
+* The HyperClient class now has a setCookieHandler method that takes a cookie handler to be used when working with requests and responses
+
+* The ability to return a List<? extends HyperResource> for @Link annotated methods was removed as it was not being used and not considered core functionality.  A plugin architecture will be introduced to allows this to be added back in a future version.
+
 BaseHyperResource added which has implementations of hasLink(relationship), hasLink(relationship, name), getLink(relationship), getLink(relationship, name), & getLinks(relationship, name) based upon an extender implementing getLinks(relationship).
 HalJsonResource now extends BaseHyperResource
 HalJsonResource now lazy non-blocking cache's calls to getLinks(relationship) (which many other methods from BaseHyperResource now use) in a simple hashmap.  If you notice issues with this, please report them.
