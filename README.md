@@ -26,7 +26,7 @@ See [history](history.md)
 
 ## Best Practices
 * When defining resource interface methods some best practices are recommended:
-** Data Properties (which are generally annotated with @Data should be defined as bean properties, prefixed with get ala getPropertyName().  
-** Methods that follow links to other resources, even if they are expected to be embedded, should not be prefixed with get to distinguish them from data that is guaranteed to be locally available.  Prefixing with fetch or follow is   IE Prefer naming a method that follows a x:product link relationship as product() or fetchProduct() over getProduct().
-** multi word links like main-goal should have camelCase method names, EG mainGoal()
-** A method used for the checking for the presence of a link should be prefixed with has EG hasLinkname
+ * Data Properties (which are generally annotated with @Data should be defined as bean properties, prefixed with get ala getPropertyName().  
+ * Methods that follow links to other resources, even if they are expected to be embedded, should not be prefixed with get to distinguish them from data that is guaranteed to be locally available.  Prefixing with fetch or follow is   IE Prefer naming a method that follows a x:product link relationship as product() or fetchProduct() over getProduct().
+ * multi word links like main-goal should have camelCase method names, EG mainGoal()
+ * A method used for the checking for the presence of a link should be prefixed with has EG hasLinkname
