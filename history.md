@@ -1,7 +1,85 @@
+## 1.4.0-SNAPSHOT - TBD
+* The concept of the ResourceRegistry was replaced with the much more general ResourceInterfaceSelectionStrategy plugin architecture.
+* A ResourceInterfaceSelectionStrategy plugin must implement the determineInterfaces method that takes the expected return interface and the HyperResource for which interfaces should be selected and returns an array of all the HyperResource interfaces that have been selected
+ * The resulting array may not include the exepected resource interface!
+* The SimpleInterfaceSelectionStrategy is an implementation of the ResourceInterfaceSelectionStrategy that returns an array containing only the expected resource interface passed to determineInterfaces regardless if that interface is applicable or not.
+* The ProfileBasedInterfaceSelectionStrategy is meant to replace the removed ResourceRegistry.
+ * It's contructor takes a collection of HyprerResource extending classes that it looks for Profile annotations on and build up a registry of profiles to interfaces.  When determineInterfaces is invoked it returns the expected return class passed in combined with all interfaces that the have claimed, via their @Profile annotation, to support the profiles of the underlying HyperResource.
+* Developers can use their own interface selection strategy to choose the resources the dynamic proxy should implement.  They could be based on media type, URL requested, headers in the response, or even based on the presence or values of fields in the response.
+* org.hyperfit.HyperRequestProcessor was renamed org.hyperfit.HyperfitProcessor to identify it as the core processing logic of the Hyperfit library.
+* Hyperfit processor has been formalized to have 3 processing methods that make up the processing pipeline within Hyperfit
+ * A developer can define how far in the pipeline the processing should proceed by specifying the the return class.  See explinations of the 3 process methods for more detail.
+ * processRequest takes a RequestBuilder and processes it into the requested return type.  If the requested return type is a Request then all that happens during processing is the request interceptors registered with the HyperfitProcessor are applied and the Request is returned.  If the requested type is not a request then the request is executed and the response is sent to processResponse.
+ * There are various overload of processRequest to make it easy to start processing with just a URL.  This functionally replaces the concept of a RootResourceBuilder.
+ * processResponse takes a response and processes it into the requested return type.  If the requested return type is a Response than that is returned.  This is most useful when processRequest is called with Response as the return type and is how a Resource Interface method that has Response as it's return type is processed. 
+ * If the return type is not a Response then an attempt to convert the response to a HyperResource using the the appropriate ContentTypeHandler registered in the ContentTypeRegistry 
+ * Upon success (either directly or with the ErrorHandler's intervention) the processResource method is called
+ * processResource takes a HyperResource and processes it into the request return type.  If the requested return type is HyperResource then it just returns it.  If not, then it wraps the given hyper resource with a dynamic proxy backed by a HyperResourceInvokeHandler instance. The proxy is defined to implement all the interfaces returned by the ResourceInterfaceSelectionStrategy configured with the HyperfitProcessor.
+* The Response type now includes a getRequest method to get a handle to the Request that was processed into the Response
+* The ErrorHandler's signature was changed to take a reference to the HyperfitProcessor in use when the error was encountered.
+
+## 1.3.0-SNAPSHOT - 2015-03-18
+* Extracted OkHttp 2.x Client library as a hyperfit plugin - artifact org.hyperfit:hyperfit-okhttp2-client
+ * This now depends on OkHttp 2.1.0 and okhttp-urlconnection 2.1.0 if you are explicitly overriding the transitive dependencies consider upgrading because of the cache reasons listed at https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-210-rc1
+* Added OkHttp 1.x Client library - artifact org.hyperfit:hyperfit-okhttp1-client 
+ * OKHttp 1.x should only be used for Java 1.6 compatibility.
+* Extracted the HAL specifics into a plugin library hyperfit-hal
+ * This removes the core dependency on jackson and allows for a gson (or some other JSON library) based HAL implementation if desired.
+* Migrated org.hyperfit.RootResourceBuilder to org.hyperfit.HyperRequestProcessor.Builder
+ * HyperRequestProcessor is now the home of the core processing functionality of Hyperfit, more to come on this
+* RequestBuilder was changed to be an interface and move out of the Request class
+* BoringRequestBuilder implements RequestBuilder and is useful when you just have a url you want to make a request with.
+ * Calling setParam on a BoringRequest builder will always result in a runtime exception being thrown as the BoringRequestBuilder cannot handle parameters in templates
+* RFC6570RequestBuilder implements RequestBuilder and works with URI templates as defined in the RFC6570 specification.
+* Both RequestBuilder implementations have static methods for building the most common types of requests like get post put delete, etc.
+* A new HyperLink type HalHyperLink has been added (in the hyperfit-hal plugin) that is returned by the HalJsonResource whenever getLink() is called.
+ * HalHyperLink's toRequestBuilder() method uses the isTemplated() method to determine if a BoringRequestBuilder or RFC6570RequestBuilder is returned
+ * This roughly means that a link with {template} like syntax will not treat those as template/macros if it is being used within a BoringRequestBuilder, which will happen whenever a links templated field explicitly is not set to true (in the case of HAL links)
+* This also allows for other link templating specifications to be used for other formats.
+* Instead of Request.builder() use new BoringRequestBuilder() or new RFC6570RequestBuilder()
+* The Request type no longer has any concept of parameters, it functions as an immutable POJO representing a full formed request.
+
+
+## 1.1.0-SNAPSHOT - 2015-03-04
+* Hyperfit now allows you to specify the content of requests (like post bodies). Various changes here:
+* The org.hyperfit.mediatype package was renamed org.hyperfit.content
+* New class ContentType for negotiating and matching content types (EG: application/hal+json;charset=UTF-8 matching application/hal+json)
+ * You can use the parse static method to construct from content type strings (like "application/hal+json;charset=UTF-8;q=.8")
+* New class ContentRegistry for managing available ContentTypeHander's
+ * This is the interface passed to the various ErrorHandler methods replacing the Map<String, MediaTypeHandler> "registry" of content type handler
+ * The RootResourceBuilder's method changed to work with this more closely
+* The MediaTypeHandler was renamed ContentTypeHandler
+ * getDefaultHandledMediaType is now called getDefaultContentType() and it now returns a ContentType
+ * parseHyperResponse was renamed parseResponse
+ * New method prepareRequest that takes a request and content (a POJO) and encodes it according to the content type and sets the reqest contentType to the appropriate content type.
+ * New methods canParseResponse() and canPrepareRequest() to indicate capabilities of the ContentTypeHandler
+* HalJsonMediaTypeHandler was renamed HalJsonContentTypeHandler
+ * It does NOT currently support the prepareRequest functionality
+* New content type handler class org.hyperfit.content.form.FormURLEncodedContentTypeHandler that works with the "application/x-www-form-urlencoded" content type.
+ * It does NOT currently support the parseResponse functionality
+ * YOU WILL WANT TO REGISTER THIS IN YOUR BUILDER!!!
+ * It performs form url encoded by reflecting on fields (private or not) and encoding them as key=value pairs in the response content
+* New annotation @Content that takes a content type string indicating how the parameter should be serialized.  For example:
+```
+@Method(org.hyperfit.net.Method.POST)
+@Link(REL_LOGIN)
+CheckoutStep login(
+    @Param("CSRF") String CSRF,
+    @Content("application/x-www-form-urlencoded") LoginCredentials credentials
+);
+```
+Makes a POST request to the URL identified by the REL_LOGIN link relationship filling in the URL CSRF parameter and serializing the LoginCredentials instance use the ContentTypeHandler implementation registered as compatible with "application/x-www-form-urlencoded".  The serialized content is used as the content of the request, in the case of HTTP this is the request body.
+
 ## 1.0.2-SNAPSHOT - 2015-02-09
+* The HyperLink type has two new follow method signatures()
+ * R follow(Class<R>) - useful when you aren't trying to return a generic type.  For example the Response.class to get a raw Response object from a follow.
+ * R follow(Class<R> class, Type genericInfo) - If you already have a generic type reference you can use it with this method.  This is actually what the follow(TypeRef<R>) calls, just using the TypeRef as an intermediate step.
+* The Request object has a getAcceptedContentType() method that is used when creating the underlying network request by prefixing to the list of accepted content types of the client request specific values.  These are used in the request to identify what the it claims to accept.  In the case of HTTP this translates to the Accept header.
+ * The Request.Builder has methods to add to the request specific accepted content types.
+* If a link has a type parameter, then when it is followed (by any method including follow() and or an annotated method on a resource interface) that type is set as a request specific accepted content type.  This type gets a higher priority than any accept content types registered with the underlying Hyperfit client.
 
 ## 1.0.1-SNAPSHOT - 2015-01-25
-* Initial release version
+* Initial release version.  These notes are here to help understand the history of pre-release versions.
 
 * All resources interfaces now must extend the HyperResource base interface, this exposes the useful hasLink method to check for arbitrary link presence as well as some other lower level stuff to retrieve as needed.
 
@@ -69,6 +147,21 @@ hasLink(String relationship, String name) (see notes about embedded affecting ha
 * getLink should only be used in cases where the link is known to be a single link by contract.
 * HyperLink getLink(relationship) method throws an exception if the relationship is a multi link relationship.
 * When working with HAL hasLink(String relationship, String name) will never return true based on the presence of a link embedded using the Hyper Text Cache Pattern.  This is because HAL's implemenation of embedded links does not allow specifying the name field of the link.
+* getLinks() returns an array of all hyper links of the resource.
+* getFirstLink(String relationship, String...names) gathers all the links with the given relationship and finds the first name for which a link is present.
+ * Use the * string to match any name.  Very useful as a fallback to try to retrieve a link by name, but resort to using any link with the relationship.
+ * Use null to match a link with no name
+ * Use the empty string to match a link with the empty string
+ * There is no way to match a link with name * with this method, instead use the hasLink(rel, "*") followed by a getLink(rel, "*") in the rare case that you are looking for a link with the * name.
+
+
+* HyperLink has a follow(TypeRef<T>) method that follows the link and returns the resulting resource with the given interface.    * The TypeRef is a super type token as explained at http://gafter.blogspot.com/2006/12/super-type-tokens.html.  Example usage:
+ * This works the same an @Link annotated method on a resource interface
+* A code example using a super type token:
+```
+HyperLink shopByLink = root.getLink("bb:shopby");
+Page<Shopby> shopbyPage = shopByLink.follow(new TypeRef<Page<Shopby>>(){});
+```
 
 * Resource interface methods that return HyperLink or HyperLink[] and are annotated with the @Link annotation are now supported.  These are functionally equivalent shortcuts for the HyperResource#getLink(String rel) and HyperResource#getLinks(String rel) methods.  An example resource interface:
 ```
@@ -81,19 +174,19 @@ public class Foo {
     HyperLink[] getMultiLinks();   
 }
 ```
-
-* HyperLink has a follow(TypeRef<T>) method that follows the link and returns the resulting resource with the given interface.    * The TypeRef is a super type token as explained at http://gafter.blogspot.com/2006/12/super-type-tokens.html.  Example usage:
- * This works the same an @Link annotated method on a resource interface
-* A code example using a super type token:
-```
-HyperLink shopByLink = root.getLink("bb:shopby");
-Page<Shopby> shopbyPage = shopByLink.follow(new TypeRef<Page<Shopby>>(){});
-```
-
-
-* A @Link annotated resource interface method can be considered short hand for a call to getLink with a subsequent call to follow underneath the covers.
+* A @Link annotated resource interface method can be considered short hand for a call to getLink(relationship) with a subsequent call to follow underneath the covers.
 * The @Link annotation now takes just 1 parameter, the link relationship value.  It's also the value of the annotation so no need to specify the param.  IE @Link("bb:promotions") 
 * Any method annotated with a @Link(relationship) that returns a boolean is executed as a hasLink(relationship) invokcation.  When true the link is present (either as a link or as embedded) when false the link is not present (either as a link or as embedded)
+* A @NamedLink annotated resource interface method can be considered short hand for a call to getLink(relationship, name) with a subsequent call to follow underneat the convers.
+public interface Store extends CHAHyperResource {
+...
+    @NamedLink(value=REL_IMAGE_FLAG, name="icon")
+    HyperLink getFlagIconLink();
+...
+}
+* A @NamedLink annotated resource interface method can be considered short hand for a call to getFirstLink(relationship, names...)
+ * Use the FirstLink.NULL constant to identify links with no name field
+ * Use the FirstLink.MATCH_ANY_NAME constant to identify any link with the given relationship
 
 
 
@@ -101,6 +194,7 @@ Page<Shopby> shopbyPage = shopByLink.follow(new TypeRef<Page<Shopby>>(){});
 * any parameter that is provided as null is ignored.
 * Complex properties (properties that have sub-properites, but no hypermedia controls) of resources are now retrievable as simple POJOs deserialized from the response.  Previously complex properties were considered a Resource with no hypermedia controls and required all the overhead of resources interfaces.
 * HyperResource::getPathAs added to return data casted to types.  This is the engine behind @Data annotations now.
+* HyperResource::hasPath(String... path) returns true if the path used results in a located piece of data
 
 
 * Embedded resource links, like HAL's _embedded or Siren's entities, are now supported when using a HyperLink's follow method along with @Link annotated methods.
@@ -140,11 +234,10 @@ Response reviewsResponse = product.getLink("bb:reviews").follow(new TypeRef<Resp
  * A default implementation based on a ConcurrentHashMap has been included
  * Developers may override the default by implementing their own and settings it during build phase.  See Configuring the client.
 * TypeInfo class added, which caches method return type information by wrapping all the generic information from the previous context.
-* The LinkedHashSet<String> HyperResoruce::getProfiles method was added to return an ordered set of profiles the resource claims to implement per the RFC6909 spec
-* HyperClientException was moved to the exception namespace
+* HyperClientException was moved to the exception namespace and renamed HyperfitException
 
 * The "Hyper" prefix is no longer present in most class names and variables.  Some examples:
- * The HyperClient class has been removed and HyperClientBuilder has been replaced with RootResourceBuilder, whose #build takes a Class<T extends HyperResource> to return the right resource interface (equivalent to the old HyperClient#fetchRoot). See  Configuring the client.  You can still jump directly to a deeper resource as needed...but this is effectively considered the root resource of a different API.
+ * The HyperClient class has been removed and HyperClientBuilder has been replaced with RootResourceBuilder, whose #build takes a Class<T extends HyperResource> to return the right resource interface (equivalent to the old HyperClient#fetchRoot) and a String URL to retrieve the resource. See  Configuring the client.  You can still jump directly to a deeper resource as needed...but this is effectively considered the root resource of a different API.
  * HyperResponse is now Response
  * HyperRequest is now Request
  * HyperMediaTypeHandler is now MediaTypeHandler
@@ -152,51 +245,23 @@ Response reviewsResponse = product.getLink("bb:reviews").follow(new TypeRef<Resp
  * HyperResourceType was no longer needed and removed
 
 * The HyperClient class now has a setCookieHandler method that takes a cookie handler to be used when working with requests and responses
+* The @Link.@Param & @Link.@Header annotations have been lifted into their own types out of the Link annotation class.
+* The @Link annotation was split up into more explicit parameters:
+* The @Method annotation controls the request method to use when following links.  The methodType field is no longer present on the Link annotation.
+ * The default it Method.GET
+ 
 
 * The ability to return a List<? extends HyperResource> for @Link annotated methods was removed as it was not being used and not considered core functionality.  A plugin architecture will be introduced to allows this to be added back in a future version.
 
-BaseHyperResource added which has implementations of hasLink(relationship), hasLink(relationship, name), getLink(relationship), getLink(relationship, name), & getLinks(relationship, name) based upon an extender implementing getLinks(relationship).
-HalJsonResource now extends BaseHyperResource
-HalJsonResource now lazy non-blocking cache's calls to getLinks(relationship) (which many other methods from BaseHyperResource now use) in a simple hashmap.  If you notice issues with this, please report them.
-An optional "name" field was added to the @Link annotation. E.g.:
-public interface Store extends CHAHyperResource {
-...
-    @Link(value=REL_IMAGE_FLAG, name="icon")
-    HyperLink getFlagIconLink();
-...
-}
-The sample above is equivalent to store.getLink(REL_IMAGE_FLAG, "icon"). Applies also for #getLinks and #hasLink
-New Profiles annotation used to annotated Resource interfaces to identify what profiles the resource supports
-Takes an array of profile URIs
-A new concept of a resource registry has been added to the client which contains information about all the profiles that registered resources implement.
-The RootResourceBuilder has a resourceRegistry method for supplying a custom resource registry
-Resources must be registered with the registry, this is most easily accomplished with the RootResourceBulder's registerResource method
-The HyperResource interface has a new method getLinks() that returns an array of all hyper links within the resource.
-The HyperResource interface has a new method getFirstLink(String relationship, String...names) that gathers all the links with the given relationship and finds the first name for which a link is present.
-Use the * string to match any name.  Very useful as a fallback to try to retrieve a link by name, but resort to using any link with the relationship.
-Use null to match a link with no name
-Use the empty string to match a link with the empty string
-There is no way to match a link with name * with this method, instead use the hasLink(rel, "*") followed by a getLink(rel, "*") in the rare case that you are looking for a link with the * name.
-The Content annotation was removed.  Register media type handlers to send the accept headers you require.  This was mostly broken anyways as we don't send request bodies currently.
-The Link.Param & Link.Header annotations have been lifted into their own types out of the Link annotation class.
-The Link annotation was split up into more explicit parameters:
-The Method annotation controls the request method to use when following links.  The methodType field is no longer present on the Link annotation.
-The default it Method.GET
-All instances that were not using GET have been updated
-The Link annotation now identifies links regardless of their names.  The name field has been removed from the Link parameter to indicate this.
-The NamedLink annotation now identifies a link with a given name
-Use the NamedLink.NULL constant to identify links with no name field
-The FirstLink annotation now identifies links with a given relationship matching the given set of names
-The names are iterated in order and the first name that matches a link is returned
-Use the FirstLink.NULL constant to identify links with no name field
-Use the FirstLink.MATCH_ANY_NAME constant to identify any link with the given relationship
-This is useful in fallback scenarios where you may want links with a given name, but can accept any link with the given relationship in the worst case
-In all cases using a name of "" no longer matches any link regardless of name.  Use the Link annotation for this instead.
-The HyperResource interface has a new method hasPath(String... path) that returns true if the path results in data that exists
-the org.hyperfit namespace was moved into it's own project.  It will eventually contain different release notes.  For now:
-the org.hyperfit.http namespace was moved to the org.hyperfit.net namespace.  Hyperfit is built to be protocol agnostic with protocol implementation plugins (like OkHttp).
-The type HyperClientException was renamed HyperfitException
-The RootResourceBuilder::build() method now has two parameters, the class interface to return and the url for the root resource
-the endpoint() method has been removed.
-The commerce hyper client project now has a transitive dependency on the hyperfit project.
+* BaseHyperResource added which has implementations of hasLink(relationship), hasLink(relationship, name), getLink(relationship), getLink(relationship, name), & getLinks(relationship, name) based upon an extender implementing getLinks(relationship).
+* HalJsonResource now extends BaseHyperResource
+* HalJsonResource now lazy non-blocking cache's calls to getLinks(relationship) (which many other methods from BaseHyperResource now use) in a simple hashmap.  If you notice issues with this, please report them.
+
+* The LinkedHashSet<String> HyperResoruce::getProfiles method was added to return an ordered set of profiles the resource claims to implement per the RFC6909 spec
+* A new concept of a resource registry has been added
+ * New Profiles annotation used to annotated Resource interfaces to identify what profiles the resource supports
+ * The registry contains all information about which resource interfaces map to which RFC6909 profiles
+ * The RootResourceBuilder has a resourceRegistry method for supplying a custom resource registry
+
+* The Content annotation was removed.  Register media type handlers to send the accept headers you require.  This was mostly broken anyways as we don't send request bodies currently.
 
