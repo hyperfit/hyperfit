@@ -14,7 +14,7 @@
  * processResponse takes a response and processes it into the requested return type.  If the requested return type is a Response than that is returned.  This is most useful when processRequest is called with Response as the return type and is how a Resource Interface method that has Response as it's return type is processed. 
  * If the return type is not a Response then an attempt to convert the response to a HyperResource using the the appropriate ContentTypeHandler registered in the ContentTypeRegistry 
  * Upon success (either directly or with the ErrorHandler's intervention) the processResource method is called
- * processResource takes a HyperResource and processes it into the request return type.  If the requested return type is HyperResource then it just returns it.  If not, then it wraps the given hyper resource with a dynamic proxy backed by a HyperResourceInvokeHandler instance. The proxy is defined to implement all the interfaces returned by the ResourceInterfaceSelectionStrategy configured with the HyperfitProcessor.
+ * processResource takes a HyperResource and processes it into the request return type.  It wraps the given hyper resource with a dynamic proxy backed by a HyperResourceInvokeHandler instance. The proxy is defined to implement all the interfaces returned by the ResourceInterfaceSelectionStrategy configured with the HyperfitProcessor.
 * The Response type now includes a getRequest method to get a handle to the Request that was processed into the Response
 * The ErrorHandler's signature was changed to take a reference to the HyperfitProcessor in use when the error was encountered.
 
