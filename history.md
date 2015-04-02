@@ -1,4 +1,6 @@
-## 1.4.0-SNAPSHOT - TBD
+## 1.5.0-SNAPSHOT - TBD
+
+## 1.4.0-SNAPSHOT - 2015-04-01
 * The concept of the ResourceRegistry was replaced with the much more general ResourceInterfaceSelectionStrategy plugin architecture.
 * A ResourceInterfaceSelectionStrategy plugin must implement the determineInterfaces method that takes the expected return interface and the HyperResource for which interfaces should be selected and returns an array of all the HyperResource interfaces that have been selected
  * The resulting array may not include the exepected resource interface!
