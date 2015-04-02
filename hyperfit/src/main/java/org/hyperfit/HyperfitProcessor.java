@@ -123,8 +123,6 @@ public class HyperfitProcessor {
 
         HyperResource resource = buildHyperResource(response, classToReturn);
 
-        //TODO: if they just want a hyper resource, give it to them
-
         return processResource(classToReturn, resource, typeInfo);
     }
 
@@ -136,6 +134,8 @@ public class HyperfitProcessor {
      * @return resource with same type specified in the resource class.
      */
     public <T> T processResource(Class<T> classToReturn, HyperResource hyperResource, TypeInfo typeInfo) {
+
+        //TODO: if they just want a hyper resource, give it to them
 
         //This can happen if they ask for the String of an embedded resource...not sure that i like that we parse it before
         //But it makes sense.  Note that if we made a request they don't get here because the String case is caught above
