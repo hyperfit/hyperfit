@@ -1,6 +1,7 @@
 package org.hyperfit;
 
-import org.hyperfit.resource.HyperLink;
+
+import org.hyperfit.resource.controls.link.HyperLink;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

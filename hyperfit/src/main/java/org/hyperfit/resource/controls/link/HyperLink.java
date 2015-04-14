@@ -1,4 +1,4 @@
-package org.hyperfit.resource;
+package org.hyperfit.resource.controls.link;
 
 import org.hyperfit.net.BoringRequestBuilder;
 import org.hyperfit.net.RequestBuilder;

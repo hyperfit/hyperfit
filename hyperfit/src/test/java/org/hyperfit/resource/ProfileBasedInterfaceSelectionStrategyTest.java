@@ -11,7 +11,6 @@ import java.util.LinkedHashSet;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 public class ProfileBasedInterfaceSelectionStrategyTest {
 

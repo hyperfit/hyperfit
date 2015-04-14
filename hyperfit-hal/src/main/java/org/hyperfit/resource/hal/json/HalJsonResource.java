@@ -4,7 +4,6 @@ import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.BaseHyperResource;
-import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +15,9 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hyperfit.resource.controls.form.Form;
+import org.hyperfit.resource.controls.link.HyperLink;
+import org.hyperfit.resource.hal.json.controls.link.HalHyperLink;
 import org.hyperfit.utils.StringUtils;
 
 /**
@@ -171,16 +173,6 @@ public class HalJsonResource extends BaseHyperResource {
     }
 
 
-    public LinkedHashSet<String> getProfiles(){
-        HyperLink[] profileLinks = this.getLinks("profile");
-        LinkedHashSet<String> profiles = new LinkedHashSet<String>(profileLinks.length);
-        for(HyperLink l : profileLinks){
-            profiles.add(l.getHref());
-        }
-
-        return profiles;
-
-    }
 
     public boolean hasLink(String relationship){
         //HAL can embed links, so let's check if it's embedded first, otherwise use default implementation
@@ -200,7 +192,7 @@ public class HalJsonResource extends BaseHyperResource {
         JsonNode nodeValue = getJsonNode(jsonResource, path);
 
         if (nodeValue == null || nodeValue.isMissingNode()) {
-            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, path, jsonResource);
+            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, jsonResource);
         }
 
         return OBJECT_MAPPER.convertValue(nodeValue, classToReturn);
@@ -235,4 +227,19 @@ public class HalJsonResource extends BaseHyperResource {
         );
     }
 
+
+    @Override
+    public Form getForm(String formName) {
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    public boolean hasForm(String formName) {
+        return false;
+    }
+
+    @Override
+    public Form[] getForms() {
+        return new Form[0];
+    }
 }

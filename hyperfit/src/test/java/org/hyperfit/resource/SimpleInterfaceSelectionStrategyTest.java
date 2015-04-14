@@ -1,5 +1,7 @@
 package org.hyperfit.resource;
 
+import org.hyperfit.resource.controls.form.Form;
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.junit.Test;
 
 import java.util.LinkedHashSet;
@@ -50,6 +52,20 @@ public class SimpleInterfaceSelectionStrategyTest {
             public LinkedHashSet<String> getProfiles() {
                 return null;
             }
+
+            public Form getForm(String formName) {
+                return null;
+            }
+
+            public boolean hasForm(String formName) {
+                return false;
+            }
+
+            public Form[] getForms() {
+                return new Form[0];
+            }
+
+
         };
 
         Class<?>[] result = x.determineInterfaces(facet.getClass(), facet);

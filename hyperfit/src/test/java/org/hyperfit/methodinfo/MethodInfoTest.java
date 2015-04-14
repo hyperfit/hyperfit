@@ -5,14 +5,10 @@ import org.hyperfit.annotation.Param;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.Link;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package org.hyperfit.resource.hal.json;
+package org.hyperfit.resource.hal.json.controls.link;
 
 
 import org.hyperfit.net.BoringRequestBuilder;

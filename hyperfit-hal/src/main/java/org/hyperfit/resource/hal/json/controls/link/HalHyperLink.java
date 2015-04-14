@@ -1,9 +1,9 @@
-package org.hyperfit.resource.hal.json;
+package org.hyperfit.resource.hal.json.controls.link;
 
 import org.hyperfit.net.BoringRequestBuilder;
 import org.hyperfit.net.RFC6570RequestBuilder;
 import org.hyperfit.net.RequestBuilder;
-import org.hyperfit.resource.HyperLink;
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.utils.StringUtils;
 
 public class HalHyperLink extends HyperLink {

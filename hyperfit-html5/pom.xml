@@ -2,19 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>org.hyperfit</groupId>
         <artifactId>hyperfit-root</artifactId>
+        <groupId>org.hyperfit</groupId>
         <version>1.5.0-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-
-    <artifactId>hyperfit-hal</artifactId>
+    <artifactId>hyperfit-html5</artifactId>
 
     <packaging>jar</packaging>
-    <name>Hyperfit HAL</name>
+    <name>Hyperfit HTML5</name>
 
     <dependencies>
         <dependency>
@@ -24,9 +22,9 @@
 
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.2.3</version>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.1</version>
         </dependency>
 
         <!--  ENTITY UTILS (@ToString) -->
@@ -53,5 +51,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

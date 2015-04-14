@@ -1,6 +1,9 @@
 package org.hyperfit.resource;
 
 
+import org.hyperfit.resource.controls.form.Form;
+import org.hyperfit.resource.controls.link.HyperLink;
+
 import java.util.LinkedHashSet;
 
 /**
@@ -75,5 +78,26 @@ public interface HyperResource {
      * @return LinkedHasSet of all profiles the resource implements.  Order from response is maintained.
      */
     LinkedHashSet<String> getProfiles();
+
+    /**
+     * Returns the form control of the resource with the given name.
+     * @param formName
+     * @return
+     * @throws java.lang.IllegalArgumentException if no form with the given name exists
+     */
+    Form getForm(String formName);
+
+    /**
+     * Returns true if a form control with the given name exists on the resource. false otherwise.
+     * @param formName
+     * @return
+     */
+    boolean hasForm(String formName);
+
+    /**
+     * Returns all form controls of the resource.  This may return an empty array but never should return null
+     * @return
+     */
+    Form[] getForms();
 
 }

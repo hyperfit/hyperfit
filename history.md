@@ -1,4 +1,13 @@
 ## 1.5.0-SNAPSHOT - TBD
+* HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control
+  * other types moved there
+* resource.controls.form package was added to contain interfaces and types for working with form controls
+  * Form interface added for working with a form
+  * Field interface for working with the fields of a form
+  * TextField interface added for working with text fields of a form
+* HyperResource interface has new getForm(String formName) and getForms() methods for retrieving forms to work with.
+* New content type plugin hyperfit-Html5
+* The getProfiles implementation on HalJsonResource was moved to the lower level BaseHyperResource class
 
 ## 1.4.0-SNAPSHOT - 2015-04-01
 * The concept of the ResourceRegistry was replaced with the much more general ResourceInterfaceSelectionStrategy plugin architecture.

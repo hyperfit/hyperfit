@@ -2,7 +2,6 @@ package org.hyperfit.resource.hal.json;
 
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.resource.HyperLink;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,6 +13,8 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.hyperfit.resource.controls.form.Form;
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -875,6 +876,29 @@ public class HalJsonResourceTest {
 
         assertEquals(makeSet(linkHref), actual);
 
+
+    }
+
+    @Test
+    public void testGetForms(){
+        HalJsonResource resource = new HalJsonResource(root);
+        Form[] actual = resource.getForms();
+
+        assertArrayEquals("HAL doesn't support forms so it should always be empty", new Form[0], actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetForm(){
+        //"HAL doesn't support forms so it should always throw"
+        HalJsonResource resource = new HalJsonResource(root);
+        resource.getForm(null);
+    }
+
+    @Test
+    public void testHasForm(){
+        HalJsonResource resource = new HalJsonResource(root);
+
+        assertFalse("HAL doesn't support forms so it should always be empty", resource.hasForm(null));
 
     }
 }

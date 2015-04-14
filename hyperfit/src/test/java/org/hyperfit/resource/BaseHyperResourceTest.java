@@ -1,6 +1,7 @@
 package org.hyperfit.resource;
 
 
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.junit.Test;
 
 import java.util.*;

@@ -56,6 +56,7 @@ public class Messages {
     // -- RESOURCE RELATED --
     public static final String MSG_ERROR_RESOURCE_DATA_SOURCE_NULL = "Resource data source cannot be null.";
     public static final String MSG_ERROR_RESOURCE_LINK_NOT_FOUND = "Resource link with path {} was not found in [{}]";
+    public static final String MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND = "Resource data with path {} was not found in [{}]";
     public static final String MSG_ERROR_RESOURCE_DATA_SOURCE_CANNOT_BE_TRAVERSED = "Resource data source [%s] cannot be traversed. Search path is either null or empty.";
 
     public static final String MSG_ERROR_RESOURCE_CANNOT_BE_BUILT = "Resource cannot be built";

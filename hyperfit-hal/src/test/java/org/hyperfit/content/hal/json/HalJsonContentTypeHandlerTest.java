@@ -1,7 +1,6 @@
 package org.hyperfit.content.hal.json;
 
 import org.hyperfit.content.ContentType;
-import org.hyperfit.content.hal.json.HalJsonContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.hal.json.HalJsonResource;
@@ -19,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 public class HalJsonContentTypeHandlerTest {
 
-    private HalJsonContentTypeHandler halJsonMediaTypeHandler;
+    private HalJsonContentTypeHandler halJsonContentTypeHandler;
 
     @Mock
     private Response responseMock;
@@ -27,17 +26,17 @@ public class HalJsonContentTypeHandlerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        halJsonMediaTypeHandler = new HalJsonContentTypeHandler();
+        halJsonContentTypeHandler = new HalJsonContentTypeHandler();
     }
 
     @Test
     public void testGetDefaultHandledMediaType() {
-        assertEquals(new ContentType("application", "hal+json"), halJsonMediaTypeHandler.getDefaultContentType());
+        assertEquals(new ContentType("application", "hal+json"), halJsonContentTypeHandler.getDefaultContentType());
     }
 
     @Test
     public void testGetDefaultHandledMediaTypeNotNull() {
-        assertNotNull(halJsonMediaTypeHandler.getDefaultContentType());
+        assertNotNull(halJsonContentTypeHandler.getDefaultContentType());
     }
 
     @Test
@@ -46,26 +45,26 @@ public class HalJsonContentTypeHandlerTest {
 
         when(responseMock.getBody()).thenReturn(validHalJson);
         assertEquals(
-                halJsonMediaTypeHandler.parseResponse(responseMock),
+                halJsonContentTypeHandler.parseResponse(responseMock),
                 new HalJsonResource(new ObjectMapper().reader(JsonNode.class).readTree(validHalJson)));
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseNullBody() {
         when(responseMock.getBody()).thenReturn(null);
-        halJsonMediaTypeHandler.parseResponse(responseMock);
+        halJsonContentTypeHandler.parseResponse(responseMock);
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseEmptyBody() {
         when(responseMock.getBody()).thenReturn("");
-        halJsonMediaTypeHandler.parseResponse(responseMock);
+        halJsonContentTypeHandler.parseResponse(responseMock);
     }
 
     @Test(expected = HyperfitException.class)
     public void testHandleHyperResponseWrongBody() {
         when(responseMock.getBody()).thenReturn("{");
-        halJsonMediaTypeHandler.parseResponse(responseMock);
+        halJsonContentTypeHandler.parseResponse(responseMock);
     }
 
 

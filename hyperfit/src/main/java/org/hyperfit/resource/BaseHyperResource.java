@@ -1,9 +1,10 @@
 package org.hyperfit.resource;
 
 import org.hyperfit.message.Messages;
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.utils.StringUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -78,6 +79,16 @@ public abstract class BaseHyperResource implements HyperResource {
 
     }
 
+    public LinkedHashSet<String> getProfiles(){
+        HyperLink[] profileLinks = this.getLinks("profile");
+        LinkedHashSet<String> profiles = new LinkedHashSet<String>(profileLinks.length);
+        for(HyperLink l : profileLinks){
+            profiles.add(l.getHref());
+        }
+
+        return profiles;
+
+    }
 
     public boolean hasLink(String relationship, String name) {
         return this.getLinks(relationship, name).length > 0;
