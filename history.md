@@ -5,6 +5,7 @@
   * Form interface added for working with a form
   * Field interface for working with the fields of a form
   * TextField interface added for working with text fields of a form
+  * The best thign you can do is replace across project any occurrence of ```import org.hyperfit.resource.HyperLink;``` with ```import org.hyperfit.resource.controls.link.HyperLink;```
 * HyperResource interface has new getForm(String formName) and getForms() methods for retrieving forms to work with.
 * New content type plugin hyperfit-Html5
 * The getProfiles implementation on HalJsonResource was moved to the lower level BaseHyperResource class
