@@ -3,6 +3,8 @@ package org.hyperfit.content.html5;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Response;
+import org.hyperfit.resource.HyperResource;
+import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.resource.html5.Html5Resource;
 import org.jsoup.Jsoup;
 import org.junit.Before;
@@ -56,10 +58,14 @@ public class Html5ContentTypeHandlerTest {
         html5ContentTypeHandler.parseResponse(responseMock);
     }
 
-    @Test(expected = HyperfitException.class)
+    @Test
     public void testHandleHyperResponseEmptyBody() {
+        //Note an empty body is technically a valid html doc as far as i can tell
         when(responseMock.getBody()).thenReturn("");
-        html5ContentTypeHandler.parseResponse(responseMock);
+        HyperResource result = html5ContentTypeHandler.parseResponse(responseMock);
+
+        assertArrayEquals("if this work, anything should", new HyperLink[0], result.getLinks("somerel"));
+
     }
 
 
