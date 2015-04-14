@@ -48,7 +48,7 @@ public class FormUrlEncodedContentTypeHandlerTest {
     }
 
     @Test
-    public void testEncodeRequest(){
+    public void testPrepareRequest(){
         RequestData content = new RequestData();
         RequestBuilder builder = new RFC6570RequestBuilder();
 
@@ -61,6 +61,10 @@ public class FormUrlEncodedContentTypeHandlerTest {
     }
 
 
-
+    @Test
+    public void testCapabilities(){
+        assertFalse(handler.canParseResponse());
+        assertTrue(handler.canPrepareRequest());
+    }
 
 }

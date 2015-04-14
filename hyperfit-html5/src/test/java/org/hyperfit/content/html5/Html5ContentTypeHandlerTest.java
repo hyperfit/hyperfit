@@ -68,6 +68,17 @@ public class Html5ContentTypeHandlerTest {
 
     }
 
+    @Test
+    public void testCapabilities(){
+        assertTrue(html5ContentTypeHandler.canParseResponse());
+        assertFalse(html5ContentTypeHandler.canPrepareRequest());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testPrepareRequest(){
+        html5ContentTypeHandler.prepareRequest(null, null);
+    }
+
 
 
 

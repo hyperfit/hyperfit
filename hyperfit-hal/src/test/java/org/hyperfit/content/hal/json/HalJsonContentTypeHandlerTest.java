@@ -68,5 +68,15 @@ public class HalJsonContentTypeHandlerTest {
     }
 
 
+    @Test
+    public void testCapabilities(){
+        assertTrue(halJsonContentTypeHandler.canParseResponse());
+        assertFalse(halJsonContentTypeHandler.canPrepareRequest());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testPrepareRequest(){
+        halJsonContentTypeHandler.prepareRequest(null, null);
+    }
 
 }
