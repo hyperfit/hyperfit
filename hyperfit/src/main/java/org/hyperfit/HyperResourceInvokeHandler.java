@@ -327,7 +327,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     protected void assignAnnotatedValues(org.hyperfit.net.RequestBuilder requestBuilder, Annotation[] annotationsPerParams, Object value) {
         for (Annotation annotation : annotationsPerParams) {
             if (Param.class.isInstance(annotation)) {
-                requestBuilder.setParam(ReflectUtils.cast(Param.class, annotation).value(), value.toString());
+                requestBuilder.setParam(ReflectUtils.cast(Param.class, annotation).value(), value);
             }
 
             if (Header.class.isInstance(annotation)) {

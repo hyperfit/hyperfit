@@ -22,11 +22,11 @@ public class RFC6570RequestBuilder implements RequestBuilder {
     private String content = null;
     private Method method = Method.GET;
 
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return Collections.unmodifiableMap(params);
     }
 
-    private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, Object> params = new HashMap<String, Object>();
 
     public Map<String, String> getHeaders() {
         return Collections.unmodifiableMap(headers);
@@ -102,7 +102,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public RFC6570RequestBuilder setParam(String name, String value) {
+    public RFC6570RequestBuilder setParam(String name, Object value) {
         if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY);
         }
@@ -130,7 +130,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         return method;
     }
 
-    public String getParam(String param) {
+    public Object getParam(String param) {
         return params.get(param);
     }
 
@@ -148,7 +148,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
         try {
             UriTemplate uriTemplateBuilder = UriTemplate.fromTemplate(urlTemplate);
 
-            for (Map.Entry<String, String> entry : params.entrySet()) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
                 uriTemplateBuilder.set(entry.getKey(), entry.getValue());
             }
 

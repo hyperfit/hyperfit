@@ -1,9 +1,7 @@
 package org.hyperfit.net;
 
-import com.damnhandy.uri.template.UriTemplate;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.utils.StringUtils;
 
@@ -21,7 +19,7 @@ public class BoringRequestBuilder implements RequestBuilder {
     private String content = null;
     private Method method = Method.GET;
 
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return Collections.emptyMap();
     }
 
@@ -100,7 +98,7 @@ public class BoringRequestBuilder implements RequestBuilder {
         return this;
     }
 
-    public BoringRequestBuilder setParam(String name, String value) {
+    public BoringRequestBuilder setParam(String name, Object value) {
         throw new RuntimeException("Boring Request Builder don't know no params");
     }
 
@@ -116,7 +114,7 @@ public class BoringRequestBuilder implements RequestBuilder {
         return method;
     }
 
-    public String getParam(String param) {
+    public Object getParam(String param) {
         return null;
     }
 

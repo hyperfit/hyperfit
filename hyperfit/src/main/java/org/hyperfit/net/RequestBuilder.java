@@ -15,7 +15,7 @@ public interface RequestBuilder {
     //TODO: take a ContentType type instead of a string
     RequestBuilder addAcceptedContentType(String name);
 
-    RequestBuilder setParam(String name, String value);
+    RequestBuilder setParam(String name, Object value);
 
     String getContentType();
 
@@ -23,9 +23,9 @@ public interface RequestBuilder {
 
     Method getMethod();
 
-    String getParam(String param);
+    Object getParam(String param);
 
-    Map<String, String> getParams();
+    Map<String, Object> getParams();
 
     String getHeader(String header);
 

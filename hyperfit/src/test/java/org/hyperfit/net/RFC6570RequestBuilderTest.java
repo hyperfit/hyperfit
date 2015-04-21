@@ -6,7 +6,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -293,7 +292,7 @@ public class RFC6570RequestBuilderTest {
         ;
 
         int count = 0;
-        for (Map.Entry<String,String> entry : request.getParams().entrySet()) {
+        for (Map.Entry<String, Object> entry : request.getParams().entrySet()) {
 
             if (entry.getKey().equals("param1")) {
                 assertEquals(entry.getValue(), "1");
@@ -317,7 +316,7 @@ public class RFC6570RequestBuilderTest {
                 ;
 
         int count = 0;
-        for (Map.Entry<String,String> entry : request.getParams().entrySet()) {
+        for (Map.Entry<String, Object> entry : request.getParams().entrySet()) {
 
             if (entry.getKey().equals("param1")) {
                 assertEquals(entry.getValue(), "1");
