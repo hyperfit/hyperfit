@@ -1,11 +1,14 @@
-## 1.5.0-SNAPSHOT - TBD
+## 1.6.0-SNAPSHOT - TBD
+* 
+
+## 1.5.0-SNAPSHOT - 2015-04-21
 * HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control
   * other types moved there
 * resource.controls.form package was added to contain interfaces and types for working with form controls
   * Form interface added for working with a form
   * Field interface for working with the fields of a form
   * TextField interface added for working with text fields of a form
-  * The best thign you can do is replace across project any occurrence of ```import org.hyperfit.resource.HyperLink;``` with ```import org.hyperfit.resource.controls.link.HyperLink;```
+  * The best thing you can do is replace across project any occurrence of ```import org.hyperfit.resource.HyperLink;``` with ```import org.hyperfit.resource.controls.link.HyperLink;```
 * HyperResource interface has new getForm(String formName) and getForms() methods for retrieving forms to work with.
 * New content type plugin hyperfit-Html5
 * The getProfiles implementation on HalJsonResource was moved to the lower level BaseHyperResource class
