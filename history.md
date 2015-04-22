@@ -16,10 +16,10 @@
 ## 1.4.0-SNAPSHOT - 2015-04-01
 * The concept of the ResourceRegistry was replaced with the much more general ResourceInterfaceSelectionStrategy plugin architecture.
 * A ResourceInterfaceSelectionStrategy plugin must implement the determineInterfaces method that takes the expected return interface and the HyperResource for which interfaces should be selected and returns an array of all the HyperResource interfaces that have been selected
- * The resulting array may not include the exepected resource interface!
+ * The resulting array may not include the expected resource interface!
 * The SimpleInterfaceSelectionStrategy is an implementation of the ResourceInterfaceSelectionStrategy that returns an array containing only the expected resource interface passed to determineInterfaces regardless if that interface is applicable or not.
 * The ProfileBasedInterfaceSelectionStrategy is meant to replace the removed ResourceRegistry.
- * It's contructor takes a collection of HyprerResource extending classes that it looks for Profile annotations on and build up a registry of profiles to interfaces.  When determineInterfaces is invoked it returns the expected return class passed in combined with all interfaces that the have claimed, via their @Profile annotation, to support the profiles of the underlying HyperResource.
+ * It's constructor takes a collection of HyperResource extending classes that it looks for Profile annotations on and build up a registry of profiles to interfaces.  When determineInterfaces is invoked it returns the expected return class passed in combined with all interfaces that the have claimed, via their @Profile annotation, to support the profiles of the underlying HyperResource.
 * Developers can use their own interface selection strategy to choose the resources the dynamic proxy should implement.  They could be based on media type, URL requested, headers in the response, or even based on the presence or values of fields in the response.
 * org.hyperfit.HyperRequestProcessor was renamed org.hyperfit.HyperfitProcessor to identify it as the core processing logic of the Hyperfit library.
 * Hyperfit processor has been formalized to have 3 processing methods that make up the processing pipeline within Hyperfit
