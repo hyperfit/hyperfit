@@ -770,5 +770,37 @@ public class Html5ResourceTest {
 
     }
 
+    @Test
+    public void testGetForms(){
+        String form1Name = UUID.randomUUID().toString();
+        Element form1Element = makeForm(form1Name);
+        body.appendChild(form1Element);
 
+        String form2Name = UUID.randomUUID().toString();
+        Element form2Element = makeForm(form2Name);
+        body.appendChild(form2Element);
+
+        Html5Resource resource = new Html5Resource(doc);
+
+        Form[] actual = resource.getForms();
+        Form[] expected = new Form[]{
+            new JsoupHtmlForm(form1Element),
+            new JsoupHtmlForm(form2Element)
+        };
+        assertThat(actual, arrayContainingInAnyOrder(expected));
+
+    }
+
+
+    @Test
+    public void testGetFormsNoForms(){
+
+
+        Html5Resource resource = new Html5Resource(doc);
+
+        Form[] actual = resource.getForms();
+        Form[] expected = new Form[0];
+        assertArrayEquals(expected, actual);
+
+    }
 }

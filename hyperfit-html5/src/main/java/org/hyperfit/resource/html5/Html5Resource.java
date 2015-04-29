@@ -175,7 +175,16 @@ public class Html5Resource extends BaseHyperResource {
 
     @Override
     public Form[] getForms() {
-        return new Form[0];
+        Elements forms = htmlResource.select("form");
+        for(Element form : forms){
+            String formName = form.attr("name");
+            //this intentionally only stores the first form with a given name
+            if(!formCache.containsKey(formName)){
+                formCache.put(formName, new JsoupHtmlForm(form));
+            }
+        }
+
+        return formCache.values().toArray(new Form[formCache.size()]);
     }
 
     //This is here for Equals to work well with lombak. Two JSoup docs aren't equal even if there contents are.  This means equals for this resource is possibly slow
