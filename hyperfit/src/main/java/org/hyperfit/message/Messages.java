@@ -62,11 +62,16 @@ public class Messages {
     public static final String MSG_ERROR_RESOURCE_CANNOT_BE_BUILT = "Resource cannot be built";
 
     //LINK Related
-    public static final String MSG_ERROR_LINK_WITHOUT_REL = "Link must have a relationship";
+    public static final String MSG_ERROR_LINK_RELATIONSHIP_REQUIRED = "Link relationship is required";
     public static final String MSG_ERROR_LINK_WITH_NAME_NOT_FOUND = "Could not find a link with relationship [{}] and name [{}]";
     public static final String MSG_ERROR_LINK_WITH_NAME_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}] and name [{}]";
-    public static final String MSG_ERROR_LINK_NOT_FOUND = "Could not find a link with relationship [{}]";
+    public static final String MSG_ERROR_LINK_WITH_REL_NOT_FOUND = "Could not find a link with relationship [{}]";
     public static final String MSG_ERROR_LINK_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}]";
+
+    //Form related
+    public static final String MSG_ERROR_FORM_NAME_REQUIRED = "Form name is required";
+    public static final String MSG_ERROR_FORM_WITH_NAME_NOT_FOUND = "Could not find a form with name [{}]";
+    public static final String MSG_ERROR_FORM_FOUND_MORE_THAN_ONE = "Found more than one form with name [{}]";
 
     // -- REFLECTION RELATED --
     public static final String MSG_ERROR_REFLECTION_CANNOT_CAST = "Cannot cast object [{}] to [{}].";

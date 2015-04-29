@@ -3,8 +3,11 @@ package org.hyperfit.resource.html5;
 
 
 
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.resource.HyperResourceException;
+import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
+import org.hyperfit.resource.html5.controls.form.JsoupHtmlForm;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -730,6 +733,40 @@ public class Html5ResourceTest {
 
         assertFalse(resource.hasForm(UUID.randomUUID().toString()));
 
+    }
+
+
+
+    @Test(expected = HyperfitException.class)
+    public void testVerifyGetFormNoMatchesThrows(){
+        Html5Resource resource = new Html5Resource(doc);
+
+        resource.getForm(UUID.randomUUID().toString());
+    }
+
+
+    @Test(expected = HyperfitException.class)
+    public void testVerifyGetFormMultipleMatchesThrows(){
+        Html5Resource resource = new Html5Resource(doc);
+
+        String formName = UUID.randomUUID().toString();
+        body.appendChild(makeForm(formName));
+        body.appendChild(makeForm(formName));
+
+        resource.getForm(UUID.randomUUID().toString());
+    }
+
+    @Test
+    public void testGetForm(){
+        String formName = UUID.randomUUID().toString();
+        Element formElement = makeForm(formName);
+        body.appendChild(formElement);
+
+        Html5Resource resource = new Html5Resource(doc);
+
+        Form actual = resource.getForm(formName);
+        JsoupHtmlForm expected = new JsoupHtmlForm(formElement);
+        assertEquals(expected, actual);
 
     }
 

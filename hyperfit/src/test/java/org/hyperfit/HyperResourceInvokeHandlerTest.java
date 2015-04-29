@@ -3,13 +3,14 @@ package org.hyperfit;
 
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.FirstLink;
-import org.hyperfit.annotation.Form;
+import org.hyperfit.annotation.NamedForm;
 import org.hyperfit.annotation.Link;
 import org.hyperfit.net.*;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
+import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.utils.TypeInfo;
 import org.hyperfit.utils.TypeRef;
@@ -150,11 +151,19 @@ public class HyperResourceInvokeHandlerTest{
     }
 
     public interface FormResource extends HyperResource {
-        @Form("FormA")
+        @NamedForm("FormA")
         boolean hasFormA();
 
-        @Form("FormB")
+        @NamedForm("FormA")
+        Form getFormA();
+
+
+
+        @NamedForm("FormB")
         boolean hasFormB();
+
+        @NamedForm("FormB")
+        Form getFormB();
     }
 
 
@@ -958,6 +967,22 @@ public class HyperResourceInvokeHandlerTest{
         assertTrue(r.hasFormA());
 
         assertFalse(r.hasFormB());
+
+    }
+
+
+    @Test
+    public void testFormAnnotatedMethodReturningForm(){
+        FormResource r = this.getHyperResourceProxy(FormResource.class);
+
+        Form expected = mock(Form.class);
+
+        when(mockHyperResource.getForm("FormA"))
+            .thenReturn(expected);
+
+        Form actual = r.getFormA();
+
+        assertSame(expected, actual);
 
     }
 

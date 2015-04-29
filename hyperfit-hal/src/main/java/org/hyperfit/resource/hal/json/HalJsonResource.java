@@ -97,7 +97,7 @@ public class HalJsonResource extends BaseHyperResource {
 
     public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
+            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
         if(!linkCache.containsKey(relationship)){

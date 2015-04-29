@@ -9,6 +9,7 @@ import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
 import org.hyperfit.net.RequestBuilder;
+import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.resource.controls.link.HyperLinkWrapper;
 import org.hyperfit.resource.HyperResource;
@@ -267,7 +268,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 HyperLink[] relLinks = hyperResource.getLinks(relationship);
 
                 if(relLinks.length == 0){
-                    throw new HyperResourceException(Messages.MSG_ERROR_LINK_NOT_FOUND, relationship);
+                    throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
                 }
 
                 for(String name : firstLink.names()){
@@ -295,10 +296,14 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         }
 
-        Form formAnnotation = methodInfo.getFormAnnotation();
-        if (formAnnotation != null) {
+        NamedForm namedFormAnnotation = methodInfo.getNamedFormAnnotation();
+        if (namedFormAnnotation != null) {
             if (boolean.class.isAssignableFrom(methodInfo.getReturnType())){
-                return hyperResource.hasForm(formAnnotation.value());
+                return hyperResource.hasForm(namedFormAnnotation.value());
+            }
+
+            if(Form.class.isAssignableFrom(methodInfo.getReturnType())){
+                return hyperResource.getForm(namedFormAnnotation.value());
             }
         }
 

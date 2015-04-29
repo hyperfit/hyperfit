@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.Assert.*;
 
 
-public class FormUrlEncodedContentTypeHandlerTest {
+public class NamedFormUrlEncodedContentTypeHandlerTest {
 
 
 

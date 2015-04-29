@@ -11,6 +11,7 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
+import org.hyperfit.resource.html5.controls.form.JsoupHtmlForm;
 import org.hyperfit.resource.html5.controls.link.Html5HyperLink;
 import org.hyperfit.utils.StringUtils;
 import org.jsoup.Jsoup;
@@ -29,6 +30,8 @@ public class Html5Resource extends BaseHyperResource {
 
 
     private final HashMap<String, HyperLink[]> linkCache = new HashMap<String, HyperLink[]>(5);
+    private final HashMap<String, Form> formCache = new HashMap<String, Form>(2);
+
     private final Document htmlResource;
 
     public Html5Resource(Response response) {
@@ -62,7 +65,7 @@ public class Html5Resource extends BaseHyperResource {
     private static final String linkByRelSelector = "link[rel=%s]";
     public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
+            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
         String anchor = String.format(anchorByRelSelector, relationship);
@@ -138,7 +141,29 @@ public class Html5Resource extends BaseHyperResource {
 
     @Override
     public Form getForm(String formName) {
-        throw new IllegalArgumentException();
+        if (StringUtils.isEmpty(formName)) {
+            throw new IllegalArgumentException(Messages.MSG_ERROR_FORM_NAME_REQUIRED);
+        }
+
+
+        //Note this assumes form names are unique
+        if(!formCache.containsKey(formName)){
+            String formSelector = String.format(formByName, formName);
+            Elements matches = htmlResource.select(formSelector);
+
+            if(matches.size() == 0){
+                throw new HyperResourceException(Messages.MSG_ERROR_FORM_WITH_NAME_NOT_FOUND, formName);
+            }
+
+            if (matches.size() > 1) {
+                throw new HyperResourceException(Messages.MSG_ERROR_FORM_FOUND_MORE_THAN_ONE, formName);
+            }
+
+            formCache.put(formName, new JsoupHtmlForm(matches.get(0)));
+
+        }
+
+        return formCache.get(formName);
     }
 
     @Override

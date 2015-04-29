@@ -60,7 +60,7 @@ public class MethodInfo {
     private final NamedLink namedLinkAnnotation;
     private final FirstLink firstLinkAnnotation;
     private final Data dataAnnotation;
-    private final Form formAnnotation;
+    private final NamedForm namedFormAnnotation;
     private final Annotation[][] parameterAnnotations;
     private final org.hyperfit.net.Method requestMethod;
 
@@ -105,7 +105,7 @@ public class MethodInfo {
         this.genericReturnType = method.getGenericReturnType();
 
         this.dataAnnotation = method.getAnnotation(Data.class);
-        this.formAnnotation = method.getAnnotation(Form.class);
+        this.namedFormAnnotation = method.getAnnotation(NamedForm.class);
         this.linkAnnotation = method.getAnnotation(Link.class);
         this.firstLinkAnnotation = method.getAnnotation(FirstLink.class);
         this.namedLinkAnnotation = method.getAnnotation(NamedLink.class);
@@ -148,8 +148,8 @@ public class MethodInfo {
         return parameterAnnotations;
     }
 
-    public Form getFormAnnotation() {
-        return formAnnotation;
+    public NamedForm getNamedFormAnnotation() {
+        return namedFormAnnotation;
     }
 
 }

@@ -22,12 +22,12 @@ public abstract class BaseHyperResource implements HyperResource {
      */
     public HyperLink getLink(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
+            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
         HyperLink[] links = this.getLinks(relationship);
         if (links.length == 0) {
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_NOT_FOUND, relationship);
+            throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
         }
 
         if (links.length > 1) {
@@ -40,7 +40,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
     public HyperLink getLink(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
+            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
         HyperLink[] links = this.getLinks(relationship, name);
@@ -58,7 +58,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
     public HyperLink[] getLinks(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_WITHOUT_REL);
+            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
         HyperLink[] links = this.getLinks(relationship);
