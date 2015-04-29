@@ -66,6 +66,14 @@ public class Html5ResourceTest {
         return link;
     }
 
+    static Element makeForm(String formName) {
+        Element form = new Element(Tag.valueOf("form"), "");
+
+        form.attr("name", formName);
+
+        return form;
+    }
+
     Document doc;
     Element body;
     Element head;
@@ -708,6 +716,19 @@ public class Html5ResourceTest {
         LinkedHashSet<String> actual = resource.getProfiles();
 
         assertEquals(makeSet(linkHref1, linkHref2), actual);
+
+
+    }
+
+    @Test
+    public void testHasForm(){
+        String formName = UUID.randomUUID().toString();
+        body.appendChild(makeForm(formName));
+
+        Html5Resource resource = new Html5Resource(doc);
+        assertTrue(resource.hasForm(formName));
+
+        assertFalse(resource.hasForm(UUID.randomUUID().toString()));
 
 
     }

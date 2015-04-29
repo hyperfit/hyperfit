@@ -295,6 +295,13 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         }
 
+        Form formAnnotation = methodInfo.getFormAnnotation();
+        if (formAnnotation != null) {
+            if (boolean.class.isAssignableFrom(methodInfo.getReturnType())){
+                return hyperResource.hasForm(formAnnotation.value());
+            }
+        }
+
         throw new HyperfitException(Messages.MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION, method, proxy, args);
     }
 

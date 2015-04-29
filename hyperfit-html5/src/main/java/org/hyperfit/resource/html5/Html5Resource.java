@@ -134,6 +134,7 @@ public class Html5Resource extends BaseHyperResource {
         throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
     }
 
+    private static final String formByName = "form[name=%s]";
 
     @Override
     public Form getForm(String formName) {
@@ -142,7 +143,9 @@ public class Html5Resource extends BaseHyperResource {
 
     @Override
     public boolean hasForm(String formName) {
-        return false;
+        String formSelector = String.format(formByName, formName);
+        Elements matches = htmlResource.select(formSelector);
+        return !matches.isEmpty();
     }
 
     @Override

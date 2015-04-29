@@ -3,6 +3,7 @@ package org.hyperfit;
 
 import org.hyperfit.annotation.Data;
 import org.hyperfit.annotation.FirstLink;
+import org.hyperfit.annotation.Form;
 import org.hyperfit.annotation.Link;
 import org.hyperfit.net.*;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
@@ -146,6 +147,14 @@ public class HyperResourceInvokeHandlerTest{
 
         @FirstLink(rel="x:first-link", names={"test", FirstLink.NULL})
         HyperLink firstLinkTestNameThenNullName();
+    }
+
+    public interface FormResource extends HyperResource {
+        @Form("FormA")
+        boolean hasFormA();
+
+        @Form("FormB")
+        boolean hasFormB();
     }
 
 
@@ -934,6 +943,22 @@ public class HyperResourceInvokeHandlerTest{
 
         HyperLink result = r.firstLinkTestNameThenNullName();
         assertEquals(link1, result);
+    }
+
+    @Test
+    public void testFormAnnotatedMethodReturningBoolean(){
+        FormResource r = this.getHyperResourceProxy(FormResource.class);
+
+        when(mockHyperResource.hasForm("FormA"))
+            .thenReturn(true);
+
+        when(mockHyperResource.hasForm("FormB"))
+            .thenReturn(false);
+
+        assertTrue(r.hasFormA());
+
+        assertFalse(r.hasFormB());
+
     }
 
 }

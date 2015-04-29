@@ -1,10 +1,7 @@
 package org.hyperfit.methodinfo;
 
-import org.hyperfit.annotation.FirstLink;
-import org.hyperfit.annotation.NamedLink;
+import org.hyperfit.annotation.*;
 import org.hyperfit.resource.HyperResource;
-import org.hyperfit.annotation.Data;
-import org.hyperfit.annotation.Link;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -63,6 +60,7 @@ public class MethodInfo {
     private final NamedLink namedLinkAnnotation;
     private final FirstLink firstLinkAnnotation;
     private final Data dataAnnotation;
+    private final Form formAnnotation;
     private final Annotation[][] parameterAnnotations;
     private final org.hyperfit.net.Method requestMethod;
 
@@ -107,6 +105,7 @@ public class MethodInfo {
         this.genericReturnType = method.getGenericReturnType();
 
         this.dataAnnotation = method.getAnnotation(Data.class);
+        this.formAnnotation = method.getAnnotation(Form.class);
         this.linkAnnotation = method.getAnnotation(Link.class);
         this.firstLinkAnnotation = method.getAnnotation(FirstLink.class);
         this.namedLinkAnnotation = method.getAnnotation(NamedLink.class);
@@ -147,6 +146,10 @@ public class MethodInfo {
 
     public Annotation[][] getParameterAnnotations() {
         return parameterAnnotations;
+    }
+
+    public Form getFormAnnotation() {
+        return formAnnotation;
     }
 
 }
