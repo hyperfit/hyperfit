@@ -156,7 +156,20 @@ public class JsoupHtmlSubmitFieldTest {
     }
 
 
+    @Test
+    public void testIncludeOnSubmit() {
 
+        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+
+        assertFalse(subject.includeOnSubmit());
+
+        String name = UUID.randomUUID().toString();
+        inputElement.attr("name", name);
+
+        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+
+        assertTrue(subject.includeOnSubmit());
+    }
 
 
 }

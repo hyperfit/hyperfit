@@ -11,11 +11,15 @@ import org.jsoup.nodes.Element;
 public class JsoupHtmlSubmitField extends JsoupHtmlField implements SubmitField {
 
     private final String value;
+    private final boolean includeOnSubmit;
 
     public JsoupHtmlSubmitField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
         value = inputElement.attr("value");
+
+        //html only includes submit when name is present
+        includeOnSubmit = inputElement.hasAttr("name");
 
     }
 
@@ -27,5 +31,10 @@ public class JsoupHtmlSubmitField extends JsoupHtmlField implements SubmitField 
     @Override
     public String getLabel() {
         return value;
+    }
+
+    @Override
+    public boolean includeOnSubmit() {
+        return includeOnSubmit;
     }
 }
