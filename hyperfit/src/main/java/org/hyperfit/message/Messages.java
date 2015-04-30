@@ -69,9 +69,17 @@ public class Messages {
     public static final String MSG_ERROR_LINK_FOUND_MORE_THAN_ONE = "Found more than one link with relationship [{}]";
 
     //Form related
+    public static final String MSG_ERROR_NOT_FORM_ELEMENT = "The provided element is not a form";
     public static final String MSG_ERROR_FORM_NAME_REQUIRED = "Form name is required";
     public static final String MSG_ERROR_FORM_WITH_NAME_NOT_FOUND = "Could not find a form with name [{}]";
     public static final String MSG_ERROR_FORM_FOUND_MORE_THAN_ONE = "Found more than one form with name [{}]";
+
+    //Field related
+    public static final String MSG_ERROR_FIELD_TYPE_NOT_KNOWN = "Field type for tag [{}] is not known";
+    public static final String MSG_ERROR_FIELD_NAME_REQUIRED = "Field name is required";
+    public static final String MSG_ERROR_FIELD_WITH_NAME_NOT_FOUND = "Could not find a field with name [{}]";
+    public static final String MSG_ERROR_FIELD_FOUND_MORE_THAN_ONE = "Found more than one field with name [{}]";
+
 
     // -- REFLECTION RELATED --
     public static final String MSG_ERROR_REFLECTION_CANNOT_CAST = "Cannot cast object [{}] to [{}].";
