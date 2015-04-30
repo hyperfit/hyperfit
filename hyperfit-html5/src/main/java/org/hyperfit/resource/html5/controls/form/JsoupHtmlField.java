@@ -6,18 +6,43 @@ import org.hyperfit.message.Messages;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.resource.controls.form.TextField;
+import org.hyperfit.utils.StringUtils;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 @EqualsAndHashCode
 @ToString
 public abstract class JsoupHtmlField implements Field {
 
-    protected final String name;
+    private final String name;
+    private final boolean required;
+    private final String label;
+    private final String errorMessage;
 
+    private final static String labelMatcher = "label[for=%s]";
     public JsoupHtmlField(Element inputElement, Element formElement){
 
         name = inputElement.attr("name");
+        required = inputElement.hasAttr("required");
 
+
+        String finalLabel = null;
+        String finalErrorMessage = null;
+        if(!StringUtils.isEmpty(name)) {
+            Elements labelMatch = formElement.select(String.format(labelMatcher, name));
+            if (!labelMatch.isEmpty()) {
+                for (Element match : labelMatch) {
+                    if (match.classNames().contains("error")) {
+                        finalErrorMessage = match.text();
+                    } else {
+                        finalLabel = match.text();
+                    }
+                }
+            }
+        }
+
+        label = finalLabel;
+        errorMessage = finalErrorMessage;
 
     }
 
@@ -29,23 +54,23 @@ public abstract class JsoupHtmlField implements Field {
 
     @Override
     public String getLabel() {
-        return null;
+        return label;
     }
 
     @Override
     public boolean hasError() {
-        return false;
+        return errorMessage != null;
     }
 
     @Override
     public String getErrorMessage() {
-        return null;
+        return errorMessage;
     }
 
 
     @Override
     public boolean isRequired() {
-        return false;
+        return required;
     }
 
     protected static JsoupHtmlField fieldFactory(Element fieldElement, Element formElement){

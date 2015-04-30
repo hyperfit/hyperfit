@@ -13,13 +13,16 @@ import org.jsoup.nodes.Element;
 @ToString(callSuper = true)
 public class JsoupHtmlTextField extends JsoupHtmlField implements TextField {
 
+    private final String value;
+
     public JsoupHtmlTextField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
+        value = inputElement.attr("value");
     }
 
     @Override
     public String getValue() {
-        return null;
+        return value;
     }
 }
