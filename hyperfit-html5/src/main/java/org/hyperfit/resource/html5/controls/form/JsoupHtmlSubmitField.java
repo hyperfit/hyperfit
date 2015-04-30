@@ -37,4 +37,10 @@ public class JsoupHtmlSubmitField extends JsoupHtmlField implements SubmitField 
     public boolean includeOnSubmit() {
         return includeOnSubmit;
     }
+
+
+    @Override
+    public Long getMaxLength() {
+        return null;
+    }
 }

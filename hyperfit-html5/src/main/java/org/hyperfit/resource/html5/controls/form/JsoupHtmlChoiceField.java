@@ -53,4 +53,9 @@ public class JsoupHtmlChoiceField extends JsoupHtmlField implements ChoiceField 
     public Option[] getOptions() {
         return options.clone();
     }
+
+    @Override
+    public Long getMaxLength() {
+        return null;
+    }
 }

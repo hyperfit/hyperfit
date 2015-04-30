@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -90,6 +91,27 @@ public class JsoupHtmlCheckboxFieldTest {
         subject = new JsoupHtmlCheckboxField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
+    }
+
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        inputElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        inputElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
     }
 
     @Test

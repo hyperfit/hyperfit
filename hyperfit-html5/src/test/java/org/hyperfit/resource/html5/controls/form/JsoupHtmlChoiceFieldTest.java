@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -99,6 +100,27 @@ public class JsoupHtmlChoiceFieldTest {
         subject = new JsoupHtmlChoiceField(selectElement, formElement);
 
         assertTrue(subject.isRequired());
+    }
+
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        selectElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        selectElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        assertNull(subject.getMaxLength());
+
     }
 
     @Test

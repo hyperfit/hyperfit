@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -75,6 +76,27 @@ public class JsoupHtmlHiddenFieldTest {
         assertTrue(subject.isRequired());
     }
 
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        inputElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        inputElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        assertEquals(maxlength, subject.getMaxLength());
+
+    }
+    
     @Test
     public void testGetLabel() {
 

@@ -30,4 +30,9 @@ public class JsoupHtmlCheckboxField extends JsoupHtmlField implements CheckboxFi
     public CheckboxField.CheckState getCheckState() {
         return checkState;
     }
+
+    @Override
+    public Long getMaxLength() {
+        return null;
+    }
 }

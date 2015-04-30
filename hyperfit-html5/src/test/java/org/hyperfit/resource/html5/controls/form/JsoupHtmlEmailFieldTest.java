@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -73,6 +74,27 @@ public class JsoupHtmlEmailFieldTest {
         subject = new JsoupHtmlEmailField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
+    }
+
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        inputElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        inputElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        assertEquals(maxlength, subject.getMaxLength());
+
     }
 
     @Test

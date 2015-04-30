@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -74,6 +75,28 @@ public class JsoupHtmlSubmitFieldTest {
         subject = new JsoupHtmlSubmitField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
+    }
+
+
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        inputElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        inputElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
     }
 
     @Test

@@ -18,6 +18,7 @@ public abstract class JsoupHtmlField implements Field {
     private final boolean required;
     private final String label;
     private final String errorMessage;
+    private final Long maxLength;
 
     private final static String labelMatcher = "label[for=%s]";
     public JsoupHtmlField(Element inputElement, Element formElement){
@@ -43,6 +44,19 @@ public abstract class JsoupHtmlField implements Field {
 
         label = finalLabel;
         errorMessage = finalErrorMessage;
+
+        Long finalMaxLength = null;
+        if(inputElement.hasAttr("maxlength")){
+            try{
+               finalMaxLength = Long.parseLong(inputElement.attr("maxlength"));
+            } catch (Exception e){
+
+            }
+        }
+
+        maxLength = finalMaxLength;
+
+
 
     }
 
@@ -71,6 +85,11 @@ public abstract class JsoupHtmlField implements Field {
     @Override
     public boolean isRequired() {
         return required;
+    }
+
+    @Override
+    public Long getMaxLength() {
+        return maxLength;
     }
 
     protected static JsoupHtmlField fieldFactory(Element fieldElement, Element formElement){

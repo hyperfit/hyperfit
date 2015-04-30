@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -78,6 +79,27 @@ public class JsoupHtmlTextFieldTest {
         subject = new JsoupHtmlTextField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
+    }
+
+    Random r = new Random();
+    @Test
+    public void testMaxLength() {
+
+        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        inputElement.attr("maxlength", "");
+
+        subject = new JsoupHtmlTextField(inputElement, formElement);
+        assertNull(subject.getMaxLength());
+
+        Long maxlength = r.nextLong();
+        inputElement.attr("maxlength", maxlength.toString());
+
+
+        subject = new JsoupHtmlTextField(inputElement, formElement);
+        assertEquals(maxlength, subject.getMaxLength());
+
     }
 
     @Test
