@@ -10,7 +10,7 @@ public interface Form {
 
     Method getMethod();
 
-    Field[] getFields();
+    //TODO: Field[] getFields();
 
     Field getField(String fieldName);
 

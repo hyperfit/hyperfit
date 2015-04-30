@@ -55,10 +55,6 @@ public class JsoupHtmlForm implements Form {
     }
 
 
-    @Override
-    public Field[] getFields() {
-        return new Field[0];
-    }
 
     private static final String fieldSelector = "input[name=%s], select[name=%s]";
 
