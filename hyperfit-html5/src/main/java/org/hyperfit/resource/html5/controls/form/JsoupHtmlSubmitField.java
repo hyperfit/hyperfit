@@ -10,13 +10,22 @@ import org.jsoup.nodes.Element;
 @ToString(callSuper = true)
 public class JsoupHtmlSubmitField extends JsoupHtmlField implements SubmitField {
 
+    private final String value;
+
     public JsoupHtmlSubmitField(Element inputElement, Element formElement){
         super(inputElement, formElement);
+
+        value = inputElement.attr("value");
 
     }
 
     @Override
     public String getValue() {
-        return null;
+        return value;
+    }
+
+    @Override
+    public String getLabel() {
+        return value;
     }
 }
