@@ -1,5 +1,5 @@
 ## 1.6.0-SNAPSHOT - TBD
-* 
+* The jackson mapper in hyperfit-hal has been changed to ignore missing fields on deserialization
 
 ## 1.5.0-SNAPSHOT - 2015-04-21
 * HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control

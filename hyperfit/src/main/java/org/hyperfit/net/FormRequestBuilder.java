@@ -2,6 +2,7 @@ package org.hyperfit.net;
 
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
+import org.hyperfit.resource.controls.form.CheckboxField;
 import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.utils.StringUtils;
@@ -77,7 +78,14 @@ public class FormRequestBuilder implements RequestBuilder {
 
         Field field = form.getField(name);
         //TODO: call field.validate or something i dunno
-
+        if(field instanceof CheckboxField){
+            //Checkboxes don't let you set a value, just opt in to sending the value
+            if(value == CheckboxField.CheckState.CHECKED){
+                value = field.getValue();
+            } else {
+                value = null;
+            }
+        }
 
         if (value != null) {
             this.params.put(name, value);
@@ -106,6 +114,10 @@ public class FormRequestBuilder implements RequestBuilder {
     }
 
     public String getContent() {
+        if(params.isEmpty()){
+            return "";
+        }
+
         StringBuilder body = new StringBuilder();
         for(Map.Entry<String,Object> entry : params.entrySet()){
             body.append(encode(entry.getKey()))

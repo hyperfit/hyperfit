@@ -2,6 +2,7 @@ package org.hyperfit.net;
 
 
 import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.resource.controls.form.CheckboxField;
 import org.hyperfit.resource.controls.form.ChoiceField;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.form.TextField;
@@ -28,6 +29,9 @@ public class FormRequestBuilderTest {
 
     @Mock
     ChoiceField mockChoiceField;
+
+    @Mock
+    CheckboxField mockCheckboxField;
 
 
     RequestBuilder subject;
@@ -67,6 +71,28 @@ public class FormRequestBuilderTest {
         subject.setParam(paramName, value);
 
         assertEquals(value, subject.getParam(paramName));
+    }
+
+    @Test
+    public void testParamSettingCheckboxField(){
+        String paramName = UUID.randomUUID().toString();
+        String value = UUID.randomUUID().toString();
+
+        when(mockForm.getField(paramName))
+            .thenReturn(mockCheckboxField);
+
+        when(mockCheckboxField.getValue())
+            .thenReturn(value);
+
+        subject.setParam(paramName, CheckboxField.CheckState.UNCHECKED);
+
+        String expected = "";
+        assertEquals(expected, subject.getContent());
+
+        subject.setParam(paramName, CheckboxField.CheckState.CHECKED);
+
+        expected =  paramName + "=" + value;
+        assertEquals(expected, subject.getContent());
     }
 
 

@@ -397,6 +397,67 @@ public class HalJsonResourceTest {
 
     }
 
+    static class POJO {
+        private String someString;
+        private Double someDouble;
+
+        public String getSomeString() {
+            return someString;
+        }
+
+        public Double getSomeDouble() {
+            return someDouble;
+        }
+    }
+
+    @Test
+    public void testGetPOJO() {
+
+        ObjectNode complexPropNode = nodeFactory.objectNode();
+
+        String stringValue = UUID.randomUUID().toString();
+        complexPropNode.put("someString", stringValue);
+
+        Double doubleValue =  Math.random();
+        complexPropNode.put("someDouble", doubleValue);
+
+
+        root.put("somekey", complexPropNode);
+
+        HalJsonResource resource = new HalJsonResource(root);
+
+        POJO actual = resource.getPathAs(POJO.class, "somekey");
+
+        assertEquals(stringValue, actual.getSomeString());
+        assertEquals(doubleValue, actual.getSomeDouble());
+
+    }
+
+    @Test
+    public void testGetPOJOExtaProps() {
+
+        ObjectNode complexPropNode = nodeFactory.objectNode();
+
+        String stringValue = UUID.randomUUID().toString();
+        complexPropNode.put("someString", stringValue);
+
+        Double doubleValue =  Math.random();
+        complexPropNode.put("someDouble", doubleValue);
+
+        complexPropNode.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+
+
+        root.put("somekey", complexPropNode);
+
+        HalJsonResource resource = new HalJsonResource(root);
+
+        POJO actual = resource.getPathAs(POJO.class, "somekey");
+
+        assertEquals(stringValue, actual.getSomeString());
+        assertEquals(doubleValue, actual.getSomeDouble());
+
+    }
+
 
     @Test
     public void testGetSimpleNestedData() {

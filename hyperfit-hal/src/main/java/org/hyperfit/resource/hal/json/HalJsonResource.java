@@ -1,5 +1,6 @@
 package org.hyperfit.resource.hal.json;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.net.Response;
@@ -27,7 +28,9 @@ import org.hyperfit.utils.StringUtils;
 @EqualsAndHashCode(exclude = {"linkCache"})
 public class HalJsonResource extends BaseHyperResource {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    
     private static final ObjectReader OBJECT_READER = OBJECT_MAPPER.reader(JsonNode.class);
     private final JsonNode jsonResource;
 
