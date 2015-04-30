@@ -1,5 +1,6 @@
 package org.hyperfit.net;
 
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.resource.html5.controls.form.JsoupHtmlForm;
 import org.hyperfit.utils.StringUtils;
@@ -86,8 +87,7 @@ public class HTMLFormRequestBuilder implements RequestBuilder {
 
     @Override
     public RequestBuilder setContent(String content) {
-        this.content = content;
-        return this;
+        throw new HyperfitException("HTMLFormRequestBuilder cannot have it's content set directly");
     }
 
 

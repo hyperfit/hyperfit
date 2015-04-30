@@ -298,13 +298,21 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         NamedForm namedFormAnnotation = methodInfo.getNamedFormAnnotation();
         if (namedFormAnnotation != null) {
+            String formName = namedFormAnnotation.value();
+
             if (boolean.class.isAssignableFrom(methodInfo.getReturnType())){
-                return hyperResource.hasForm(namedFormAnnotation.value());
+                return hyperResource.hasForm(formName);
             }
 
             if(Form.class.isAssignableFrom(methodInfo.getReturnType())){
-                return hyperResource.getForm(namedFormAnnotation.value());
+                return hyperResource.getForm(formName);
             }
+
+            //At this point we know it's a single link that's not embedded
+            RequestBuilder requestBuilder = hyperResource.getForm(formName).toRequestBuilder();
+            assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
+            return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
+
         }
 
         throw new HyperfitException(Messages.MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION, method, proxy, args);

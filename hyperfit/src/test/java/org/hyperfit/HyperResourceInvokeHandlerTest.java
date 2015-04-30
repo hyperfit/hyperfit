@@ -1,15 +1,14 @@
 package org.hyperfit;
 
 
-import org.hyperfit.annotation.Data;
-import org.hyperfit.annotation.FirstLink;
-import org.hyperfit.annotation.NamedForm;
-import org.hyperfit.annotation.Link;
+import org.hyperfit.annotation.*;
 import org.hyperfit.net.*;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
+import org.hyperfit.net.Method;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
+import org.hyperfit.resource.controls.form.CheckboxField;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.utils.TypeInfo;
@@ -157,6 +156,16 @@ public class HyperResourceInvokeHandlerTest{
         @NamedForm("FormA")
         Form getFormA();
 
+        @NamedForm("FormA")
+        FormResource formAResource();
+
+
+        @NamedForm("FormA")
+        FormResource formAResource(
+            @Param("Field1") String param1,
+            @Param("Field2") CheckboxField.CheckState checked
+        );
+
 
 
         @NamedForm("FormB")
@@ -164,6 +173,8 @@ public class HyperResourceInvokeHandlerTest{
 
         @NamedForm("FormB")
         Form getFormB();
+
+
     }
 
 
@@ -983,6 +994,67 @@ public class HyperResourceInvokeHandlerTest{
         Form actual = r.getFormA();
 
         assertSame(expected, actual);
+
+    }
+
+
+    @Test
+    public void testFormAnnotatedMethodSubmittingFormNoParams(){
+        FormResource r = this.getHyperResourceProxy(FormResource.class);
+
+
+        Form mockForm = mock(Form.class);
+
+        when(mockHyperResource.getForm("FormA"))
+            .thenReturn(mockForm);
+
+        RequestBuilder mockRequestBuilder = mock(RequestBuilder.class);
+
+        when(mockForm.toRequestBuilder())
+            .thenReturn(mockRequestBuilder);
+
+        FormResource expectedResult = mock(FormResource.class);
+
+        when(mockHyperfitProcessor.processRequest(eq(FormResource.class), eq(mockRequestBuilder), any(TypeInfo.class)))
+            .thenReturn(expectedResult);
+
+        FormResource actual = r.formAResource();
+
+        assertSame(expectedResult, actual);
+
+    }
+
+
+    @Test
+    public void testFormAnnotatedMethodSubmittingFormWithParams(){
+        FormResource r = this.getHyperResourceProxy(FormResource.class);
+
+
+        Form mockForm = mock(Form.class);
+
+        when(mockHyperResource.getForm("FormA"))
+            .thenReturn(mockForm);
+
+        RequestBuilder mockRequestBuilder = mock(RequestBuilder.class);
+
+        when(mockForm.toRequestBuilder())
+            .thenReturn(mockRequestBuilder);
+
+        FormResource expectedResult = mock(FormResource.class);
+
+        when(mockHyperfitProcessor.processRequest(eq(FormResource.class), eq(mockRequestBuilder), any(TypeInfo.class)))
+            .thenReturn(expectedResult);
+
+        String value1 = UUID.randomUUID().toString();
+        FormResource actual = r.formAResource(
+            value1,
+            CheckboxField.CheckState.CHECKED
+        );
+
+        verify(mockRequestBuilder).setParam("Field1", value1);
+        verify(mockRequestBuilder).setParam("Field2", CheckboxField.CheckState.CHECKED);
+
+        assertSame(expectedResult, actual);
 
     }
 
