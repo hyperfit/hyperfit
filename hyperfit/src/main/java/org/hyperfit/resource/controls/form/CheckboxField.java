@@ -9,6 +9,8 @@ public interface CheckboxField extends Field {
         //TODO: support indeterminate?
     }
 
-    CheckState getValue();
+    String getValue();
+
+    CheckState getCheckState();
 
 }

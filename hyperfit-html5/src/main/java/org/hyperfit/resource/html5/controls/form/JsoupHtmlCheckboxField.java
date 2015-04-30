@@ -10,15 +10,24 @@ import org.jsoup.nodes.Element;
 @ToString(callSuper = true)
 public class JsoupHtmlCheckboxField extends JsoupHtmlField implements CheckboxField {
 
+    private final String value;
+    private final CheckState checkState;
 
     public JsoupHtmlCheckboxField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
+        value = inputElement.attr("value");
+
+        checkState = inputElement.hasAttr("checked") ? CheckState.CHECKED : CheckState.UNCHECKED;
     }
 
 
     @Override
-    public CheckState getValue() {
-        return null;
+    public String getValue() {
+        return value;
+    }
+
+    public CheckboxField.CheckState getCheckState() {
+        return checkState;
     }
 }
