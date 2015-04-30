@@ -1,5 +1,26 @@
 ## 1.6.0-SNAPSHOT - TBD
 * The jackson mapper in hyperfit-hal has been changed to ignore missing fields on deserialization
+* Lots more support around form fields
+ * Fields share some common properties: required, label, hasError, errorMessage, maxLength, name
+ * Fields are read only immutable objects that describe the fields of a resource's form.  They are meant to help build UIs and create requests.
+ * You do not modify fields or values, instead you generate a RequestBuilder from a form.  This request builder uses the fields of the form to perform semantics and validation.
+ * This is exactly how params for links work, think of fields just as a much richer link parameter with richer semantics
+ * Forms and Links are the two supported hypermedia controls in hyperfit
+* the following fields types are supported.  Any unique aspects are summarized
+ * TextField - very general
+ * HiddenField - not intended to be shown in the UI, although it still can have a label
+ * SubmitField - may not have a name
+ * TelephoneNumberField - similar to text field, except also conveys meta info that the value should be validated as a telephone number
+ * EmailField - similar to text field, except also conveys meta info that the value should be validated as an email address
+ * CheckboxField - Has a CheckedStage property.  The value for the field is only submitted if the state is checked.
+ * ChoiceField - Offers a set of options.  The value of the field is the value of the selected option.
+* hyperfit-html5 library has implementations of all form types based upon specs at http://confluence/display/commerce/Forms+in+the+Commerce+Hyper+API
+* Resource interface methods annotated with new NamedForm do interesting things now
+ * If the return type is boolean, it returns true if the resource has a form with the name in the annotation, false otherwise
+ * If the return type is assignable to Form, then if the given Form exists that form will be returned.  Otherwise it will throw an exception
+ * Otherwise the normal hyperfit processing takes place.  All parameters annotated with @Param are set as values for the field that matches their name
+ * Note: Checkbox is interesting in that you don't pass in a value but instead pass in a checked state which causes hyperfit to include the value of the checkbox field
+* Form now has a toRequestBuilder method that creates a request from the form.  All fields of the form have their values set in the request params per the rules of the field
 
 ## 1.5.0-SNAPSHOT - 2015-04-21
 * HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control
