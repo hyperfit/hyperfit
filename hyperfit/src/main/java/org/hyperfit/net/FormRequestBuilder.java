@@ -2,9 +2,12 @@ package org.hyperfit.net;
 
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.message.Messages;
+import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.utils.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 public class FormRequestBuilder implements RequestBuilder {
@@ -13,12 +16,16 @@ public class FormRequestBuilder implements RequestBuilder {
     private final static String contentType = "application/x-www-form-urlencoded";
     private String content = null;
     private Method method = Method.GET;
+    private final Form form;
+
 
     public Map<String, Object> getParams() {
         return Collections.unmodifiableMap(params);
     }
 
-    private Map<String, Object> params = new HashMap<String, Object>();
+    //I use a linked hash map because of all the server frameworks that will use the first param instance so i maintain order
+    //TODO: support multiple values of a param...
+    private Map<String, Object> params = new LinkedHashMap<String, Object>();
 
     public Map<String, String> getHeaders() {
         return Collections.unmodifiableMap(headers);
@@ -36,6 +43,7 @@ public class FormRequestBuilder implements RequestBuilder {
     public FormRequestBuilder(Form form){
         url = form.getHref();
         this.setMethod(form.getMethod());
+        this.form = form;
     }
 
     public FormRequestBuilder addHeader(String name, String value) {
@@ -66,6 +74,11 @@ public class FormRequestBuilder implements RequestBuilder {
             throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY);
         }
 
+
+        Field field = form.getField(name);
+        //TODO: call field.validate or something i dunno
+
+
         if (value != null) {
             this.params.put(name, value);
         }
@@ -93,7 +106,16 @@ public class FormRequestBuilder implements RequestBuilder {
     }
 
     public String getContent() {
-        return content;
+        StringBuilder body = new StringBuilder();
+        for(Map.Entry<String,Object> entry : params.entrySet()){
+            body.append(encode(entry.getKey()))
+            .append("=")
+            .append(encode(entry.getValue().toString()))
+            .append("&");
+
+        }
+
+        return body.deleteCharAt(body.length() -1).toString();
     }
 
     public Method getMethod() {
@@ -115,6 +137,15 @@ public class FormRequestBuilder implements RequestBuilder {
 
     public String getURL() {
         return url;
+    }
+
+    private static final String encoding = "UTF-8";
+    private static String encode(String s){
+        try {
+            return URLEncoder.encode(s, encoding);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("error generating request body", e);
+        }
     }
 
 }
