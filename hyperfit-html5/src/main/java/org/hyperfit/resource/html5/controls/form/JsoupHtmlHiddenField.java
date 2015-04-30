@@ -10,13 +10,16 @@ import org.jsoup.nodes.Element;
 @ToString(callSuper = true)
 public class JsoupHtmlHiddenField extends JsoupHtmlField implements HiddenField {
 
+    private final String value;
+
     public JsoupHtmlHiddenField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
+        value = inputElement.attr("value");
     }
 
     @Override
     public String getValue() {
-        return null;
+        return value;
     }
 }

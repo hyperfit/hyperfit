@@ -10,12 +10,16 @@ import org.jsoup.nodes.Element;
 @ToString(callSuper = true)
 public class JsoupHtmlEmailField extends JsoupHtmlField implements EmailField {
 
+    private final String value;
+
     public JsoupHtmlEmailField(Element inputElement, Element formElement){
         super(inputElement, formElement);
+
+        value = inputElement.attr("value");
     }
 
     @Override
     public String getValue() {
-        return null;
+        return value;
     }
 }
