@@ -13,6 +13,7 @@ import org.hyperfit.utils.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @EqualsAndHashCode
@@ -83,6 +84,33 @@ public class JsoupHtml5Form implements Form {
         }
 
         return fieldCache.get(fieldName);
+    }
+
+    @Override
+    public Field[] getFields() {
+        Elements fieldElements = formElement.select("input,select");
+        ArrayList<Field> fields = new ArrayList<Field>(fieldCache.values());
+
+
+
+        for(Element fieldElement : fieldElements) {
+            String fieldName = fieldElement.attr("name");
+            //this intentionally only stores the first form with a given name
+            if(!fieldCache.containsKey(fieldName)){
+                JsoupHtml5Field field = JsoupHtml5Field.fieldFactory(fieldElement, formElement);
+                fields.add(field);
+
+                if(!StringUtils.isEmpty(fieldName)){
+                    //hmmmm TODO: how can we cache unnamed fields?
+                    fieldCache.put(fieldName, field);
+                }
+
+            }
+
+        }
+
+        return fields.toArray(new Field[fields.size()]);
+
     }
 
     @Override

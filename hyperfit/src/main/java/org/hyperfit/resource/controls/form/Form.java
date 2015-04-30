@@ -11,7 +11,7 @@ public interface Form {
 
     Method getMethod();
 
-    //TODO: Field[] getFields();
+    Field[] getFields();
 
     Field getField(String fieldName);
 

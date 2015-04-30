@@ -30,6 +30,7 @@ public class FormRequestBuilderTest {
     @Mock
     ChoiceField mockChoiceField;
 
+
     @Mock
     CheckboxField mockCheckboxField;
 
@@ -57,6 +58,20 @@ public class FormRequestBuilderTest {
         subject.setParam(paramName, value);
 
         assertNull(subject.getParam(paramName));
+    }
+
+
+    @Test
+    public void testParamSettingFromConstructor(){
+        String paramName = UUID.randomUUID().toString();
+        String value = UUID.randomUUID().toString();
+
+        when(mockForm.getField(paramName))
+        .thenReturn(mockTextField);
+
+        subject.setParam(paramName, value);
+
+        assertEquals(value, subject.getParam(paramName));
     }
 
 

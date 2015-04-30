@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 
 public class JsoupHtml5FormTest {
@@ -275,6 +275,56 @@ public class JsoupHtml5FormTest {
 
         JsoupHtml5ChoiceField expected = new JsoupHtml5ChoiceField(inputElement, formElement);
         assertEquals(expected, actual);
+
+    }
+
+
+    @Test
+    public void testGetFields(){
+        Element formElement = Jsoup.parse(
+            "<form>" +
+            "</form>"
+        ).select("form").get(0);
+
+
+        Element combo1 = formElement.appendElement("select")
+            .attr("name", UUID.randomUUID().toString());
+
+        Element combo2 = formElement.appendElement("select")
+            .attr("name", UUID.randomUUID().toString());
+
+
+        Element hidden1 = formElement.appendElement("input")
+            .attr("name", UUID.randomUUID().toString())
+            .attr("type", "hidden")
+        ;
+
+        Element namedSubmit = formElement.appendElement("input")
+            .attr("name", UUID.randomUUID().toString())
+            .attr("type", "submit")
+        ;
+
+        Element unamedSubmit = formElement.appendElement("input")
+            .attr("type", "submit")
+        ;
+
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
+
+
+
+        Field[] actual = subject.getFields();
+        Field[] expected = new Field[]{
+            JsoupHtml5Field.fieldFactory(unamedSubmit, formElement),
+            JsoupHtml5Field.fieldFactory(namedSubmit, formElement),
+            JsoupHtml5Field.fieldFactory(hidden1, formElement),
+            JsoupHtml5Field.fieldFactory(combo1, formElement),
+            JsoupHtml5Field.fieldFactory(combo2, formElement)
+        };
+
+
+
+        assertThat(actual, arrayContainingInAnyOrder(expected));
+
 
     }
 
