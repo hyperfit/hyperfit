@@ -3,7 +3,9 @@ package org.hyperfit.resource.html5.controls.form;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.message.Messages;
+import org.hyperfit.net.HTMLFormRequestBuilder;
 import org.hyperfit.net.Method;
+import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.resource.controls.form.Form;
@@ -81,5 +83,10 @@ public class JsoupHtmlForm implements Form {
         }
 
         return fieldCache.get(fieldName);
+    }
+
+    @Override
+    public RequestBuilder toRequestBuilder() {
+        return new HTMLFormRequestBuilder(this);
     }
 }

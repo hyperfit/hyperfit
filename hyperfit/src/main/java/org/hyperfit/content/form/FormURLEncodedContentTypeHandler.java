@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 
 public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
 
+
     private static final String encoding = "UTF-8";
     private static final ContentType type = new ContentType("application", "x-www-form-urlencoded");
     public ContentType getDefaultContentType() {

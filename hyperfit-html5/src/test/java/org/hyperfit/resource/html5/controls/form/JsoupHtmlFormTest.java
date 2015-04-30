@@ -280,4 +280,27 @@ public class JsoupHtmlFormTest {
         assertEquals(expected, actual);
 
     }
+
+
+    @Test
+    public void testToRequestBuilder(){
+        Element formElement = Jsoup.parse(
+            "<form>" +
+            "" +
+            "</form>"
+        ).select("form").get(0);
+
+        String href = UUID.randomUUID().toString();
+        formElement.attr("action", href);
+
+        formElement.attr("method", "post");
+
+
+        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+
+        RequestBuilder actual = subject.toRequestBuilder();
+
+        assertEquals(Method.POST, actual.getMethod());
+        assertEquals("application/x-www-form-urlencoded", actual.getContentType());
+    }
 }

@@ -1,6 +1,7 @@
 package org.hyperfit.resource.controls.form;
 
 import org.hyperfit.net.Method;
+import org.hyperfit.net.RequestBuilder;
 
 public interface Form {
 
@@ -13,5 +14,7 @@ public interface Form {
     //TODO: Field[] getFields();
 
     Field getField(String fieldName);
+
+    public RequestBuilder toRequestBuilder();
 
 }
