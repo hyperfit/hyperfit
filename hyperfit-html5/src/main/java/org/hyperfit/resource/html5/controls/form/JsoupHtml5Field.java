@@ -5,14 +5,13 @@ import lombok.ToString;
 import org.hyperfit.message.Messages;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Field;
-import org.hyperfit.resource.controls.form.TextField;
 import org.hyperfit.utils.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 @EqualsAndHashCode
 @ToString
-public abstract class JsoupHtmlField implements Field {
+public abstract class JsoupHtml5Field implements Field {
 
     private final String name;
     private final boolean required;
@@ -21,7 +20,7 @@ public abstract class JsoupHtmlField implements Field {
     private final Long maxLength;
 
     private final static String labelMatcher = "label[for=%s]";
-    public JsoupHtmlField(Element inputElement, Element formElement){
+    public JsoupHtml5Field(Element inputElement, Element formElement){
 
         name = inputElement.attr("name");
         required = inputElement.hasAttr("required");
@@ -92,39 +91,39 @@ public abstract class JsoupHtmlField implements Field {
         return maxLength;
     }
 
-    protected static JsoupHtmlField fieldFactory(Element fieldElement, Element formElement){
+    protected static JsoupHtml5Field fieldFactory(Element fieldElement, Element formElement){
         String tagName = fieldElement.tagName().toLowerCase();
 
         if(tagName.equals("input")){
             String type = fieldElement.attr("type").toLowerCase();
 
             if(type.equals("text")) {
-                return new JsoupHtmlTextField(fieldElement, formElement);
+                return new JsoupHtml5TextField(fieldElement, formElement);
             }
 
             if(type.equals("hidden")){
-                return new JsoupHtmlHiddenField(fieldElement, formElement);
+                return new JsoupHtml5HiddenField(fieldElement, formElement);
             }
 
             if(type.equals("email")){
-                return new JsoupHtmlEmailField(fieldElement, formElement);
+                return new JsoupHtml5EmailField(fieldElement, formElement);
             }
 
             if(type.equals("tel")){
-                return new JsoupHtmlTelephoneNumberField(fieldElement, formElement);
+                return new JsoupHtml5TelephoneNumberField(fieldElement, formElement);
             }
 
             if(type.equals("checkbox")){
-                return new JsoupHtmlCheckboxField(fieldElement, formElement);
+                return new JsoupHtml5CheckboxField(fieldElement, formElement);
             }
 
             if(type.equals("submit")){
-                return new JsoupHtmlSubmitField(fieldElement, formElement);
+                return new JsoupHtml5SubmitField(fieldElement, formElement);
             }
         }
 
         if(tagName.equals("select")){
-            return new JsoupHtmlChoiceField(fieldElement, formElement);
+            return new JsoupHtml5ChoiceField(fieldElement, formElement);
         }
 
 

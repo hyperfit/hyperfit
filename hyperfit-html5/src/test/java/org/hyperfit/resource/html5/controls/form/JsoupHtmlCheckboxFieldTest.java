@@ -46,7 +46,7 @@ public class JsoupHtmlCheckboxFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -58,7 +58,7 @@ public class JsoupHtmlCheckboxFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -69,12 +69,12 @@ public class JsoupHtmlCheckboxFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(CheckboxField.CheckState.UNCHECKED, subject.getCheckState());
 
         inputElement.attr("checked", UUID.randomUUID().toString());
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(CheckboxField.CheckState.CHECKED, subject.getCheckState());
     }
@@ -82,13 +82,13 @@ public class JsoupHtmlCheckboxFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -97,19 +97,19 @@ public class JsoupHtmlCheckboxFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
     }
@@ -117,36 +117,36 @@ public class JsoupHtmlCheckboxFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -156,7 +156,7 @@ public class JsoupHtmlCheckboxFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlCheckboxField subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -168,7 +168,7 @@ public class JsoupHtmlCheckboxFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -180,13 +180,13 @@ public class JsoupHtmlCheckboxFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlCheckboxField(inputElement, formElement);
+        subject = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }

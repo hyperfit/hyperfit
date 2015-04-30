@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 
-public class JsoupHtmlEmailFieldTest {
+public class JsoupHtml5EmailFieldTest {
 
 
     Element formElement;
@@ -45,7 +45,7 @@ public class JsoupHtmlEmailFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -57,7 +57,7 @@ public class JsoupHtmlEmailFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -65,13 +65,13 @@ public class JsoupHtmlEmailFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -80,19 +80,19 @@ public class JsoupHtmlEmailFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertEquals(maxlength, subject.getMaxLength());
 
     }
@@ -100,36 +100,36 @@ public class JsoupHtmlEmailFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -139,7 +139,7 @@ public class JsoupHtmlEmailFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlEmailField subject = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -151,7 +151,7 @@ public class JsoupHtmlEmailFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -163,13 +163,13 @@ public class JsoupHtmlEmailFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlEmailField(inputElement, formElement);
+        subject = new JsoupHtml5EmailField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }

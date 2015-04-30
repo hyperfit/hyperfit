@@ -11,7 +11,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertTrue;
 
 
-public class HtmlLinkTest {
+public class Html5HyperLinkTest {
 
     @Test
     public void testToBuilderTemplated(){

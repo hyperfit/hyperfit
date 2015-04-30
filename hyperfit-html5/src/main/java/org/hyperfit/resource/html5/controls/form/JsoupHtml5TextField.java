@@ -2,17 +2,16 @@ package org.hyperfit.resource.html5.controls.form;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hyperfit.resource.controls.form.HiddenField;
-import org.hyperfit.resource.controls.form.TelephoneNumberField;
+import org.hyperfit.resource.controls.form.TextField;
 import org.jsoup.nodes.Element;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class JsoupHtmlTelephoneNumberField extends JsoupHtmlField implements TelephoneNumberField {
+public class JsoupHtml5TextField extends JsoupHtml5Field implements TextField {
 
     private final String value;
 
-    public JsoupHtmlTelephoneNumberField(Element inputElement, Element formElement){
+    public JsoupHtml5TextField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
         value = inputElement.attr("value");

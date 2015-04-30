@@ -7,7 +7,7 @@ import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
-import org.hyperfit.resource.html5.controls.form.JsoupHtmlForm;
+import org.hyperfit.resource.html5.controls.form.JsoupHtml5Form;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,7 +15,6 @@ import org.jsoup.parser.Tag;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.UUID;
 
@@ -765,7 +764,7 @@ public class Html5ResourceTest {
         Html5Resource resource = new Html5Resource(doc);
 
         Form actual = resource.getForm(formName);
-        JsoupHtmlForm expected = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form expected = new JsoupHtml5Form(formElement);
         assertEquals(expected, actual);
 
     }
@@ -784,8 +783,8 @@ public class Html5ResourceTest {
 
         Form[] actual = resource.getForms();
         Form[] expected = new Form[]{
-            new JsoupHtmlForm(form1Element),
-            new JsoupHtmlForm(form2Element)
+            new JsoupHtml5Form(form1Element),
+            new JsoupHtml5Form(form2Element)
         };
         assertThat(actual, arrayContainingInAnyOrder(expected));
 

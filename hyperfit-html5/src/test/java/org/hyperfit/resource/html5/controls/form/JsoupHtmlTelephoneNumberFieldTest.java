@@ -45,7 +45,7 @@ public class JsoupHtmlTelephoneNumberFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -57,7 +57,7 @@ public class JsoupHtmlTelephoneNumberFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -65,13 +65,13 @@ public class JsoupHtmlTelephoneNumberFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -81,19 +81,19 @@ public class JsoupHtmlTelephoneNumberFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertEquals(maxlength, subject.getMaxLength());
 
     }
@@ -101,36 +101,36 @@ public class JsoupHtmlTelephoneNumberFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -140,7 +140,7 @@ public class JsoupHtmlTelephoneNumberFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlTelephoneNumberField subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -152,7 +152,7 @@ public class JsoupHtmlTelephoneNumberFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -164,13 +164,13 @@ public class JsoupHtmlTelephoneNumberFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        subject = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }

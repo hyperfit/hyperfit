@@ -1,16 +1,11 @@
 package org.hyperfit.resource.html5.controls.form;
 
 
-import org.hyperfit.Helpers;
-import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.Method;
-import org.hyperfit.resource.controls.form.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.util.collections.Sets;
 
 import java.util.Random;
 import java.util.UUID;
@@ -50,7 +45,7 @@ public class JsoupHtmlTextFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -62,7 +57,7 @@ public class JsoupHtmlTextFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -70,13 +65,13 @@ public class JsoupHtmlTextFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -85,19 +80,19 @@ public class JsoupHtmlTextFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertEquals(maxlength, subject.getMaxLength());
 
     }
@@ -105,36 +100,36 @@ public class JsoupHtmlTextFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -144,7 +139,7 @@ public class JsoupHtmlTextFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlTextField subject = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField subject = new JsoupHtml5TextField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -156,7 +151,7 @@ public class JsoupHtmlTextFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -168,13 +163,13 @@ public class JsoupHtmlTextFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlTextField(inputElement, formElement);
+        subject = new JsoupHtml5TextField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }

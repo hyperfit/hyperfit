@@ -3,17 +3,16 @@ package org.hyperfit.resource.html5.controls.form;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.resource.controls.form.CheckboxField;
-import org.hyperfit.resource.controls.form.HiddenField;
 import org.jsoup.nodes.Element;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class JsoupHtmlCheckboxField extends JsoupHtmlField implements CheckboxField {
+public class JsoupHtml5CheckboxField extends JsoupHtml5Field implements CheckboxField {
 
     private final String value;
     private final CheckState checkState;
 
-    public JsoupHtmlCheckboxField(Element inputElement, Element formElement){
+    public JsoupHtml5CheckboxField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
         value = inputElement.attr("value");

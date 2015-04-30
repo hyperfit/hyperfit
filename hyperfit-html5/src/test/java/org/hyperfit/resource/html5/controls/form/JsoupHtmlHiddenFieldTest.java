@@ -45,7 +45,7 @@ public class JsoupHtmlHiddenFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -57,7 +57,7 @@ public class JsoupHtmlHiddenFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -65,13 +65,13 @@ public class JsoupHtmlHiddenFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -80,19 +80,19 @@ public class JsoupHtmlHiddenFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertEquals(maxlength, subject.getMaxLength());
 
     }
@@ -100,36 +100,36 @@ public class JsoupHtmlHiddenFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -139,7 +139,7 @@ public class JsoupHtmlHiddenFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlHiddenField subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -151,7 +151,7 @@ public class JsoupHtmlHiddenFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -163,13 +163,13 @@ public class JsoupHtmlHiddenFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlHiddenField(inputElement, formElement);
+        subject = new JsoupHtml5HiddenField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }

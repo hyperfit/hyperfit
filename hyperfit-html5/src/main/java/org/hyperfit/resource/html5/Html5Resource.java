@@ -11,7 +11,7 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
-import org.hyperfit.resource.html5.controls.form.JsoupHtmlForm;
+import org.hyperfit.resource.html5.controls.form.JsoupHtml5Form;
 import org.hyperfit.resource.html5.controls.link.Html5HyperLink;
 import org.hyperfit.utils.StringUtils;
 import org.jsoup.Jsoup;
@@ -159,7 +159,7 @@ public class Html5Resource extends BaseHyperResource {
                 throw new HyperResourceException(Messages.MSG_ERROR_FORM_FOUND_MORE_THAN_ONE, formName);
             }
 
-            formCache.put(formName, new JsoupHtmlForm(matches.get(0)));
+            formCache.put(formName, new JsoupHtml5Form(matches.get(0)));
 
         }
 
@@ -180,7 +180,7 @@ public class Html5Resource extends BaseHyperResource {
             String formName = form.attr("name");
             //this intentionally only stores the first form with a given name
             if(!formCache.containsKey(formName)){
-                formCache.put(formName, new JsoupHtmlForm(form));
+                formCache.put(formName, new JsoupHtml5Form(form));
             }
         }
 

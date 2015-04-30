@@ -3,19 +3,18 @@ package org.hyperfit.resource.html5.controls.form;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.resource.controls.form.ChoiceField;
-import org.hyperfit.resource.controls.form.EmailField;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class JsoupHtmlChoiceField extends JsoupHtmlField implements ChoiceField {
+public class JsoupHtml5ChoiceField extends JsoupHtml5Field implements ChoiceField {
 
     private final Option[] options;
     private final Option selectedOption;
 
-    public JsoupHtmlChoiceField(Element inputElement, Element formElement){
+    public JsoupHtml5ChoiceField(Element inputElement, Element formElement){
         super(inputElement, formElement);
 
         Elements optionElements = inputElement.select("option");

@@ -3,12 +3,9 @@ package org.hyperfit.resource.html5.controls.form;
 
 import org.hyperfit.Helpers;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.BoringRequestBuilder;
 import org.hyperfit.net.Method;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.controls.form.*;
-import org.hyperfit.resource.html5.Html5Resource;
-import org.hyperfit.resource.html5.controls.link.Html5HyperLink;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class JsoupHtmlFormTest {
+public class JsoupHtml5FormTest {
 
 
     Element formElement;
@@ -50,7 +47,7 @@ public class JsoupHtmlFormTest {
         String name = UUID.randomUUID().toString();
         formElement.attr("name", name);
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -62,7 +59,7 @@ public class JsoupHtmlFormTest {
         String action = UUID.randomUUID().toString();
         formElement.attr("action", action);
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         assertEquals(action, subject.getHref());
     }
@@ -73,14 +70,14 @@ public class JsoupHtmlFormTest {
         String method = Helpers.random("get", "GET", "POST", "post");
         formElement.attr("method", method);
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         assertEquals(Method.valueOf(method.toUpperCase()), subject.getMethod());
     }
 
     @Test
     public void testGetMethodDefaultsToGET() {
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         assertEquals(Method.GET, subject.getMethod());
     }
@@ -88,7 +85,7 @@ public class JsoupHtmlFormTest {
     @Test(expected = HyperfitException.class)
     public void testVerifyGetFormNoMatchesThrows(){
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
         subject.getField(UUID.randomUUID().toString());
 
     }
@@ -105,7 +102,7 @@ public class JsoupHtmlFormTest {
         ).select("form").get(0);
 
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         subject.getField("name");
     }
@@ -124,12 +121,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof TextField);
 
-        JsoupHtmlTextField expected = new JsoupHtmlTextField(inputElement, formElement);
+        JsoupHtml5TextField expected = new JsoupHtml5TextField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -148,12 +145,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof HiddenField);
 
-        JsoupHtmlHiddenField expected = new JsoupHtmlHiddenField(inputElement, formElement);
+        JsoupHtml5HiddenField expected = new JsoupHtml5HiddenField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -172,12 +169,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof EmailField);
 
-        JsoupHtmlEmailField expected = new JsoupHtmlEmailField(inputElement, formElement);
+        JsoupHtml5EmailField expected = new JsoupHtml5EmailField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -197,12 +194,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof TelephoneNumberField);
 
-        JsoupHtmlTelephoneNumberField expected = new JsoupHtmlTelephoneNumberField(inputElement, formElement);
+        JsoupHtml5TelephoneNumberField expected = new JsoupHtml5TelephoneNumberField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -222,12 +219,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof CheckboxField);
 
-        JsoupHtmlCheckboxField expected = new JsoupHtmlCheckboxField(inputElement, formElement);
+        JsoupHtml5CheckboxField expected = new JsoupHtml5CheckboxField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -247,12 +244,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof SubmitField);
 
-        JsoupHtmlSubmitField expected = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField expected = new JsoupHtml5SubmitField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -271,12 +268,12 @@ public class JsoupHtmlFormTest {
         String inputName = UUID.randomUUID().toString();
 
         inputElement.attr("name", inputName);
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         Field actual = subject.getField(inputName);
         assertTrue(actual instanceof ChoiceField);
 
-        JsoupHtmlChoiceField expected = new JsoupHtmlChoiceField(inputElement, formElement);
+        JsoupHtml5ChoiceField expected = new JsoupHtml5ChoiceField(inputElement, formElement);
         assertEquals(expected, actual);
 
     }
@@ -296,7 +293,7 @@ public class JsoupHtmlFormTest {
         formElement.attr("method", "post");
 
 
-        JsoupHtmlForm subject = new JsoupHtmlForm(formElement);
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
 
         RequestBuilder actual = subject.toRequestBuilder();
 

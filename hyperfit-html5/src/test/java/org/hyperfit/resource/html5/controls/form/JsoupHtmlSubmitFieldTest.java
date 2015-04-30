@@ -46,7 +46,7 @@ public class JsoupHtmlSubmitFieldTest {
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -58,7 +58,7 @@ public class JsoupHtmlSubmitFieldTest {
         String value = UUID.randomUUID().toString();
         inputElement.attr("value", value);
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(value, subject.getValue());
     }
@@ -66,13 +66,13 @@ public class JsoupHtmlSubmitFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         inputElement.attr("required", value);
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -82,19 +82,19 @@ public class JsoupHtmlSubmitFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         inputElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         inputElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertNull(subject.getMaxLength());
 
     }
@@ -102,7 +102,7 @@ public class JsoupHtmlSubmitFieldTest {
     @Test
     public void testGetLabel() {
         //this test generally assures that no
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertEquals("", subject.getLabel());
 
         String name = UUID.randomUUID().toString();
@@ -111,29 +111,29 @@ public class JsoupHtmlSubmitFieldTest {
         inputElement.attr("value", value);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertEquals(value, subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(value, subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(value, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(value, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertEquals(value, subject.getLabel());
 
@@ -143,7 +143,7 @@ public class JsoupHtmlSubmitFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -155,7 +155,7 @@ public class JsoupHtmlSubmitFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -167,13 +167,13 @@ public class JsoupHtmlSubmitFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }
@@ -182,14 +182,14 @@ public class JsoupHtmlSubmitFieldTest {
     @Test
     public void testIncludeOnSubmit() {
 
-        JsoupHtmlSubmitField subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        JsoupHtml5SubmitField subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertFalse(subject.includeOnSubmit());
 
         String name = UUID.randomUUID().toString();
         inputElement.attr("name", name);
 
-        subject = new JsoupHtmlSubmitField(inputElement, formElement);
+        subject = new JsoupHtml5SubmitField(inputElement, formElement);
 
         assertTrue(subject.includeOnSubmit());
     }

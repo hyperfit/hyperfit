@@ -3,7 +3,7 @@ package org.hyperfit.resource.html5.controls.form;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.message.Messages;
-import org.hyperfit.net.HTMLFormRequestBuilder;
+import org.hyperfit.net.FormRequestBuilder;
 import org.hyperfit.net.Method;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperResourceException;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 @EqualsAndHashCode
 @ToString
-public class JsoupHtmlForm implements Form {
+public class JsoupHtml5Form implements Form {
 
     private final String name;
     private final String href;
@@ -26,7 +26,7 @@ public class JsoupHtmlForm implements Form {
 
     private final HashMap<String, Field> fieldCache = new HashMap<String, Field>();
 
-    public JsoupHtmlForm(Element formElement){
+    public JsoupHtml5Form(Element formElement){
         if(!formElement.tagName().equalsIgnoreCase("form")){
             throw new HyperResourceException(Messages.MSG_ERROR_NOT_FORM_ELEMENT);
         }
@@ -79,7 +79,7 @@ public class JsoupHtmlForm implements Form {
                 throw new HyperResourceException(Messages.MSG_ERROR_FIELD_FOUND_MORE_THAN_ONE, fieldName);
             }
 
-            fieldCache.put(fieldName, JsoupHtmlField.fieldFactory(matches.get(0), formElement));
+            fieldCache.put(fieldName, JsoupHtml5Field.fieldFactory(matches.get(0), formElement));
         }
 
         return fieldCache.get(fieldName);
@@ -87,6 +87,6 @@ public class JsoupHtmlForm implements Form {
 
     @Override
     public RequestBuilder toRequestBuilder() {
-        return new HTMLFormRequestBuilder(this);
+        return new FormRequestBuilder(this);
     }
 }

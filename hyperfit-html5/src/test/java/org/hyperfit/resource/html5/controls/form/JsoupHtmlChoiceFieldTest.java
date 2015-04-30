@@ -47,7 +47,7 @@ public class JsoupHtmlChoiceFieldTest {
         String name = UUID.randomUUID().toString();
         selectElement.attr("name", name);
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertEquals(name, subject.getName());
     }
@@ -56,14 +56,14 @@ public class JsoupHtmlChoiceFieldTest {
     @Test
     public void testGetValue() {
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getValue());
         assertNull(subject.getSelectedOption());
 
 
         Element option1 = selectElement.appendElement("option");
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertNull(subject.getValue());
         assertNull(subject.getSelectedOption());
@@ -73,14 +73,14 @@ public class JsoupHtmlChoiceFieldTest {
         String optionLabel = UUID.randomUUID().toString();
         option1.text(optionLabel);
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertNull(subject.getValue());
         assertNull(subject.getSelectedOption());
 
 
         option1.attr("selected", UUID.randomUUID().toString());
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertEquals(value, subject.getValue());
         assertEquals(new ChoiceField.Option(optionLabel, value), subject.getSelectedOption());
@@ -91,13 +91,13 @@ public class JsoupHtmlChoiceFieldTest {
     @Test
     public void testRequired() {
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertFalse(subject.isRequired());
 
         String value = UUID.randomUUID().toString();
         selectElement.attr("required", value);
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertTrue(subject.isRequired());
     }
@@ -106,19 +106,19 @@ public class JsoupHtmlChoiceFieldTest {
     @Test
     public void testMaxLength() {
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getMaxLength());
 
         selectElement.attr("maxlength", "");
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getMaxLength());
 
         Long maxlength = r.nextLong();
         selectElement.attr("maxlength", maxlength.toString());
 
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getMaxLength());
 
     }
@@ -126,36 +126,36 @@ public class JsoupHtmlChoiceFieldTest {
     @Test
     public void testGetLabel() {
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getLabel());
 
         String name = UUID.randomUUID().toString();
         selectElement.attr("name", name);
         Element labelElement = formElement.appendElement("label");
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertNull(subject.getLabel());
 
         labelElement.attr("for", name);
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertEquals("", subject.getLabel());
 
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a non-error class
         labelElement.addClass("x");
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertEquals(labelText, subject.getLabel());
 
         //add a error class
         labelElement.addClass("error");
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         assertNull(subject.getLabel());
 
@@ -165,7 +165,7 @@ public class JsoupHtmlChoiceFieldTest {
     @Test
     public void testHasError() {
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -177,7 +177,7 @@ public class JsoupHtmlChoiceFieldTest {
         String labelText = UUID.randomUUID().toString();
         labelElement.text(labelText);
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
@@ -189,13 +189,13 @@ public class JsoupHtmlChoiceFieldTest {
         String errorText = UUID.randomUUID().toString();
         errorLabelElement.text(errorText);
 
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertFalse(subject.hasError());
         assertNull(subject.getErrorMessage());
 
 
         errorLabelElement.addClass("error");
-        subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        subject = new JsoupHtml5ChoiceField(selectElement, formElement);
         assertTrue(subject.hasError());
         assertEquals(errorText, subject.getErrorMessage());
     }
@@ -217,7 +217,7 @@ public class JsoupHtmlChoiceFieldTest {
         option2.text(label2);
 
 
-        JsoupHtmlChoiceField subject = new JsoupHtmlChoiceField(selectElement, formElement);
+        JsoupHtml5ChoiceField subject = new JsoupHtml5ChoiceField(selectElement, formElement);
 
         ChoiceField.Option[] expected = new ChoiceField.Option[]{
             new ChoiceField.Option(label1, value1),
