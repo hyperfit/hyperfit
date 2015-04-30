@@ -1,7 +1,12 @@
 package org.hyperfit.resource.controls.form;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 public interface ChoiceField extends Field {
 
+    @EqualsAndHashCode
+    @ToString
     public class Option {
         private final String value;
         private final String label;
