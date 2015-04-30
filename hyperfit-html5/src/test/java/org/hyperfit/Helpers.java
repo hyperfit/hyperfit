@@ -50,7 +50,7 @@ public class Helpers {
     }
 
     private static Random r = new Random();
-    public static <T> T random(T[] array) {
+    public static <T> T random(T... array) {
         return array[r.nextInt(array.length)];
     }
 }
