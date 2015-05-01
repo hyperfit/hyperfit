@@ -2,10 +2,7 @@ package org.hyperfit.net;
 
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.resource.controls.form.CheckboxField;
-import org.hyperfit.resource.controls.form.ChoiceField;
-import org.hyperfit.resource.controls.form.Form;
-import org.hyperfit.resource.controls.form.TextField;
+import org.hyperfit.resource.controls.form.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -40,7 +37,12 @@ public class FormRequestBuilderTest {
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
+
+        when(mockForm.getFields()).thenReturn(new Field[0]);
+
         this.subject = new FormRequestBuilder(mockForm);
+
+
     }
 
 
@@ -62,16 +64,56 @@ public class FormRequestBuilderTest {
 
 
     @Test
-    public void testParamSettingFromConstructor(){
-        String paramName = UUID.randomUUID().toString();
-        String value = UUID.randomUUID().toString();
+    public void testParamSettingFromConstructorTextField(){
 
-        when(mockForm.getField(paramName))
-        .thenReturn(mockTextField);
+        Field[] fields = new Field[]{
+            mockTextField
+        };
 
-        subject.setParam(paramName, value);
+        when(mockForm.getFields())
+            .thenReturn(fields);
 
-        assertEquals(value, subject.getParam(paramName));
+        this.subject = new FormRequestBuilder(mockForm);
+
+        String textFieldValue = UUID.randomUUID().toString();
+        when(mockTextField.getValue()).thenReturn(textFieldValue);
+
+        assertThat("because field name is null, value should not be set", subject.getParams().keySet(), empty());
+
+
+        String textFieldName = UUID.randomUUID().toString();
+        when(mockTextField.getName()).thenReturn(textFieldName);
+
+        this.subject = new FormRequestBuilder(mockForm);
+
+        assertEquals(textFieldValue, subject.getParam(textFieldName));
+    }
+
+
+    @Test
+    public void testParamSettingFromConstructorCheckboxField(){
+
+        Field[] fields = new Field[]{
+            mockCheckboxField
+        };
+
+        when(mockForm.getFields())
+        .thenReturn(fields);
+
+        String fieldName = UUID.randomUUID().toString();
+        String fieldValue = UUID.randomUUID().toString();
+        when(mockCheckboxField.getName()).thenReturn(fieldName);
+        when(mockCheckboxField.getValue()).thenReturn(fieldValue);
+
+        this.subject = new FormRequestBuilder(mockForm);
+
+        assertNull("because checkbox isn't checked, it should be null", subject.getParam(fieldName));
+
+        when(mockCheckboxField.getCheckState()).thenReturn(CheckboxField.CheckState.CHECKED);
+        this.subject = new FormRequestBuilder(mockForm);
+
+        assertEquals(fieldValue, subject.getParam(fieldName));
+
     }
 
 

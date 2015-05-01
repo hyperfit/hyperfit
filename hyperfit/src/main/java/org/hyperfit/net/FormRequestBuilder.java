@@ -45,6 +45,18 @@ public class FormRequestBuilder implements RequestBuilder {
         url = form.getHref();
         this.setMethod(form.getMethod());
         this.form = form;
+
+        for(Field field : form.getFields()){
+            if(!StringUtils.isEmpty(field.getName())){
+                if(field instanceof CheckboxField) {
+                    if( ((CheckboxField)field).getCheckState() == CheckboxField.CheckState.CHECKED){
+                        this.setParam(field.getName(), field.getValue());
+                    }
+                } else {
+                    this.setParam(field.getName(), field.getValue());
+                }
+            }
+        }
     }
 
     public FormRequestBuilder addHeader(String name, String value) {
