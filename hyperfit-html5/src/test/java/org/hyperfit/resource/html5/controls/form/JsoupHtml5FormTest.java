@@ -350,4 +350,42 @@ public class JsoupHtml5FormTest {
         assertEquals(Method.POST, actual.getMethod());
         assertEquals("application/x-www-form-urlencoded", actual.getContentType());
     }
+
+    @Test(expected = HyperfitException.class)
+    public void testGetFieldSetNotFound(){
+        Element formElement = Jsoup.parse(
+            "<form>" +
+            "<fieldset>" +
+            "<label/>" +
+            "</fieldset>" +
+            "</form>"
+        ).select("form").get(0);
+
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
+
+        subject.getFieldSet(UUID.randomUUID().toString());
+    }
+
+
+    @Test
+    public void testGetFieldSet(){
+        Element formElement = Jsoup.parse(
+            "<form>" +
+            "<fieldset>" +
+            "<label/>" +
+            "</fieldset>" +
+            "</form>"
+        ).select("form").get(0);
+
+        Element fieldSetElement = formElement.select("fieldset").get(0);
+
+        String name = UUID.randomUUID().toString();
+        fieldSetElement.attr("name", name);
+
+
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
+
+        FieldSet actual = subject.getFieldSet(name);
+        assertEquals(new JsoupHtml5FieldSet(fieldSetElement, formElement), actual);
+    }
 }

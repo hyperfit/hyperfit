@@ -21,6 +21,8 @@
  * Otherwise the normal hyperfit processing takes place.  All parameters annotated with @Param are set as values for the field that matches their name
  * Note: Checkbox is interesting in that you don't pass in a value but instead pass in a checked state which causes hyperfit to include the value of the checkbox field
 * Form now has a toRequestBuilder method that creates a request from the form.  All fields of the form have their values set in the request params per the rules of the field
+* New type FieldSet which eventually will contain a collection of fields, but for now lets you get a label for a field set
+* Form has method getFieldSet(String name) that gets the field set for the given name or throws if not exactly one is found
 
 ## 1.5.0-SNAPSHOT - 2015-04-21
 * HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control

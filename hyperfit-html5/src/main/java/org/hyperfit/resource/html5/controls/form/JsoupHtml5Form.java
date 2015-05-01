@@ -8,6 +8,7 @@ import org.hyperfit.net.Method;
 import org.hyperfit.net.RequestBuilder;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Field;
+import org.hyperfit.resource.controls.form.FieldSet;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.utils.StringUtils;
 import org.jsoup.nodes.Element;
@@ -26,6 +27,7 @@ public class JsoupHtml5Form implements Form {
     private final Element formElement;
 
     private final HashMap<String, Field> fieldCache = new HashMap<String, Field>();
+    private final HashMap<String, FieldSet> fieldSetCache = new HashMap<String, FieldSet>();
 
     public JsoupHtml5Form(Element formElement){
         if(!formElement.tagName().equalsIgnoreCase("form")){
@@ -111,6 +113,32 @@ public class JsoupHtml5Form implements Form {
 
         return fields.toArray(new Field[fields.size()]);
 
+    }
+
+    private static final String fieldSetSelector = "fieldset[name=%s]";
+    @Override
+    public FieldSet getFieldSet(String fieldSetName) {
+        if (StringUtils.isEmpty(fieldSetName)) {
+            throw new IllegalArgumentException(Messages.MSG_ERROR_FIELD_SET_NAME_REQUIRED);
+        }
+
+        if(!fieldSetCache.containsKey(fieldSetName)){
+            String selector = String.format(fieldSetSelector, fieldSetName);
+
+            Elements matches = formElement.select(selector);
+
+            if(matches.size() == 0){
+                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_SET_WITH_NAME_NOT_FOUND, fieldSetName);
+            }
+
+            if (matches.size() > 1) {
+                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_SET_FOUND_MORE_THAN_ONE, fieldSetName);
+            }
+
+            fieldSetCache.put(fieldSetName, new JsoupHtml5FieldSet(matches.get(0), formElement));
+        }
+
+        return fieldSetCache.get(fieldSetName);
     }
 
     @Override

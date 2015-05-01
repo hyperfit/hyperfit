@@ -15,6 +15,8 @@ public interface Form {
 
     Field getField(String fieldName);
 
+    FieldSet getFieldSet(String fieldSetName);
+
     public RequestBuilder toRequestBuilder();
 
 }

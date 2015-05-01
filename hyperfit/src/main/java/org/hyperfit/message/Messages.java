@@ -80,6 +80,9 @@ public class Messages {
     public static final String MSG_ERROR_FIELD_WITH_NAME_NOT_FOUND = "Could not find a field with name [{}]";
     public static final String MSG_ERROR_FIELD_FOUND_MORE_THAN_ONE = "Found more than one field with name [{}]";
 
+    public static final String MSG_ERROR_FIELD_SET_NAME_REQUIRED = "Field set name is required";
+    public static final String MSG_ERROR_FIELD_SET_WITH_NAME_NOT_FOUND = "Could not find a field set with name [{}]";
+    public static final String MSG_ERROR_FIELD_SET_FOUND_MORE_THAN_ONE = "Found more than one field set with name [{}]";
 
     // -- REFLECTION RELATED --
     public static final String MSG_ERROR_REFLECTION_CANNOT_CAST = "Cannot cast object [{}] to [{}].";
