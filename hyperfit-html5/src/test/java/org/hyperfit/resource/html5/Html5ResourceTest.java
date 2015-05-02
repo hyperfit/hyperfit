@@ -554,6 +554,24 @@ public class Html5ResourceTest {
 
 
     @Test
+    public void testGetPathAs() {
+
+        Element dataSection = body.appendElement("section");
+        dataSection.addClass("data");
+
+        Element spanNode = dataSection.appendElement("span");
+        spanNode.attr("name", "errorMessage");
+
+        String message = UUID.randomUUID().toString();
+        spanNode.text(message);
+
+        Html5Resource resource = new Html5Resource(doc);
+
+        assertEquals(message, resource.getPathAs(String.class, "errorMessage"));
+    }
+
+
+    @Test
     public void testCanResolveLinkLocal() {
 
         Html5Resource resource = new Html5Resource(doc);

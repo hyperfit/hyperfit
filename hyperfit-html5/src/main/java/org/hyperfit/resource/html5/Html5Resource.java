@@ -150,7 +150,25 @@ public class Html5Resource extends BaseHyperResource {
     }
 
     public <T> T getPathAs(Class<T> classToReturn, String... path) {
-        throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+        if(!classToReturn.equals(String.class)){
+            throw new HyperResourceException("Only string is currently supported");
+        }
+
+        if(dataNode == null){
+            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+        }
+
+        Element node = dataNode;
+        for(String step : path){
+            node = node.select("*[name=" + step + "]").first();
+            if(node == null){
+                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+            }
+
+        }
+
+        return (T)node.text();
+
     }
 
     private static final String formByName = "form[name=%s]";
