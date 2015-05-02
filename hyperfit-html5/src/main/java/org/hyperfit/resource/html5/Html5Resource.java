@@ -33,10 +33,12 @@ public class Html5Resource extends BaseHyperResource {
     private final HashMap<String, Form> formCache = new HashMap<String, Form>(2);
 
     private final Document htmlResource;
+    private final Element dataNode;
 
     public Html5Resource(Response response) {
         try {
             this.htmlResource = Jsoup.parse(response.getBody());
+            this.dataNode = this.htmlResource.select("section.data").first();
         } catch (Exception ex) {
             throw new HyperfitException(
                 ex,
@@ -52,6 +54,8 @@ public class Html5Resource extends BaseHyperResource {
         }
 
         this.htmlResource = htmlDoc;
+        this.dataNode = htmlDoc.select("section.data").first();
+
     }
 
 
@@ -130,7 +134,19 @@ public class Html5Resource extends BaseHyperResource {
 
 
     public boolean hasPath(String... path) {
-        return false;
+        if(dataNode == null){
+            return false;
+        }
+
+        Element node = dataNode;
+        for(String step : path){
+            node = node.select("*[name=" + step + "]").first();
+            if(node == null){
+                return false;
+            }
+
+        }
+        return true;
     }
 
     public <T> T getPathAs(Class<T> classToReturn, String... path) {

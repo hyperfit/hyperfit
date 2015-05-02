@@ -531,9 +531,25 @@ public class Html5ResourceTest {
 
     @Test
     public void testHasPath() {
-        Html5Resource resource = new Html5Resource(doc);
-        assertFalse("data fields not supported in html just yet, always return false", resource.hasPath("complexProp", "somekey"));
 
+        Element dataSection = body.appendElement("section");
+        dataSection.addClass("data");
+
+        Element spanNode = dataSection.appendElement("span");
+        spanNode.attr("name", "errorMessage");
+
+        String message = UUID.randomUUID().toString();
+        spanNode.text(message);
+
+        Html5Resource resource = new Html5Resource(doc);
+
+        assertTrue(resource.hasPath("errorMessage"));
+
+        assertFalse(resource.hasPath(UUID.randomUUID().toString()));
+
+        assertFalse(resource.hasPath("errorMessage", UUID.randomUUID().toString()));
+
+        assertFalse(resource.hasPath(UUID.randomUUID().toString(), "errorMessage"));
     }
 
 
@@ -789,6 +805,10 @@ public class Html5ResourceTest {
         assertThat(actual, arrayContainingInAnyOrder(expected));
 
     }
+
+
+
+
 
 
     @Test
