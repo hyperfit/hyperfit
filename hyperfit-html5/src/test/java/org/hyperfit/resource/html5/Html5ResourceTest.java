@@ -459,15 +459,6 @@ public class Html5ResourceTest {
         new Html5Resource(doc).getPathAs(String.class, null);
     }
 
-    @Test(expected = HyperResourceException.class)
-    public void testGetPathAsNullType() {
-        new Html5Resource(doc).getPathAs(null);
-    }
-
-    @Test(expected = HyperResourceException.class)
-    public void testGetValueEmptyPath() {
-        new Html5Resource(doc).getPathAs(String.class);
-    }
 
 
     @Test

@@ -154,7 +154,7 @@ public class Html5Resource extends BaseHyperResource {
             throw new HyperResourceException("Only string is currently supported");
         }
 
-        if(dataNode == null){
+        if(dataNode == null || path == null || path.length == 0){
             throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
         }
 
