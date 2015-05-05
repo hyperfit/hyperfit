@@ -1,7 +1,7 @@
 ## 1.7.0-SNAPSHOT - TBD
 * 
 
-## 1.6.0 - 2015-05-05
+## 1.6.1 - 2015-05-05
 * The jackson mapper in hyperfit-hal has been changed to ignore missing fields on deserialization
 * Lots more support around form fields
  * Fields share some common properties: required, label, hasError, errorMessage, maxLength, name
