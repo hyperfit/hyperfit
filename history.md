@@ -1,5 +1,5 @@
 ## 1.7.0-SNAPSHOT - TBD
-* 
+*  
 
 ## 1.6.1 - 2015-05-05
 * The jackson mapper in hyperfit-hal has been changed to ignore missing fields on deserialization
