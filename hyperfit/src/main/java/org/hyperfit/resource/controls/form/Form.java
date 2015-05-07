@@ -13,6 +13,8 @@ public interface Form {
 
     Field[] getFields();
 
+    boolean hasField(String fieldName);
+
     Field getField(String fieldName);
 
     FieldSet getFieldSet(String fieldSetName);
