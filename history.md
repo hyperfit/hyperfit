@@ -1,7 +1,7 @@
 ## 1.7.0-SNAPSHOT - TBD
 * 
 
-## 1.6.2 - 2015-05-07
+## 1.6.3 - 2015-05-07
 * Form::hasField(String fieldName) added to detect presence of fields
 
 ## 1.6.1 - 2015-05-05
