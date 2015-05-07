@@ -89,6 +89,18 @@ public class JsoupHtml5Form implements Form {
     }
 
     @Override
+    public boolean hasField(String fieldName) {
+        if (StringUtils.isEmpty(fieldName)) {
+            throw new IllegalArgumentException(Messages.MSG_ERROR_FIELD_NAME_REQUIRED);
+        }
+
+        String selector = String.format(fieldSelector, fieldName, fieldName);
+        Elements matches = formElement.select(selector);
+        return !matches.isEmpty();
+
+    }
+
+    @Override
     public Field[] getFields() {
         Elements fieldElements = formElement.select("input,select");
         ArrayList<Field> fields = new ArrayList<Field>(fieldCache.values());

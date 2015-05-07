@@ -108,6 +108,37 @@ public class JsoupHtml5FormTest {
     }
 
     @Test
+    public void testHasField(){
+        Element formElement = Jsoup.parse(
+        "<form>" +
+        "" +
+        "<input/>" +
+        "" +
+        "<select/>" +
+        "</form>"
+        ).select("form").get(0);
+
+        Element inputElement = formElement.select("input").get(0);
+        inputElement.attr("type", "text");
+        String inputName = UUID.randomUUID().toString();
+        inputElement.attr("name", inputName);
+
+        Element selectElement = formElement.select("select").get(0);
+        String selectName = UUID.randomUUID().toString();
+        selectElement.attr("name", selectName);
+
+
+        JsoupHtml5Form subject = new JsoupHtml5Form(formElement);
+
+        assertTrue(subject.hasField(inputName));
+        assertTrue(subject.hasField(selectName));
+
+        assertFalse(subject.hasField(UUID.randomUUID().toString()));
+
+    }
+
+
+    @Test
     public void testGetTextField(){
         Element formElement = Jsoup.parse(
             "<form>" +
