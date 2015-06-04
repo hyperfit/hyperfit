@@ -9,6 +9,7 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.net.URI;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,16 +34,21 @@ public class HalJsonResource extends BaseHyperResource {
     
     private static final ObjectReader OBJECT_READER = OBJECT_MAPPER.reader(JsonNode.class);
     private final JsonNode jsonResource;
-
+    private final String baseURI;
     private final HashMap<String, HyperLink[]> linkCache = new HashMap<String, HyperLink[]>(5);
 
     public HalJsonResource(Response response) {
         try {
             this.jsonResource = OBJECT_READER.readTree(response.getBody());
+            this.baseURI = response.getRequest().getUrl();
+
         } catch (Exception ex) {
-            throw new HyperfitException(ex,
-                    Messages.MSG_ERROR_MEDIATYPE_CANNOT_CREATE_RESOURCE,
-                    response, HalJsonResource.class);
+            throw new HyperfitException(
+                ex,
+                Messages.MSG_ERROR_MEDIATYPE_CANNOT_CREATE_RESOURCE,
+                response,
+                HalJsonResource.class
+            );
         }
 
         if (this.jsonResource == null) {
@@ -55,6 +61,7 @@ public class HalJsonResource extends BaseHyperResource {
             throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
         }
 
+        this.baseURI = null;
         this.jsonResource = jsonResource;
     }
 
@@ -104,13 +111,13 @@ public class HalJsonResource extends BaseHyperResource {
         }
 
         if(!linkCache.containsKey(relationship)){
-            linkCache.put(relationship, doLinkParsing(relationship, jsonResource.path("_links").path(relationship)));
+            linkCache.put(relationship, doLinkParsing(relationship, jsonResource.path("_links").path(relationship), baseURI));
         }
 
         return linkCache.get(relationship);
     }
 
-    private static HyperLink[] doLinkParsing(String relationship, JsonNode matchingLinks){
+    private static HyperLink[] doLinkParsing(String relationship, JsonNode matchingLinks, String baseURI){
         if(matchingLinks.isMissingNode()){
             return new HyperLink[0];
         }
@@ -120,13 +127,13 @@ public class HalJsonResource extends BaseHyperResource {
             HyperLink[] results = new HyperLink[links.size()];
             int i = 0;
             for(JsonNode link : links){
-                results[i] = linkFromHalJSON(relationship, link);
+                results[i] = linkFromHalJSON(relationship, link, baseURI);
                 i++;
             }
 
             return results;
         } else {
-            return new HyperLink[]{linkFromHalJSON(relationship, matchingLinks)};
+            return new HyperLink[]{linkFromHalJSON(relationship, matchingLinks, baseURI)};
         }
     }
 
@@ -203,7 +210,7 @@ public class HalJsonResource extends BaseHyperResource {
 
 
     //TODO: we could use data binding here if that were faster...and any of us had a clue how to use JACKSON
-    public static HyperLink linkFromHalJSON(String relationship, JsonNode node){
+    public static HyperLink linkFromHalJSON(String relationship, JsonNode node, String baseURI){
         JsonNode href = node.path("href");
         JsonNode template = node.path("templated");
         JsonNode type = node.path("type");
@@ -217,6 +224,8 @@ public class HalJsonResource extends BaseHyperResource {
             throw new IllegalArgumentException("Malformed HAL link node. href field not present in json: " + node.toString());
         }
 
+
+
         return new HalHyperLink(
             href.textValue(),
             relationship,
@@ -226,7 +235,8 @@ public class HalJsonResource extends BaseHyperResource {
             name.isMissingNode() ? null : name.textValue(),
             profile.isMissingNode() ? null : profile.textValue(),
             title.isMissingNode() ? null : title.textValue(),
-            hrefLang.isMissingNode() ? null : hrefLang.textValue()
+            hrefLang.isMissingNode() ? null : hrefLang.textValue(),
+            baseURI
         );
     }
 

@@ -2,6 +2,8 @@ package org.hyperfit.resource.hal.json;
 
 
 import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.net.Request;
+import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,16 +13,21 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import static org.hyperfit.Helpers.makeSet;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.UUID;
+
 
 
 public class HalJsonResourceTest {
@@ -30,8 +37,16 @@ public class HalJsonResourceTest {
     ObjectNode links;
     ObjectNode embedded;
 
+    @Mock
+    Response mockResponse;
+
+    @Mock
+    Request mockRequest;
+
     @Before
     public void setUp(){
+        MockitoAnnotations.initMocks(this);
+
         root = nodeFactory.objectNode();
         links = nodeFactory.objectNode();
         embedded = nodeFactory.objectNode();
@@ -960,6 +975,44 @@ public class HalJsonResourceTest {
         HalJsonResource resource = new HalJsonResource(root);
 
         assertFalse("HAL doesn't support forms so it should always be empty", resource.hasForm(null));
+
+    }
+
+
+    @Test
+    public void testRelativeURLs(){
+
+        String requestURL = "proto://host.net:70/stuff/com";
+        String json = "{" +
+            "\"_links\" : {" +
+                "\"root-relative\" : { \"href\" : \"/root-relative{?params}\"}," +
+        //TODO: support other types of relative paths
+               // "\"path-relative\" : { \"href\" : \"path/relative{?params}\"}," +
+               // "\"path-relative-parent\" : { \"href\" : \"../parent/path{?params}\"}," +
+               // "\"scheme-relative\" : { \"href\" : \"//host2.net/path{?params}\"}," +
+                "\"absolute\" : { \"href\" : \"proto://host/path{?params}\"}" +
+            "" +
+            "}" +
+        "}";
+        when(mockResponse.getBody())
+            .thenReturn(json);
+
+        when(mockResponse.getRequest())
+            .thenReturn(mockRequest);
+
+        when(mockRequest.getUrl())
+            .thenReturn(requestURL);
+
+        HalJsonResource resource = new HalJsonResource(mockResponse);
+
+
+
+        assertEquals("proto://host.net:70/root-relative{?params}", resource.getLink("root-relative").getHref());
+        //assertEquals("proto://host.net:70/stuff/path/relative", resource.getLink("path-relative").getHref());
+        //assertEquals("proto://host.net:70/parent/path", resource.getLink("path-relative-parent").getHref());
+        //assertEquals("proto://host.net:70/parent/path", resource.getLink("scheme-relative").getHref());
+        assertEquals("proto://host/path{?params}", resource.getLink("absolute").getHref());
+
 
     }
 }
