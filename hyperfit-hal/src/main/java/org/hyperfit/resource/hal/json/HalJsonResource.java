@@ -56,12 +56,12 @@ public class HalJsonResource extends BaseHyperResource {
         }
     }
 
-    public HalJsonResource(JsonNode jsonResource) {
+    public HalJsonResource(JsonNode jsonResource, String baseURI) {
         if (jsonResource == null) {
             throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
         }
 
-        this.baseURI = null;
+        this.baseURI = baseURI;
         this.jsonResource = jsonResource;
     }
 
@@ -149,7 +149,7 @@ public class HalJsonResource extends BaseHyperResource {
             throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, relationship, jsonResource);
         }
 
-        return new HalJsonResource(node);
+        return new HalJsonResource(node, this.baseURI);
     }
 
     public HyperResource[] resolveLinksLocal(String relationship) {
@@ -164,14 +164,14 @@ public class HalJsonResource extends BaseHyperResource {
             HalJsonResource[] results = new HalJsonResource[resources.size()];
             int i = 0;
             for(JsonNode resource : resources){
-                results[i] = new HalJsonResource(resource);
+                results[i] = new HalJsonResource(resource, baseURI);
                 i++;
             }
 
             return results;
 
         } else {
-            return new HalJsonResource[]{ new HalJsonResource(node) };
+            return new HalJsonResource[]{ new HalJsonResource(node, baseURI) };
         }
 
     }

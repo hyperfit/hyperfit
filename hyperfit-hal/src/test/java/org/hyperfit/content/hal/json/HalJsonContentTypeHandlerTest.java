@@ -52,8 +52,9 @@ public class HalJsonContentTypeHandlerTest {
 
         when(mockResponse.getBody()).thenReturn(validHalJson);
         assertEquals(
-                halJsonContentTypeHandler.parseResponse(mockResponse),
-                new HalJsonResource(new ObjectMapper().reader(JsonNode.class).readTree(validHalJson)));
+            halJsonContentTypeHandler.parseResponse(mockResponse),
+            new HalJsonResource(new ObjectMapper().reader(JsonNode.class).readTree(validHalJson), null)
+        );
     }
 
     @Test(expected = HyperfitException.class)
