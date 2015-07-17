@@ -55,7 +55,7 @@ public class Response {
     }
 
     public boolean isOK() {
-        return (this.code == 200);
+        return (this.code > 199) && (this.code < 300);
     }
 
     public static ResponseBuilder builder() {
