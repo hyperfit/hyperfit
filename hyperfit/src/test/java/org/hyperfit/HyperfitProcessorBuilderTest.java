@@ -2,7 +2,7 @@ package org.hyperfit;
 
 import facets.RootResource;
 import org.hyperfit.content.ContentType;
-import org.hyperfit.exception.NoClientRegisteredForScheme;
+import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.net.HyperClient;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
@@ -124,7 +124,7 @@ public class HyperfitProcessorBuilderTest {
         requestProcessor.processRequest(null, "http://host.com");
     }
 
-    @Test(expected = NoClientRegisteredForScheme.class)
+    @Test(expected = NoClientRegisteredForSchemeException.class)
     public void testNoClientRegisteredException(){
         when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor requestProcessor = HyperfitProcessor.builder()

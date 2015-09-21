@@ -6,7 +6,7 @@ import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.exception.NoClientRegisteredForScheme;
+import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
@@ -115,7 +115,7 @@ public class HyperfitProcessor {
 
         hyperClient = schemeClientMap.get(scheme);
         if(hyperClient == null){
-            throw new NoClientRegisteredForScheme(Messages.MSG_ERROR_NO_CLIENT_FOR_SCHEME, scheme);
+            throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT_FOR_SCHEME, scheme);
         }
         hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
 

@@ -1,5 +1,6 @@
 package org.hyperfit;
 
+import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.exception.ResponseException;
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
@@ -38,11 +39,12 @@ public class HyperfitProcessorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
     }
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeException() {
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -57,7 +59,7 @@ public class HyperfitProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeHandlerException() {
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -71,10 +73,10 @@ public class HyperfitProcessorTest {
         hyperfitProcessor.buildHyperResource(response, HyperResource.class);
     }
 
+
     @Test
     public void testInvokeSingleProfileResourceTest() {
 
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .interfaceSelectionStrategy(mockSelectionStrategy)
@@ -96,7 +98,6 @@ public class HyperfitProcessorTest {
     public void testProcessResourceWithArrayOfRegisteredProfiles() {
 
 
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .interfaceSelectionStrategy(mockSelectionStrategy)
