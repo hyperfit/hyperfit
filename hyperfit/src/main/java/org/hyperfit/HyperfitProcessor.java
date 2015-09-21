@@ -6,6 +6,8 @@ import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
+import org.hyperfit.exception.NoClientRegisteredForScheme;
+import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.net.*;
@@ -20,6 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
@@ -34,24 +38,25 @@ public class HyperfitProcessor {
 
 
     private final RequestInterceptors requestInterceptors;
-    private final HyperClient hyperClient;
+    private HyperClient hyperClient;
     private final ResourceMethodInfoCache resourceMethodInfoCache;
     //TODO: make this protected hack non-sense go away...something is wrong with our class layout
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
-
+    private final Map<String, HyperClient> schemeClientMap;
 
     private HyperfitProcessor(Builder builder) {
 
         contentRegistry = Preconditions.checkNotNull(builder.contentRegistry);
-        hyperClient = Preconditions.checkNotNull(builder.hyperClient, "HyperClient cannot be null");
+        //hyperClient = Preconditions.checkNotNull(builder.hyperClient, "HyperClient cannot be null");
         errorHandler = firstNonNull(builder.errorHandler, new DefaultErrorHandler());
         resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
         requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
 
-        hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
+        //hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
+        schemeClientMap = builder.schemeClientMap;
     }
 
 
@@ -100,8 +105,19 @@ public class HyperfitProcessor {
         requestInterceptors.intercept(requestBuilder);
 
         Request request = requestBuilder.build();
+        //find the scheme
+        int pos = request.getUrl().indexOf(":");
+
+        String scheme = request.getUrl().substring(0, pos);
 
         //TODO: return the request if that's what they want
+
+
+        hyperClient = schemeClientMap.get(scheme);
+        if(hyperClient == null){
+            throw new NoClientRegisteredForScheme(Messages.MSG_ERROR_NO_CLIENT_FOR_SCHEME, scheme);
+        }
+        hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
 
         Response response = hyperClient.execute(request);
 
@@ -234,6 +250,7 @@ public class HyperfitProcessor {
         private ResourceMethodInfoCache resourceMethodInfoCache;
         private RequestInterceptors requestInterceptors = new RequestInterceptors();
         private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
+        private Map<String, HyperClient> schemeClientMap = new HashMap<String, HyperClient>();
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.add(handler);
@@ -256,7 +273,17 @@ public class HyperfitProcessor {
         }
 
         public Builder hyperClient(HyperClient hyperClient) {
-            this.hyperClient = hyperClient;
+
+            for(String scheme: hyperClient.getSchemas()){
+                schemeClientMap.put(scheme, hyperClient);
+            }
+            return this;
+        }
+
+        public Builder hyperClient(HyperClient hyperClient, String... scheme){
+            for(int i=0; i<scheme.length; i++){
+                schemeClientMap.put(scheme[i], hyperClient);
+            }
             return this;
         }
 

@@ -28,4 +28,10 @@ public interface HyperClient {
      * @param handler
      */
     HyperClient setCookieHandler(CookieHandler handler);
+
+    /**
+     * Returns an array of schemes the client support
+     * @return
+     */
+    String[] getSchemas();
 }

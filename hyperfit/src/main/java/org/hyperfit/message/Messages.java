@@ -97,4 +97,6 @@ public class Messages {
     public static final String MSG_ERROR_PROXY_UNEXPECTED_ERROR =
             "Unexpected error occurred when handling proxy method invocation [{}] in [{}] with arguments {}.";
 
+    public static final String MSG_ERROR_NO_CLIENT_FOR_SCHEME = "No client is registered for scheme {}";
+
 }

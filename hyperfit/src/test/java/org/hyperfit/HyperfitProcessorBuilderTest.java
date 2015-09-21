@@ -2,6 +2,7 @@ package org.hyperfit;
 
 import facets.RootResource;
 import org.hyperfit.content.ContentType;
+import org.hyperfit.exception.NoClientRegisteredForScheme;
 import org.hyperfit.net.HyperClient;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
@@ -25,6 +26,9 @@ public class HyperfitProcessorBuilderTest {
     protected HyperClient mockHyperClient;
 
     @Mock
+    protected HyperClient secondMockHyperClient;
+
+    @Mock
     protected Response mockResponse;
 
     @Mock
@@ -42,6 +46,7 @@ public class HyperfitProcessorBuilderTest {
     @Test
     public void testBuildAResource(){
         HyperfitProcessor requestProcessor;
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         requestProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -90,6 +95,7 @@ public class HyperfitProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullEndpoint(){
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor requestProcessor =
                 HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
@@ -100,6 +106,7 @@ public class HyperfitProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingEmptyEndpoint(){
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor requestProcessor =
                 HyperfitProcessor.builder()
                         .hyperClient(mockHyperClient)
@@ -109,10 +116,60 @@ public class HyperfitProcessorBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildingNullClass(){
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
 
         requestProcessor.processRequest(null, "http://host.com");
+    }
+
+    @Test(expected = NoClientRegisteredForScheme.class)
+    public void testNoClientRegisteredException(){
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+        HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
+                .hyperClient(mockHyperClient)
+                .build();
+
+        requestProcessor.processRequest(RootResource.class, "bbcom://host.com");
+    }
+
+    @Test
+    public void testUserDefinedHyperClient(){
+        when(secondMockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+
+        String fakeContentTypeString = "application/hal+json";
+        ContentType fakeContentType = ContentType.parse(fakeContentTypeString);
+
+        when(secondMockHyperClient.execute(isA(Request.class)))
+                .thenReturn(this.mockResponse);
+
+        when(mockHyperClient.execute(isA(Request.class)))
+                .thenReturn(this.mockResponse);
+
+        when(mockResponse.getContentType())
+                .thenReturn(fakeContentTypeString);
+
+        when(mockResponse.isOK())
+                .thenReturn(true);
+
+        when(mockContentTypeHandler.canParseResponse())
+                .thenReturn(true);
+
+        when(mockContentTypeHandler.getDefaultContentType())
+                .thenReturn(fakeContentType);
+
+        when(mockContentTypeHandler.parseResponse(this.mockResponse))
+                .thenReturn(this.mockHyperResource);
+
+        HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
+                .hyperClient(secondMockHyperClient)
+                .hyperClient(mockHyperClient, "bbcom", "bbcoms" )
+                .addContentTypeHandler(mockContentTypeHandler)
+                .build();
+        requestProcessor.processRequest(RootResource.class, "bbcom://host.com");
+        requestProcessor.processRequest(RootResource.class, "bbcoms://host.com");
+        requestProcessor.processRequest(RootResource.class, "http://host.com");
+        requestProcessor.processRequest(RootResource.class, "https://host.com");
     }
 }

@@ -88,6 +88,10 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         return this;
     }
 
+    public String[] getSchemas() {
+        return new String[]{"http", "https"};
+    }
+
     /**
      * Use the request builder to build the request to be executed in the future
      * @param request {@link org.hyperfit.net.Request} includes url,method, headers information
