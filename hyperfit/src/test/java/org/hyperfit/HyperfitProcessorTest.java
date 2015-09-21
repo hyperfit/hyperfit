@@ -42,6 +42,7 @@ public class HyperfitProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeException() {
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -56,6 +57,7 @@ public class HyperfitProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeHandlerException() {
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -72,7 +74,7 @@ public class HyperfitProcessorTest {
     @Test
     public void testInvokeSingleProfileResourceTest() {
 
-
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .interfaceSelectionStrategy(mockSelectionStrategy)
@@ -94,7 +96,7 @@ public class HyperfitProcessorTest {
     public void testProcessResourceWithArrayOfRegisteredProfiles() {
 
 
-
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .interfaceSelectionStrategy(mockSelectionStrategy)
@@ -114,7 +116,7 @@ public class HyperfitProcessorTest {
 
     @Test
     public void testProcessResourceWithUnregisteredProfile() {
-
+        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
 
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
