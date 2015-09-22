@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +60,15 @@ public class HyperfitProcessor {
             throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT);
         }
         schemeClientMap = builder.schemeClientMap;
+
+        //get the distinct hyperclient from the map and call the setAcceptedContentTypes
+        Set<HyperClient> uniqueClient = new HashSet<HyperClient>();
+        for(HyperClient hyperClient: schemeClientMap.values()){
+            uniqueClient.add(hyperClient);
+        }
+        for(HyperClient hyperClient: uniqueClient){
+            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
+        }
     }
 
 
@@ -187,10 +197,10 @@ public class HyperfitProcessor {
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
+    protected <T> HyperResource
+    buildHyperResource(Response response, Class<T> expectedResourceInterface) {
 
         //STAGE 1 - There's response, let's see if we understand the content type!
-
         ContentType responseContentType = null;
         try {
             responseContentType = ContentType.parse(response.getContentType());
@@ -290,7 +300,6 @@ public class HyperfitProcessor {
             if( hyperClient == null){
                 throw new IllegalArgumentException("HyperClient can not be null");
             }
-            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
             for(String scheme: hyperClient.getSchemes()){
                 schemeClientMap.put(scheme, hyperClient);
             }
@@ -316,7 +325,6 @@ public class HyperfitProcessor {
                 throw new IllegalArgumentException("HyperClient has to have schemes defined");
             }
 
-            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
             for(String scheme: schemes){
                 schemeClientMap.put(scheme, hyperClient);
             }
