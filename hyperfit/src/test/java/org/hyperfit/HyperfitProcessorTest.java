@@ -1,6 +1,5 @@
 package org.hyperfit;
 
-import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.exception.ResponseException;
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
@@ -39,7 +38,7 @@ public class HyperfitProcessorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
     }
 
     @Test(expected = ResponseException.class)
@@ -117,7 +116,7 @@ public class HyperfitProcessorTest {
 
     @Test
     public void testProcessResourceWithUnregisteredProfile() {
-        when(mockHyperClient.getSchemas()).thenReturn(new String[]{"http", "https"});
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
 
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)

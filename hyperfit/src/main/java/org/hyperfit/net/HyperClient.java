@@ -30,8 +30,8 @@ public interface HyperClient {
     HyperClient setCookieHandler(CookieHandler handler);
 
     /**
-     * Returns an array of schemes the client support
+     * Returns the URL schemes this HyperClient implementation supports by default
      * @return
      */
-    String[] getSchemas();
+    String[] getSchemes();
 }
