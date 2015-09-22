@@ -266,4 +266,15 @@ public class HyperfitProcessorBuilderTest {
 
         requestProcessor.processRequest(RootResource.class, "scheme1://host.com");
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExceptionWhenUrlNotRight(){
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"random1", "random2"});
+        HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
+                .hyperClient(mockHyperClient)
+                .addContentTypeHandler(mockContentTypeHandler)
+                .build();
+
+        requestProcessor.processRequest(RootResource.class, "host.com");
+    }
 }

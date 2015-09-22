@@ -318,4 +318,13 @@ public class OkHttp1HyperClientTest {
                 .containsEntry("entry2", "value2")
                 .containsEntry("entry3", "value4");
     }
+
+    @Test
+    public void testGetSchemes(){
+        String[] expected = new String[]{"http", "https"};
+        String[] real = client.getSchemes();
+        Arrays.sort(expected);
+        Arrays.sort(real);
+        Arrays.equals(expected,real);
+    }
 }

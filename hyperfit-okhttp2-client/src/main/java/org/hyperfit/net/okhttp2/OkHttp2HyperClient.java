@@ -88,7 +88,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         return this;
     }
 
-    public String[] getSchemas() {
+    public String[] getSchemes() {
         return new String[]{"http", "https"};
     }
 

@@ -76,7 +76,7 @@ public class OkHttp1HyperClient extends BaseHyperClient {
     }
 
     @Override
-    public String[] getSchemas() {
+    public String[] getSchemes() {
         return new String[]{"http", "https"};
     }
 

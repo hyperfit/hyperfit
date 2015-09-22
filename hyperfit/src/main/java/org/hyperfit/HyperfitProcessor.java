@@ -110,7 +110,14 @@ public class HyperfitProcessor {
         //find the scheme
         int pos = request.getUrl().indexOf(":");
 
-        String scheme = request.getUrl().substring(0, pos);
+        String scheme = null;
+        if(pos > 0) {
+            scheme = request.getUrl().substring(0, pos);
+        }
+
+        if(StringUtils.isEmpty(scheme)){
+            throw new IllegalArgumentException("The request url does not have a scheme");
+        }
 
         //TODO: return the request if that's what they want
 
