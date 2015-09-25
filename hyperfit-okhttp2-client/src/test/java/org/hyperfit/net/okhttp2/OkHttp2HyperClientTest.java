@@ -6,10 +6,7 @@ import com.google.common.base.Charsets;
 import com.squareup.okhttp.*;
 
 import java.net.CookieManager;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -294,5 +291,12 @@ public class OkHttp2HyperClientTest {
         verify(mockOkHttpClient, times(1)).setCookieHandler(null);
 
     }
-
+    @Test
+    public void testGetSchemes(){
+        String[] expected = new String[]{"https", "http"};
+        String[] real = okHttp2HyperClient.getSchemes();
+        Arrays.sort(expected);
+        Arrays.sort(real);
+        Arrays.equals(expected,real);
+    }
 }

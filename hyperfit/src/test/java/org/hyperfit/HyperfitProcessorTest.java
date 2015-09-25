@@ -38,10 +38,12 @@ public class HyperfitProcessorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
     }
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeException() {
+
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -56,6 +58,7 @@ public class HyperfitProcessorTest {
 
     @Test(expected = ResponseException.class)
     public void testBuildResourceNoContentTypeHandlerException() {
+
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
                 .hyperClient(mockHyperClient)
                 .build();
@@ -69,9 +72,9 @@ public class HyperfitProcessorTest {
         hyperfitProcessor.buildHyperResource(response, HyperResource.class);
     }
 
+
     @Test
     public void testInvokeSingleProfileResourceTest() {
-
 
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
@@ -94,7 +97,6 @@ public class HyperfitProcessorTest {
     public void testProcessResourceWithArrayOfRegisteredProfiles() {
 
 
-
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .interfaceSelectionStrategy(mockSelectionStrategy)
@@ -114,7 +116,7 @@ public class HyperfitProcessorTest {
 
     @Test
     public void testProcessResourceWithUnregisteredProfile() {
-
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
 
         HyperfitProcessor processor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)

@@ -75,6 +75,11 @@ public class OkHttp1HyperClient extends BaseHyperClient {
         return this;
     }
 
+    @Override
+    public String[] getSchemes() {
+        return new String[]{"http", "https"};
+    }
+
 
     @SuppressWarnings("deprecation")
     protected HttpURLConnection openConnection(Request request) throws IOException {

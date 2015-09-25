@@ -6,6 +6,8 @@ import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
+import org.hyperfit.exception.NoClientRegisteredForSchemeException;
+import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.net.*;
@@ -14,12 +16,17 @@ import org.hyperfit.resource.InterfaceSelectionStrategy;
 import org.hyperfit.resource.SimpleInterfaceSelectionStrategy;
 import org.hyperfit.utils.Preconditions;
 import org.hyperfit.utils.ReflectUtils;
+import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
@@ -34,24 +41,34 @@ public class HyperfitProcessor {
 
 
     private final RequestInterceptors requestInterceptors;
-    private final HyperClient hyperClient;
     private final ResourceMethodInfoCache resourceMethodInfoCache;
     //TODO: make this protected hack non-sense go away...something is wrong with our class layout
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
-
+    private final Map<String, HyperClient> schemeClientMap;
 
     private HyperfitProcessor(Builder builder) {
 
         contentRegistry = Preconditions.checkNotNull(builder.contentRegistry);
-        hyperClient = Preconditions.checkNotNull(builder.hyperClient, "HyperClient cannot be null");
         errorHandler = firstNonNull(builder.errorHandler, new DefaultErrorHandler());
         resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
         requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
 
-        hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
+        if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
+            throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT);
+        }
+        schemeClientMap = builder.schemeClientMap;
+
+        //get the distinct hyperclient from the map and call the setAcceptedContentTypes
+        Set<HyperClient> uniqueClient = new HashSet<HyperClient>();
+        for(HyperClient hyperClient: schemeClientMap.values()){
+            uniqueClient.add(hyperClient);
+        }
+        for(HyperClient hyperClient: uniqueClient){
+            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
+        }
     }
 
 
@@ -100,8 +117,26 @@ public class HyperfitProcessor {
         requestInterceptors.intercept(requestBuilder);
 
         Request request = requestBuilder.build();
+        //find the scheme
+        int pos = request.getUrl().indexOf(":");
+
+        String scheme = null;
+        if(pos > 0) {
+            scheme = request.getUrl().substring(0, pos);
+        }
+
+        if(StringUtils.isEmpty(scheme)){
+            throw new IllegalArgumentException("The request url does not have a scheme");
+        }
 
         //TODO: return the request if that's what they want
+
+
+        HyperClient hyperClient = schemeClientMap.get(scheme);
+        if(hyperClient == null){
+            Set<String> registeredSchemes = schemeClientMap.keySet();
+            throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT_FOR_SCHEME, scheme, registeredSchemes);
+        }
 
         Response response = hyperClient.execute(request);
 
@@ -162,10 +197,10 @@ public class HyperfitProcessor {
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
+    protected <T> HyperResource
+    buildHyperResource(Response response, Class<T> expectedResourceInterface) {
 
         //STAGE 1 - There's response, let's see if we understand the content type!
-
         ContentType responseContentType = null;
         try {
             responseContentType = ContentType.parse(response.getContentType());
@@ -234,6 +269,7 @@ public class HyperfitProcessor {
         private ResourceMethodInfoCache resourceMethodInfoCache;
         private RequestInterceptors requestInterceptors = new RequestInterceptors();
         private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
+        private Map<String, HyperClient> schemeClientMap = new HashMap<String, HyperClient>();
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.add(handler);
@@ -255,8 +291,43 @@ public class HyperfitProcessor {
             return this;
         }
 
+        /**
+         * A HyperClient will be registered in schemeClientMap based on the schemes it can handle, which is defined in getSchemes()
+         * @param hyperClient HyperClient {@link org.hyperfit.net.HyperClient}
+         * @return {@link org.hyperfit.HyperfitProcessor.Builder}
+         */
         public Builder hyperClient(HyperClient hyperClient) {
-            this.hyperClient = hyperClient;
+            if( hyperClient == null){
+                throw new IllegalArgumentException("HyperClient can not be null");
+            }
+            for(String scheme: hyperClient.getSchemes()){
+                schemeClientMap.put(scheme, hyperClient);
+            }
+            return this;
+        }
+
+        /**
+         *  A HyperClient will be registered in schemeClientMap based on the schemes it provided in the parameters
+         *   and ignores the default schemes registered by getSchemes()
+         * @param hyperClient {@link org.hyperfit.net.HyperClient}
+         * @param schemes {@link java.lang.String}
+         * @return {@link org.hyperfit.HyperfitProcessor.Builder}
+         */
+        public Builder hyperClient(HyperClient hyperClient, String... schemes){
+            boolean isSchemeValid = false;
+            for(String scheme: schemes){
+                if(!StringUtils.isEmpty(scheme)) {
+                    isSchemeValid = true;
+                    break;
+                }
+            }
+            if(!isSchemeValid) {
+                throw new IllegalArgumentException("HyperClient has to have schemes defined");
+            }
+
+            for(String scheme: schemes){
+                schemeClientMap.put(scheme, hyperClient);
+            }
             return this;
         }
 

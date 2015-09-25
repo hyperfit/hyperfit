@@ -1,4 +1,7 @@
 ## 1.8.0-SNAPSHOT - TBD
+Added the ability for a HyperfitProcessor to have multiple network clients, identified by the schemes they service, e.g. bbcomstore://account 
+reference http://confluence/display/commerce/Commerce+Mobile+Deep+Link+URL+Specification for detail about deep link
+reference http://confluence/display/commerce/Commerce+Hyper+Client#CommerceHyperClient-Deeplinkresource&Routing for detail design for custom scheme routing 
 
 ## 1.7.0- 2015-06-05
 *  
