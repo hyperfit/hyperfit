@@ -1,13 +1,14 @@
 package org.hyperfit.net;
 
 
+import com.damnhandy.uri.template.VarExploder;
+import com.damnhandy.uri.template.VariableExpansionException;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -103,6 +104,67 @@ public class RFC6570RequestBuilderTest {
         assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
     }
 
+
+    class Selections extends ArrayList<String> implements VarExploder {
+
+        //This is quite a hack here.  Damn handy supports arrays, but only with java.beans.Introspector
+        //which it really doesn't need for an array of string, but anyways android doesn't have java.beans.Introspector
+        //so it complains so we need to have our own VarExploder
+        //But there's no way to do arrays AND have a custom var exploder
+        //so you have to have something that is both
+        //see https://github.com/damnhandy/Handy-URI-Templates/issues/26
+        public Selections(String... selections){
+            this.addAll(Arrays.asList(selections));
+        }
+
+        public Map<String, Object> getNameValuePairs() throws VariableExpansionException {
+            return null;
+        }
+
+        public Collection<Object> getValues() throws VariableExpansionException {
+            return null;
+        }
+    }
+
+    @Test
+    public void testGetUrlExpandWildCardRepeatingExploder() {
+
+        //we'll use a more complicated template with 2 params to testst
+        String xValue = UUID.randomUUID().toString();
+
+        VarExploder exploder = new Selections("1","2");
+
+        String actual = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?x,param*}")
+            .setParam("param", exploder)
+            .setParam("x", xValue)
+            .build()
+            .getUrl();
+
+        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?x=" + xValue + "&param=1&param=2", actual);
+    }
+
+
+
+    @Test
+    public void testGetUrlExpandWildCardMap() {
+        //we'll use a more complicated template with 2 params to testst
+        String xValue = UUID.randomUUID().toString();
+
+
+        LinkedHashMap<String,String> val = new LinkedHashMap<String, String>();
+        val.put("x", "1"); //this x is different than x in template
+        val.put("y", "cat");
+
+        String actual = new RFC6570RequestBuilder()
+            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?x,param*}")
+            .setParam("param", val)
+            .setParam("x", xValue)
+            .build()
+            .getUrl();
+
+        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?x=" + xValue + "&x=1&y=cat", actual);
+    }
 
 
 
