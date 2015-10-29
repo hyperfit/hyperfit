@@ -6,7 +6,10 @@
 hyperfit
 ========
 
-Hyperfit is a client library for RESTful Applications &amp; Hypermedia APIs inspired by Retrofit
+Hyperfit is a client library for RESTful Applications &amp; Hypermedia APIs inspired by [Retrofit](http://square.github.io/retrofit/)
+
+If you design your client as a [RESTful Reactive client]() such that the basic design is ```ViewFactory(ResourceFactory(URL))```
+then you can use hyperfit to completely fullfill the ```ResourceFactory(URL)``` portion of your client.
 
 ## releases
 Releases are published to artifactory.  For maven projects you can add the dependency as
