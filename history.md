@@ -3,8 +3,10 @@
  * reference http://confluence/display/commerce/Commerce+Mobile+Deep+Link+URL+Specification for detail about deep link
  * reference http://confluence/display/commerce/Commerce+Hyper+Client#CommerceHyperClient-Deeplinkresource&Routing for detail design for custom scheme routing
 * Added some tests around support maps as params values for templated links.  Note: use a LinkedHashMap if parameter order is important.
+* Moved to Damn Handy URI Templates 2.1.0
+ * Better android support for var exploding
 
-## 1.7.0- 2015-06-05
+## 1.7.0 - 2015-06-05
 *  
 
 ## 1.6.3 - 2015-05-07
