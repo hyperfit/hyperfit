@@ -228,5 +228,9 @@ public class ContentType {
 
     }
 
+    public ContentType withQ(double q){
+        return new ContentType(type, subType, parameters, q);
+    }
+
 
 }

@@ -3,6 +3,9 @@ package org.hyperfit.content;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -54,6 +57,38 @@ public class ContentTypeTest {
 
         c = ContentType.parse("stuff/sub");
         assertFalse(a.compatibleWith(c));
+
+    }
+
+    Random r = new Random();
+
+    @Test
+    public void testWithQ(){
+        String type = UUID.randomUUID().toString();
+        String subtype = UUID.randomUUID().toString();
+
+        String param = "p1";
+        String paramVal = UUID.randomUUID().toString();
+
+
+        Map<String,String> params = new HashMap<String,String>();
+        params.put(param, paramVal);
+
+        Double q = r.nextDouble();
+
+
+        ContentType startingContent = new ContentType(type, subtype, params, q);
+
+        Double newQ = r.nextDouble();
+
+        assertNotEquals(q, newQ);
+
+        ContentType newContent = startingContent.withQ(newQ);
+
+        assertEquals(startingContent.toString(false), newContent.toString(false));
+        assertEquals(newQ, newContent.getQualifier(), 0);
+
+
 
     }
 

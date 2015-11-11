@@ -5,6 +5,7 @@
 * Added some tests around support maps as params values for templated links.  Note: use a LinkedHashMap if parameter order is important.
 * Moved to Damn Handy URI Templates 2.1.0
  * Better android support for var exploding
+* ContentType now has a withQ method that creates a new Content type identicle to the previous with a different Q value.  Very useful when registering content type handlers with different q ratings.
 
 ## 1.7.0 - 2015-06-05
 *  
