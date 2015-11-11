@@ -276,6 +276,11 @@ public class HyperfitProcessor {
             return this;
         }
 
+        public Builder addContentTypeHandler(ContentTypeHandler handler, double q) {
+            this.contentRegistry.add(handler, handler.getDefaultContentType().withQ(q));
+            return this;
+        }
+
         public Builder removeContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.remove(handler);
             return this;
