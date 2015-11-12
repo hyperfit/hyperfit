@@ -1,215 +1,214 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.hyperfit</groupId>
-    <artifactId>hyperfit-root</artifactId>
-    <version>1.8.0-SNAPSHOT</version>
+  <groupId>org.hyperfit</groupId>
+  <artifactId>hyperfit-root</artifactId>
+  <version>1.8.0</version>
 
-    <packaging>pom</packaging>
-    <name>Hyperfit Root</name>
-    <url>http://hyperfit.org</url>
+  <packaging>pom</packaging>
+  <name>Hyperfit Root</name>
+  <url>http://hyperfit.org</url>
 
-    <modules>
-        <module>hyperfit</module>
-        <module>hyperfit-okhttp1-client</module>
-        <module>hyperfit-okhttp2-client</module>
-        <module>hyperfit-hal</module>
-        <module>hyperfit-html5</module>
-    </modules>
+  <modules>
+    <module>hyperfit</module>
+    <module>hyperfit-okhttp1-client</module>
+    <module>hyperfit-okhttp2-client</module>
+    <module>hyperfit-hal</module>
+    <module>hyperfit-html5</module>
+  </modules>
 
-    <!-- BBCOM DEPENDENCY HANDLING -->
-    <distributionManagement>
-        <repository>
-            <id>bbcom</id>
-            <name>bbcom-releases</name>
-            <url>http://artifactory/libs-release-local</url>
-        </repository>
+  <!-- BBCOM DEPENDENCY HANDLING -->
+  <distributionManagement>
+    <repository>
+      <id>bbcom</id>
+      <name>bbcom-releases</name>
+      <url>http://artifactory/libs-release-local</url>
+    </repository>
 
-        <snapshotRepository>
-            <id>bbcom</id>
-            <name>bbcom-snapshots</name>
-            <url>http://artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <snapshotRepository>
+      <id>bbcom</id>
+      <name>bbcom-snapshots</name>
+      <url>http://artifactory/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>bbcom</id>
-            <name>bbcom-releases</name>
-            <url>http://artifactory/libs-release-local</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
+  <repositories>
+    <repository>
+      <id>bbcom</id>
+      <name>bbcom-releases</name>
+      <url>http://artifactory/libs-release-local</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
 
-        <repository>
-            <id>remote</id>
-            <name>remote-repos</name>
-            <url>http://artifactory/remote-repos</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
+    <repository>
+      <id>remote</id>
+      <name>remote-repos</name>
+      <url>http://artifactory/remote-repos</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
 
-        <repository>
-            <id>bbcom-snapshots</id>
-            <name>bbcom-snapshots</name>
-            <url>http://artifactory/local-repos</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
+    <repository>
+      <id>bbcom-snapshots</id>
+      <name>bbcom-snapshots</name>
+      <url>http://artifactory/local-repos</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
 
-    </repositories>
+  </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>remote</id>
-            <name>remote-repos</name>
-            <url>http://artifactory/remote-repos</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>remote</id>
+      <name>remote-repos</name>
+      <url>http://artifactory/remote-repos</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.hyperfit</groupId>
-                <artifactId>hyperfit</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- LOGGING DEPENDENCIES  -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.5</version>
-            </dependency>
-
-            <!-- URI Template Handler -->
-            <dependency>
-                <groupId>com.damnhandy</groupId>
-                <artifactId>handy-uri-templates</artifactId>
-                <version>2.1.0</version>
-            </dependency>
-
-            <!--tuples-->
-            <dependency>
-                <groupId>org.javatuples</groupId>
-                <artifactId>javatuples</artifactId>
-                <version>1.2</version>
-            </dependency>
-
-
-
-            <!-- TESTING BUNDLE -->
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-library</artifactId>
-                <version>1.3</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>1.9.5</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
+  <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
+
+      <dependency>
+        <groupId>org.hyperfit</groupId>
+        <artifactId>hyperfit</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- LOGGING DEPENDENCIES  -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+
+      <!-- URI Template Handler -->
+      <dependency>
+        <groupId>com.damnhandy</groupId>
+        <artifactId>handy-uri-templates</artifactId>
+        <version>2.1.0</version>
+      </dependency>
+
+      <!--tuples-->
+      <dependency>
+        <groupId>org.javatuples</groupId>
+        <artifactId>javatuples</artifactId>
+        <version>1.2</version>
+      </dependency>
 
 
-        <!-- Global Test Dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
+      <!-- TESTING BUNDLE -->
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>1.3</version>
+        <scope>test</scope>
+      </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.9.5</version>
+        <scope>test</scope>
+      </dependency>
 
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-        </dependency>
-
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
 
     </dependencies>
+  </dependencyManagement>
 
-    <!-- PROPERTIES DEFINITION -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
-
-    <build>
-        <plugins>
-            <!-- ATTACHES SOURCES -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- ATTACHES JAVADOC -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Code coverage for SONAR -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.3-SNAPSHOT</version>
-            </plugin>
-
-        </plugins>
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
 
 
-    </build>
+    <!-- Global Test Dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+    </dependency>
+
+
+  </dependencies>
+
+  <!-- PROPERTIES DEFINITION -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- ATTACHES SOURCES -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- ATTACHES JAVADOC -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Code coverage for SONAR -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.5-SNAPSHOT</version>
+      </plugin>
+
+    </plugins>
+
+
+  </build>
 
 
 </project>

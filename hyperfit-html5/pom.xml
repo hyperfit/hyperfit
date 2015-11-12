@@ -2,53 +2,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>hyperfit-root</artifactId>
-        <groupId>org.hyperfit</groupId>
-        <version>1.8.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>hyperfit-root</artifactId>
+    <groupId>org.hyperfit</groupId>
+    <version>1.8.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hyperfit-html5</artifactId>
+  <artifactId>hyperfit-html5</artifactId>
 
-    <packaging>jar</packaging>
-    <name>Hyperfit HTML5</name>
+  <packaging>jar</packaging>
+  <name>Hyperfit HTML5</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.hyperfit</groupId>
-            <artifactId>hyperfit</artifactId>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.hyperfit</groupId>
+      <artifactId>hyperfit</artifactId>
+    </dependency>
 
 
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.8.1</version>
-        </dependency>
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.8.1</version>
+    </dependency>
 
-        <!--  ENTITY UTILS (@ToString) -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.8</version>
-            <!--see http://projectlombok.org/mavenrepo/index.html no need to bundle this for runtime -->
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <!--  ENTITY UTILS (@ToString) -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.14.8</version>
+      <!--see http://projectlombok.org/mavenrepo/index.html no need to bundle this for runtime -->
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <plugins>
-            <!-- COMPILATION OPTIONS -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <compilerArgument>-Xlint:unchecked</compilerArgument>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <!-- COMPILATION OPTIONS -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
