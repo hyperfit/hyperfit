@@ -1,5 +1,5 @@
 ## 1.9.0 - TBD
-*
+* Fixed a bug where the Response object of okhttp2 client only included the last header with a given name
 
 ## 1.8.0 - 2015-11-11
 * Added the ability for a HyperfitProcessor to have multiple network clients, identified by the schemes they service, e.g. bbcomstore://account

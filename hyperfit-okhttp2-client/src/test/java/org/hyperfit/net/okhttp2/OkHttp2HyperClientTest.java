@@ -178,7 +178,8 @@ public class OkHttp2HyperClientTest {
             .build();
 
         String fakeHeader = UUID.randomUUID().toString();
-        String fakeHeaderValue = UUID.randomUUID().toString();
+        String fakeHeaderValue1 = UUID.randomUUID().toString();
+        String fakeHeaderValue2 = UUID.randomUUID().toString();
 
         String fakeContent = UUID.randomUUID().toString();
 
@@ -205,7 +206,8 @@ public class OkHttp2HyperClientTest {
                     return fakeBuffer;
                 }
             })
-            .header(fakeHeader, fakeHeaderValue)
+            .header(fakeHeader, fakeHeaderValue1)
+            .header(fakeHeader, fakeHeaderValue2)
             .build();
 
 
@@ -214,7 +216,10 @@ public class OkHttp2HyperClientTest {
 
         assertEquals(200, response.getCode());
         assertEquals(fakeContent, response.getBody());
-        assertEquals(fakeHeaderValue, response.getHeader(fakeHeader));
+        HashMap<String,String> expectedHeaders = new HashMap<String, String>();
+        expectedHeaders.put(fakeHeader, fakeHeaderValue1);
+        expectedHeaders.put(fakeHeader, fakeHeaderValue2);
+        assertEquals(expectedHeaders.entrySet(), response.getHeaders());
         assertSame(hyperfitRequestMock, response.getRequest());
     }
 

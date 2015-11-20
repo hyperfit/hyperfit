@@ -142,8 +142,11 @@ public class OkHttp2HyperClient extends BaseHyperClient {
             .addRequest(request)
         ;
 
-        for (String headerName : response.headers().names()) {
-            responseBuilder.addHeader(headerName, response.header(headerName));
+        Headers headers = response.headers();
+        for (String headerName : headers.names()) {
+            for(String value : headers.values(headerName)) {
+                responseBuilder.addHeader(headerName, value);
+            }
         }
 
         //Set the content type explicitly, even though it comes from the headers.  Hyperfit needs to know this
