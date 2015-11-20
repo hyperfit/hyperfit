@@ -2,10 +2,8 @@ package org.hyperfit.net;
 
 import org.hyperfit.message.Messages;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+
 import lombok.ToString;
 import org.hyperfit.utils.Preconditions;
 import org.hyperfit.utils.StringUtils;
@@ -17,7 +15,7 @@ import org.hyperfit.utils.StringUtils;
 public class Response {
 
     private final int code;
-    private final Map<String, String> headers;
+    private final List<Map.Entry<String, String>> headers;
     private final String body;
     private final String contentType;
     private final Request request;
@@ -25,7 +23,7 @@ public class Response {
     private Response(ResponseBuilder builder) {
         this.body = builder.body;
         this.code = builder.code;
-        this.headers = builder.headers;
+        this.headers = Collections.unmodifiableList(builder.headers);
         this.contentType = builder.contentType;
         this.request = Preconditions.checkNotNull(builder.request, "request can not be null");
     }
@@ -39,7 +37,7 @@ public class Response {
     }
 
     public Iterable<Map.Entry<String, String>> getHeaders() {
-        return Collections.unmodifiableSet(headers.entrySet());
+        return headers;
     }
 
     public String getContentType() {
@@ -47,7 +45,12 @@ public class Response {
     }
 
     public String getHeader(String key) {
-        return headers.get(key);
+        for(Map.Entry<String,String> header : this.getHeaders()){
+            if(header.getKey().equalsIgnoreCase(key)){
+                return header.getValue();
+            }
+        }
+        return null;
     }
 
     public Request getRequest() {
@@ -69,7 +72,7 @@ public class Response {
 
         private int code;
         private String body;
-        private Map<String, String> headers = new HashMap<String, String>();
+        private List<Map.Entry<String, String>> headers = new ArrayList<Map.Entry<String, String>>(5);
         private String contentType;
         private Request request;
 
@@ -92,7 +95,7 @@ public class Response {
             }
 
             if (value != null) {
-                this.headers.put(name, value);
+                this.headers.add(new HashMap.SimpleEntry<String, String>(name, value));
             }
 
             return this;

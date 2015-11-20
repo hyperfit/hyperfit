@@ -1,5 +1,8 @@
 package org.hyperfit.net.okhttp2;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.*;
 import com.google.common.base.Charsets;
@@ -216,10 +219,11 @@ public class OkHttp2HyperClientTest {
 
         assertEquals(200, response.getCode());
         assertEquals(fakeContent, response.getBody());
-        HashMap<String,String> expectedHeaders = new HashMap<String, String>();
+        ArrayListMultimap<Object,Object> expectedHeaders = ArrayListMultimap.create();
+
         expectedHeaders.put(fakeHeader, fakeHeaderValue1);
         expectedHeaders.put(fakeHeader, fakeHeaderValue2);
-        assertEquals(expectedHeaders.entrySet(), response.getHeaders());
+        assertEquals(expectedHeaders.entries(), response.getHeaders());
         assertSame(hyperfitRequestMock, response.getRequest());
     }
 
