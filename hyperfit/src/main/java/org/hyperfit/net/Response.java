@@ -15,7 +15,7 @@ import org.hyperfit.utils.StringUtils;
 public class Response {
 
     private final int code;
-    private final List<Map.Entry<String, String>> headers;
+    private final Collection<Map.Entry<String, String>> headers;
     private final String body;
     private final String contentType;
     private final Request request;
@@ -23,7 +23,7 @@ public class Response {
     private Response(ResponseBuilder builder) {
         this.body = builder.body;
         this.code = builder.code;
-        this.headers = Collections.unmodifiableList(builder.headers);
+        this.headers = Collections.unmodifiableCollection(builder.headers);
         this.contentType = builder.contentType;
         this.request = Preconditions.checkNotNull(builder.request, "request can not be null");
     }
@@ -36,7 +36,7 @@ public class Response {
         return body;
     }
 
-    public Iterable<Map.Entry<String, String>> getHeaders() {
+    public Collection<Map.Entry<String, String>> getHeaders() {
         return headers;
     }
 

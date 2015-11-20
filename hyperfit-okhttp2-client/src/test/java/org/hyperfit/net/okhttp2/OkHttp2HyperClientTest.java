@@ -209,8 +209,8 @@ public class OkHttp2HyperClientTest {
                     return fakeBuffer;
                 }
             })
-            .header(fakeHeader, fakeHeaderValue1)
-            .header(fakeHeader, fakeHeaderValue2)
+            .addHeader(fakeHeader, fakeHeaderValue1)
+            .addHeader(fakeHeader, fakeHeaderValue2)
             .build();
 
 
@@ -223,7 +223,12 @@ public class OkHttp2HyperClientTest {
 
         expectedHeaders.put(fakeHeader, fakeHeaderValue1);
         expectedHeaders.put(fakeHeader, fakeHeaderValue2);
-        assertEquals(expectedHeaders.entries(), response.getHeaders());
+
+        //check that each collection contains each other
+        assertTrue(expectedHeaders.entries().containsAll(response.getHeaders()));
+        assertTrue(response.getHeaders().containsAll(expectedHeaders.entries()));
+
+
         assertSame(hyperfitRequestMock, response.getRequest());
     }
 
