@@ -1,5 +1,5 @@
-[![Build Status](http://bitwise-shields.dev/jenkins/s/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/view/CHA/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
-[![Tests](http://bitwise-shields.dev/jenkins/t/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/view/CHA/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
+[![Build Status](http://bitwise-shields.dev/jenkins/s/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
+[![Tests](http://bitwise-shields.dev/jenkins/t/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
 [![Sonarqube Coverage](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod:9000/org.hyperfit:hyperfit-root/coverage.svg)](http://sonarqube.body.prod:9000/dashboard/index/org.hyperfit:hyperfit-root)
 
 
