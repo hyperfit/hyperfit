@@ -17,7 +17,7 @@ Releases are published to artifactory.  For maven projects you can add the depen
 <dependency>
   <groupId>org.hyperfit</groupId>
   <artifactId>hyperfit</artifactId>
-  <version>1.8.0</version>
+  <version>1.9.0</version>
 </dependency>
 ```
 See latest [snaps](http://artifactory/simple/libs-snapshot-local/org/hyperfit/hyperfit/) & [releases](http://artifactory/simple/libs-release-local/org/hyperfit/hyperfit/)
