@@ -26,7 +26,6 @@ See latest [snaps](http://artifactory/simple/libs-snapshot-local/org/hyperfit/hy
 See [history](history.md)
 
 
-
 ## Best Practices
 * When defining resource interface methods some best practices are recommended:
  * Data Properties (which are generally annotated with @Data should be defined as bean properties, prefixed with get ala getPropertyName().  
