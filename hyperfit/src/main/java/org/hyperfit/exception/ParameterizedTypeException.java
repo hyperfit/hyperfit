@@ -3,7 +3,7 @@ package org.hyperfit.exception;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
- * <p>Custom exception class for exceptions related with unability to resolve
+ * <p>Custom exception class for exceptions related with inability to resolve
  * parameterized types.</p>
  *
  */
