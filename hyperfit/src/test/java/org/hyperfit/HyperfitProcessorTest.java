@@ -174,7 +174,8 @@ public class HyperfitProcessorTest {
             .hyperClient(mockClient, "xyz")
             .build();
 
-        BoringRequestBuilder request = new BoringRequestBuilder("xyz://local");
+        BoringRequestBuilder request = new BoringRequestBuilder()
+            .setUrl("xyz://local");
 
         String fakeResponseBody = uniqueString();
         when(mockClient.execute(request.build()))

@@ -464,7 +464,8 @@ public class HyperResourceInvokeHandlerTest{
 
         DataResource mockDataResource = mock(DataResource.class);
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
+            .setUrl(expectedLink.getHref())
             .setMethod(Method.GET);
 
         when(mockHyperfitProcessor.processRequest(eq(DataResource.class), eq(expectedHyperRequest), any(TypeInfo.class)))
@@ -486,7 +487,8 @@ public class HyperResourceInvokeHandlerTest{
 
         String expectedStr = uniqueString();
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
+            .setUrl(expectedLink.getHref())
             .setMethod(Method.GET)
             ;
 
@@ -509,7 +511,8 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink expectedLink = makeLink(rel);
         when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
+            .setUrl(expectedLink.getHref())
             .setMethod(Method.GET)
             ;
 

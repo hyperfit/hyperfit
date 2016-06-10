@@ -35,7 +35,12 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     private Set<String> acceptedContentTypes = new HashSet<String>();
 
-    public BoringRequestBuilder(String url) {
+
+    public BoringRequestBuilder() {
+
+    }
+
+    private BoringRequestBuilder(String url) {
         setUrl(url);
     }
 

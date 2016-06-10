@@ -2,6 +2,7 @@ package org.hyperfit.net;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hyperfit.utils.StringUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -55,12 +56,17 @@ public class Request {
      * @param builder
      */
     protected Request(RequestBuilder builder) {
+        if(StringUtils.isEmpty(builder.getURL())){
+            throw new IllegalArgumentException("url can not be null or empty");
+        }
+
+        this.url = builder.getURL();
+
         this.contentType = builder.getContentType();
         this.content = builder.getContent();
         this.headers = builder.getHeaders();
         this.method = builder.getMethod();
         this.acceptedContentTypes = Collections.unmodifiableSet(builder.getAcceptedContentTypes());
-        this.url = builder.getURL();
 
     }
 

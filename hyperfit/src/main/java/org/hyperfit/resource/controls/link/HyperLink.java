@@ -90,7 +90,9 @@ public abstract class HyperLink {
 
     public RequestBuilder toRequestBuilder() {
 
-        BoringRequestBuilder builder = new BoringRequestBuilder(this.getHref());
+        BoringRequestBuilder builder = new BoringRequestBuilder()
+            .setUrl(this.getHref())
+            ;
 
         if(!StringUtils.isEmpty(this.getType())){
             builder.addAcceptedContentType(this.getType());
