@@ -1,4 +1,4 @@
-package org.hyperfit;
+package test;
 
 
 import com.google.common.base.Predicate;

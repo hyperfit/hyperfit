@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.UUID;

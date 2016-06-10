@@ -11,13 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.Null;
 
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hyperfit.Helpers.*;
+import static test.TestUtils.*;
 
 public class HyperfitProcessorBuilderTest {
 
@@ -82,7 +80,7 @@ public class HyperfitProcessorBuilderTest {
 
 
         //Need to verify the proxied result is wrapping the mocked underlying resource
-        String fakeRel = UUID.randomUUID().toString();
+        String fakeRel = uniqueString();
         HyperLink fakeLink = makeLink(fakeRel);
         when(mockHyperResource.getLink(fakeRel))
             .thenReturn(fakeLink);

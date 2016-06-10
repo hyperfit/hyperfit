@@ -8,11 +8,17 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
+import static test.TestUtils.*;
 
 
 public class RFC6570RequestBuilderTest {
@@ -130,7 +136,7 @@ public class RFC6570RequestBuilderTest {
     public void testGetUrlExpandWildCardRepeatingExploder() {
 
         //we'll use a more complicated template with 2 params to testst
-        String xValue = UUID.randomUUID().toString();
+        String xValue = uniqueString();
 
         VarExploder exploder = new Selections("1","2");
 
@@ -149,7 +155,7 @@ public class RFC6570RequestBuilderTest {
     @Test
     public void testGetUrlExpandWildCardMap() {
         //we'll use a more complicated template with 2 params to testst
-        String xValue = UUID.randomUUID().toString();
+        String xValue = uniqueString();
 
 
         LinkedHashMap<String,String> val = new LinkedHashMap<String, String>();
@@ -297,11 +303,11 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeader() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
-        String header2Value = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
+        String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
@@ -314,11 +320,11 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeaderNullValue() {
-        String header1Name = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
         String header1Value = null;
 
-        String header2Name = UUID.randomUUID().toString();
-        String header2Value = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
+        String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
@@ -394,11 +400,11 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeaders() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
-        String header2Value = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
+        String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
             .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
@@ -431,10 +437,10 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGetHeadersNullHeader() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
         String header2Value = null;
 
         Request request = new RFC6570RequestBuilder()
@@ -517,7 +523,7 @@ public class RFC6570RequestBuilderTest {
     @Test
     public void testEquals(){
 
-        String fakeUrl = UUID.randomUUID().toString();
+        String fakeUrl = uniqueString();
 
         Request request1 = new RFC6570RequestBuilder()
                 .setUrlTemplate(fakeUrl)

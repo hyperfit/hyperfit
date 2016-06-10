@@ -20,11 +20,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Proxy;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hyperfit.Helpers.*;
+import static test.TestUtils.*;
 
 public class HyperResourceInvokeHandlerTest{
 
@@ -196,7 +196,7 @@ public class HyperResourceInvokeHandlerTest{
     }
 
 
-    public <T> T getHyperResourceProxy(Class<T> clazz) {
+    <T> T getHyperResourceProxy(Class<T> clazz) {
         return clazz.cast(
             Proxy.newProxyInstance(
                 clazz.getClassLoader(),
@@ -236,7 +236,7 @@ public class HyperResourceInvokeHandlerTest{
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
 
-        String fakeRelationship = UUID.randomUUID().toString();
+        String fakeRelationship = uniqueString();
         HyperLink expectedLink = makeLink(fakeRelationship);
         when(mockHyperResource.getLink(fakeRelationship)).thenReturn(expectedLink);
         assertEquals(expectedLink, proxyTest.getLink(fakeRelationship));
@@ -484,7 +484,7 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink expectedLink = makeLink(rel);
         when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
-        String expectedStr = UUID.randomUUID().toString();
+        String expectedStr = uniqueString();
 
         RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
                 .setMethod(Method.GET)
@@ -672,7 +672,7 @@ public class HyperResourceInvokeHandlerTest{
         ObjectNode dataSelfLink = nodeFactory.objectNode();
         dataNode1Links.put("self", dataSelfLink);
 
-        String data1StringValue = UUID.randomUUID().toString();
+        String data1StringValue = uniqueString();
         dataNode1.put("dataString", data1StringValue);
 
         ObjectNode dataNode2 = nodeFactory.objectNode();
@@ -683,7 +683,7 @@ public class HyperResourceInvokeHandlerTest{
         ObjectNode data2SelfLink = nodeFactory.objectNode();
         dataNode2Links.put("self", data2SelfLink);
 
-        String data2StringValue = UUID.randomUUID().toString();
+        String data2StringValue = uniqueString();
         dataNode2.put("dataString", data2StringValue);
 
         HalJsonResource fakeResource = new HalJsonResource(root);
@@ -1045,7 +1045,7 @@ public class HyperResourceInvokeHandlerTest{
         when(mockHyperfitProcessor.processRequest(eq(FormResource.class), eq(mockRequestBuilder), any(TypeInfo.class)))
             .thenReturn(expectedResult);
 
-        String value1 = UUID.randomUUID().toString();
+        String value1 = uniqueString();
         FormResource actual = r.formAResource(
             value1,
             CheckboxField.CheckState.CHECKED

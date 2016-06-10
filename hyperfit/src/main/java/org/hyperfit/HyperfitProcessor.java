@@ -264,7 +264,6 @@ public class HyperfitProcessor {
     public static class Builder {
 
         private ContentRegistry contentRegistry = new ContentRegistry();
-        private HyperClient hyperClient;
         private ErrorHandler errorHandler;
         private ResourceMethodInfoCache resourceMethodInfoCache;
         private RequestInterceptors requestInterceptors = new RequestInterceptors();

@@ -11,8 +11,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
-
-import java.util.UUID;
+import static test.TestUtils.*;
 
 
 public class FormRequestBuilderTest {
@@ -48,8 +47,8 @@ public class FormRequestBuilderTest {
 
     @Test(expected = HyperfitException.class)
     public void testParamSettingFieldNotPresent(){
-        String paramName = UUID.randomUUID().toString();
-        String value = UUID.randomUUID().toString();
+        String paramName = uniqueString();
+        String value = uniqueString();
 
         //TODO: maybe we should have a hasField that we could check in builder..i dunno
         when(mockForm.getField(paramName))
@@ -75,13 +74,13 @@ public class FormRequestBuilderTest {
 
         this.subject = new FormRequestBuilder(mockForm);
 
-        String textFieldValue = UUID.randomUUID().toString();
+        String textFieldValue = uniqueString();
         when(mockTextField.getValue()).thenReturn(textFieldValue);
 
         assertThat("because field name is null, value should not be set", subject.getParams().keySet(), empty());
 
 
-        String textFieldName = UUID.randomUUID().toString();
+        String textFieldName = uniqueString();
         when(mockTextField.getName()).thenReturn(textFieldName);
 
         this.subject = new FormRequestBuilder(mockForm);
@@ -100,8 +99,8 @@ public class FormRequestBuilderTest {
         when(mockForm.getFields())
         .thenReturn(fields);
 
-        String fieldName = UUID.randomUUID().toString();
-        String fieldValue = UUID.randomUUID().toString();
+        String fieldName = uniqueString();
+        String fieldValue = uniqueString();
         when(mockCheckboxField.getName()).thenReturn(fieldName);
         when(mockCheckboxField.getValue()).thenReturn(fieldValue);
 
@@ -119,8 +118,8 @@ public class FormRequestBuilderTest {
 
     @Test
     public void testParamSettingTextField(){
-        String paramName = UUID.randomUUID().toString();
-        String value = UUID.randomUUID().toString();
+        String paramName = uniqueString();
+        String value = uniqueString();
 
         when(mockForm.getField(paramName))
             .thenReturn(mockTextField);
@@ -132,8 +131,8 @@ public class FormRequestBuilderTest {
 
     @Test
     public void testParamSettingCheckboxField(){
-        String paramName = UUID.randomUUID().toString();
-        String value = UUID.randomUUID().toString();
+        String paramName = uniqueString();
+        String value = uniqueString();
 
         when(mockForm.getField(paramName))
             .thenReturn(mockCheckboxField);
@@ -155,14 +154,14 @@ public class FormRequestBuilderTest {
 
     @Test
     public void testGetContentWithManyParamsSet(){
-        String paramName1 = UUID.randomUUID().toString();
-        String value1 = UUID.randomUUID().toString();
+        String paramName1 = uniqueString();
+        String value1 = uniqueString();
 
-        String paramName2 = UUID.randomUUID().toString();
-        String value2 = UUID.randomUUID().toString();
+        String paramName2 = uniqueString();
+        String value2 = uniqueString();
 
-        String paramName3 = UUID.randomUUID().toString();
-        String value3 = UUID.randomUUID().toString();
+        String paramName3 = uniqueString();
+        String value3 = uniqueString();
 
         when(mockForm.getField(anyString()))
             .thenReturn(mockTextField);

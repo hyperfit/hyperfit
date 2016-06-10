@@ -4,9 +4,9 @@ package org.hyperfit.resource;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.junit.Test;
 
-import java.util.*;
 
-import static org.hyperfit.Helpers.*;
+
+import static test.TestUtils.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -23,7 +23,7 @@ public class BaseHyperResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelZeroLinksForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
@@ -32,7 +32,7 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinkByRelSingleLinkForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
 
         HyperLink link = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
@@ -44,7 +44,7 @@ public class BaseHyperResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelTwoLinksForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
 
         HyperLink link1 = makeLink(rel);
         HyperLink link2 = makeLink(rel);
@@ -59,7 +59,7 @@ public class BaseHyperResourceTest {
     // BEGIN hasLink(String profile) tests
     @Test
     public void testHasLinkByRelZeroLinksForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
@@ -68,7 +68,7 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelSingleLinkForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
 
         HyperLink link = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
@@ -79,7 +79,7 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelTwoLinksForRel() {
-        String rel = UUID.randomUUID().toString();
+        String rel = uniqueString();
 
         HyperLink link1 = makeLink(rel);
         HyperLink link2 = makeLink(rel);
@@ -93,8 +93,8 @@ public class BaseHyperResourceTest {
     // BEGIN getLink(String profile, String name) tests
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelAndNameZeroLinksForRel() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
@@ -103,18 +103,18 @@ public class BaseHyperResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelAndName1LinkDifferentName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, UUID.randomUUID().toString())}).when(resource).getLinks(rel);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
         resource.getLink(rel, name);
     }
 
     @Test
     public void testGetLinkByRelAndNameSingleLinkMatchesName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
@@ -126,11 +126,11 @@ public class BaseHyperResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelAndNameTwoLinksForRelNeitherMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
-        HyperLink link2 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
+        HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
@@ -140,10 +140,10 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinkByRelAndNameTwoLinksForRelSecondMatches() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
@@ -155,8 +155,8 @@ public class BaseHyperResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkByRelAndNameTwoLinksForRelBothMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);
@@ -171,8 +171,8 @@ public class BaseHyperResourceTest {
     // BEGIN hasLink(String profile, String name) tests
     @Test
     public void testHasLinkByRelAndNameZeroLinksForRel() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
@@ -181,18 +181,18 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelAndName1LinkDifferentName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, UUID.randomUUID().toString())}).when(resource).getLinks(rel);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
         assertFalse(resource.hasLink(rel, name));
     }
 
     @Test
     public void testHasLinkByRelAndNameSingleLinkMatchesName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
@@ -203,11 +203,11 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelAndNameTwoLinksForRelNeitherMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
-        HyperLink link2 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
+        HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
@@ -217,10 +217,10 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelAndNameTwoLinksForRelSecondMatches() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
@@ -232,8 +232,8 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testHasLinkByRelAndNameTwoLinksForRelBothMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);
@@ -248,8 +248,8 @@ public class BaseHyperResourceTest {
     // BEGIN getLinks(String profile, String name) tests
     @Test
     public void testGetLinksByRelAndNameZeroLinksForRel() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
@@ -258,18 +258,18 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinksByRelAndName1LinkDifferentName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, UUID.randomUUID().toString())}).when(resource).getLinks(rel);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
         assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name));
     }
 
     @Test
     public void testGetLinksByRelAndNameSingleLinkMatchesName() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
@@ -280,11 +280,11 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinksByRelAndNameTwoLinksForRelNeitherMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
-        HyperLink link2 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
+        HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
@@ -294,10 +294,10 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinksByRelAndNameTwoLinksForRelSecondMatches() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
-        HyperLink link1 = makeLink(rel, UUID.randomUUID().toString());
+        HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
         doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
@@ -309,8 +309,8 @@ public class BaseHyperResourceTest {
 
     @Test
     public void testGetLinksByRelAndNameTwoLinksForRelBothMatch() {
-        String rel = UUID.randomUUID().toString();
-        String name = UUID.randomUUID().toString();
+        String rel = uniqueString();
+        String name = uniqueString();
 
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);

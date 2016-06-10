@@ -1,7 +1,6 @@
 package org.hyperfit.net;
 
 import java.util.Map;
-import java.util.UUID;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -13,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static test.TestUtils.*;
 
 
 public class ResponseTest {
@@ -57,11 +57,11 @@ public class ResponseTest {
 
     @Test
     public void testGetHeaders() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
-        String header2Value = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
+        String header2Value = uniqueString();
 
         Response response = Response.builder()
             .addRequest(mockRequest)
@@ -93,10 +93,10 @@ public class ResponseTest {
 
     @Test
     public void testGetHeadersNullHeader() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
         String header2Value = null;
 
         Response response = Response.builder()
@@ -128,11 +128,11 @@ public class ResponseTest {
 
     @Test
     public void testGetHeader() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
-        String header2Value = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
+        String header2Value = uniqueString();
 
         Response response = Response.builder()
             .addRequest(mockRequest)
@@ -145,10 +145,10 @@ public class ResponseTest {
 
     @Test
     public void testGetHeaderNullValue() {
-        String header1Name = UUID.randomUUID().toString();
-        String header1Value = UUID.randomUUID().toString();
+        String header1Name = uniqueString();
+        String header1Value = uniqueString();
 
-        String header2Name = UUID.randomUUID().toString();
+        String header2Name = uniqueString();
         String header2Value = null;
 
         Response response = Response.builder()

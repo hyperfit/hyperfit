@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
+import static test.TestUtils.*;
 
 public class ContentTypeTest {
 
@@ -60,26 +59,25 @@ public class ContentTypeTest {
 
     }
 
-    Random r = new Random();
 
     @Test
     public void testWithQ(){
-        String type = UUID.randomUUID().toString();
-        String subtype = UUID.randomUUID().toString();
+        String type = uniqueString();
+        String subtype = uniqueString();
 
         String param = "p1";
-        String paramVal = UUID.randomUUID().toString();
+        String paramVal = uniqueString();
 
 
         Map<String,String> params = new HashMap<String,String>();
         params.put(param, paramVal);
 
-        Double q = r.nextDouble();
+        Double q = Math.random();
 
 
         ContentType startingContent = new ContentType(type, subtype, params, q);
 
-        Double newQ = r.nextDouble();
+        Double newQ = Math.random();
 
         assertNotEquals(q, newQ);
 
