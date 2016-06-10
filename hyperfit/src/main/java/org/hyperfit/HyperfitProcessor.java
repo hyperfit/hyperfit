@@ -77,6 +77,9 @@ public class HyperfitProcessor {
      * @return resource with same type specified in the resource class.
      */
     public <T> T processRequest(Class<T> classToReturn, String entryPointURL){
+        if(StringUtils.isEmpty(entryPointURL)){
+            throw new IllegalArgumentException("entryPointURL can not be null or empty");
+        }
         return processRequest(classToReturn, BoringRequestBuilder.get(entryPointURL));
     }
 
@@ -100,6 +103,9 @@ public class HyperfitProcessor {
      * @return resource with same type specified in the resource class.
      */
     public <T> T processRequest(TypeRef<T> typeToReturn, RequestBuilder requestBuilder){
+        if(typeToReturn == null){
+            throw new IllegalArgumentException("typeToReturn can not be null");
+        }
         return processRequest(typeToReturn.getClazz(), requestBuilder, new TypeInfo().make(typeToReturn.getType()));
     }
 
@@ -111,6 +117,9 @@ public class HyperfitProcessor {
      * @return resource with same type specified in the resource class.
      */
     public <T> T processRequest(TypeRef<T> typeToReturn, String entryPointURL){
+        if(StringUtils.isEmpty(entryPointURL)){
+            throw new IllegalArgumentException("entryPointURL can not be null or empty");
+        }
         return processRequest(typeToReturn, BoringRequestBuilder.get(entryPointURL));
     }
 

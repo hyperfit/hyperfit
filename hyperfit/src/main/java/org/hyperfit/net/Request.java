@@ -57,7 +57,7 @@ public class Request {
      */
     protected Request(RequestBuilder builder) {
         if(StringUtils.isEmpty(builder.getURL())){
-            throw new IllegalArgumentException("url can not be null or empty");
+            throw new IllegalArgumentException("builder's url can not be null or empty");
         }
 
         this.url = builder.getURL();

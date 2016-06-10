@@ -5,6 +5,7 @@ import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.InterfaceSelectionStrategy;
 
+import org.hyperfit.utils.TypeRef;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -140,6 +141,40 @@ public class HyperfitProcessorTest {
         HyperfitProcessor processor = builder.build();
 
         try{
+            processor.processRequest((Class<?>)null, (String)null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("entryPointURL can not be null or empty"));
+        }
+
+
+        try{
+            //it's a bit odd to have to set the 2nd param to get the first to error, but it's cause
+            //of the polymorphic chain and wanting the return type to be the first param always
+            processor.processRequest((Class<?>)null, "xyz://localhost");
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("classToReturn can not be null"));
+        }
+
+
+        try{
+            processor.processRequest((Class<?>)null, (RequestBuilder) null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("classToReturn can not be null"));
+        }
+
+
+        try{
+            processor.processRequest(String.class, (RequestBuilder) null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("requestBuilder can not be null"));
+        }
+
+
+        try{
             processor.processRequest(null, null, null);
             fail("expected exception not thrown");
         } catch (IllegalArgumentException e){
@@ -149,6 +184,37 @@ public class HyperfitProcessorTest {
 
         try{
             processor.processRequest(String.class, null, null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("requestBuilder can not be null"));
+        }
+
+
+
+        try{
+            processor.processRequest(new TypeRef<Object>() {}, (String)null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("entryPointURL can not be null or empty"));
+        }
+
+        try{
+            processor.processRequest((TypeRef<? extends Object>) null, "xyz://local");
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("typeToReturn can not be null"));
+        }
+
+
+        try{
+            processor.processRequest((TypeRef<? extends Object>) null, (RequestBuilder) null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("typeToReturn can not be null"));
+        }
+
+        try{
+            processor.processRequest(new TypeRef<Object>() {}, (RequestBuilder)null);
             fail("expected exception not thrown");
         } catch (IllegalArgumentException e){
             assertThat(e.getMessage(), containsString("requestBuilder can not be null"));
