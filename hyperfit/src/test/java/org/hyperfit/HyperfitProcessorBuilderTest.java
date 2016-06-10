@@ -118,7 +118,7 @@ public class HyperfitProcessorBuilderTest {
                 .hyperClient(mockHyperClient)
                 .build();
 
-        requestProcessor.processRequest(null, "http://host.com");
+        requestProcessor.processRequest((Class<?>)null, "http://host.com");
     }
 
     @Test(expected = NoClientRegisteredForSchemeException.class)
