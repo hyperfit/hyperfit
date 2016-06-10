@@ -35,7 +35,8 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     private Set<String> acceptedContentTypes = new HashSet<String>();
 
-    public BoringRequestBuilder() {
+    public BoringRequestBuilder(String url) {
+        setUrl(url);
     }
 
     public BoringRequestBuilder setUrl(String url) {
@@ -137,7 +138,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link} RequestBuilder
      */
     public static BoringRequestBuilder get(String url) {
-        return new BoringRequestBuilder().setMethod(Method.GET).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.GET);
     }
 
     /**
@@ -147,7 +148,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link org.hyperfit.net.BoringRequestBuilder}
      */
     public static BoringRequestBuilder post(String url) {
-        return new BoringRequestBuilder().setMethod(Method.POST).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.POST);
     }
 
     /**
@@ -157,7 +158,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link org.hyperfit.net.BoringRequestBuilder}
      */
     public static BoringRequestBuilder put(String url) {
-        return new BoringRequestBuilder().setMethod(Method.PUT).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.PUT);
     }
 
     /**
@@ -167,7 +168,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link org.hyperfit.net.BoringRequestBuilder}
      */
     public static BoringRequestBuilder delete(String url) {
-        return new BoringRequestBuilder().setMethod(Method.DELETE).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.DELETE);
     }
 
     /**
@@ -177,7 +178,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link org.hyperfit.net.BoringRequestBuilder}
      */
     public static BoringRequestBuilder options(String url) {
-        return new BoringRequestBuilder().setMethod(Method.OPTIONS).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.OPTIONS);
     }
 
     /**
@@ -187,7 +188,7 @@ public class BoringRequestBuilder implements RequestBuilder {
      * @return {@link org.hyperfit.net.BoringRequestBuilder}
      */
     public static BoringRequestBuilder head(String url) {
-        return new BoringRequestBuilder().setMethod(Method.HEAD).setUrl(url);
+        return new BoringRequestBuilder(url).setMethod(Method.HEAD);
     }
 
 }

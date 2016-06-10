@@ -7,11 +7,14 @@ import org.hyperfit.resource.InterfaceSelectionStrategy;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.*;
+import static test.TestUtils.*;
 
 public class HyperfitProcessorTest {
 
@@ -35,10 +38,17 @@ public class HyperfitProcessorTest {
     @Mock
     protected InterfaceSelectionStrategy mockSelectionStrategy;
 
+    HyperfitProcessor.Builder builder;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
+
+        builder = HyperfitProcessor.builder()
+            .hyperClient(mockHyperClient)
+            .interfaceSelectionStrategy(mockSelectionStrategy)
+            ;
     }
 
     @Test(expected = ResponseException.class)
@@ -76,10 +86,7 @@ public class HyperfitProcessorTest {
     @Test
     public void testInvokeSingleProfileResourceTest() {
 
-        HyperfitProcessor processor = HyperfitProcessor.builder()
-            .hyperClient(mockHyperClient)
-            .interfaceSelectionStrategy(mockSelectionStrategy)
-            .build();
+        HyperfitProcessor processor = builder.build();
 
         when(mockSelectionStrategy.determineInterfaces(BaseProfileResource.class, mockHyperResource))
             .thenReturn(new Class[]{ProfileResource1.class, ProfileResource2.class});
@@ -97,10 +104,7 @@ public class HyperfitProcessorTest {
     public void testProcessResourceWithArrayOfRegisteredProfiles() {
 
 
-        HyperfitProcessor processor = HyperfitProcessor.builder()
-            .hyperClient(mockHyperClient)
-            .interfaceSelectionStrategy(mockSelectionStrategy)
-            .build();
+        HyperfitProcessor processor = builder.build();
 
         when(mockSelectionStrategy.determineInterfaces(BaseProfileResource.class, mockHyperResource))
             .thenReturn(new Class[]{ProfileResource1.class, ProfileResource2.class});
@@ -118,10 +122,7 @@ public class HyperfitProcessorTest {
     public void testProcessResourceWithUnregisteredProfile() {
         when(mockHyperClient.getSchemes()).thenReturn(new String[]{"http", "https"});
 
-        HyperfitProcessor processor = HyperfitProcessor.builder()
-            .hyperClient(mockHyperClient)
-            .interfaceSelectionStrategy(mockSelectionStrategy)
-            .build();
+        HyperfitProcessor processor = builder.build();
 
         when(mockSelectionStrategy.determineInterfaces(BaseProfileResource.class, mockHyperResource))
             .thenReturn(new Class[]{BaseProfileResource.class});
@@ -132,4 +133,71 @@ public class HyperfitProcessorTest {
         assertTrue(result instanceof BaseProfileResource);
 
     }
+
+
+    @Test
+    public void testProcessRequestThrowsForBadArgs(){
+        HyperfitProcessor processor = builder.build();
+
+        try{
+            processor.processRequest(null, null, null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("classToReturn can not be null"));
+        }
+
+
+        try{
+            processor.processRequest(String.class, null, null);
+            fail("expected exception not thrown");
+        } catch (IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("requestBuilder can not be null"));
+        }
+
+    }
+
+
+
+    @Test
+    public void testProcessRequestRunsInterceptors(){
+        RequestInterceptor mockInterceptor1 = mock(RequestInterceptor.class);
+        RequestInterceptor mockInterceptor2 = mock(RequestInterceptor.class);
+
+        HyperClient mockClient = mock(HyperClient.class);
+
+
+
+
+        HyperfitProcessor processor = builder
+            .addRequestInterceptor(mockInterceptor1)
+            .addRequestInterceptor(mockInterceptor2)
+            .hyperClient(mockClient, "xyz")
+            .build();
+
+        BoringRequestBuilder request = new BoringRequestBuilder("xyz://local");
+
+        String fakeResponseBody = uniqueString();
+        when(mockClient.execute(request.build()))
+            .thenReturn(
+                Response.builder()
+                    .addRequest(request.build())
+                    .addBody(fakeResponseBody)
+                    .build()
+            );
+
+        String actual = processor.processRequest(String.class, request, null);
+
+
+        assertEquals(fakeResponseBody, actual);
+
+        verify(mockInterceptor1, times(1)).intercept(Matchers.any(RequestBuilder.class));
+        verify(mockInterceptor1, times(1)).intercept(request);
+
+        verify(mockInterceptor2, times(1)).intercept(Matchers.any(RequestBuilder.class));
+        verify(mockInterceptor2, times(1)).intercept(request);
+
+    }
+
+
+
 }

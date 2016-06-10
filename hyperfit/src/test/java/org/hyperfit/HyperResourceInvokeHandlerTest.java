@@ -464,11 +464,11 @@ public class HyperResourceInvokeHandlerTest{
 
         DataResource mockDataResource = mock(DataResource.class);
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
-                .setMethod(Method.GET)
-                .setUrl(expectedLink.getHref());
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
+            .setMethod(Method.GET);
 
-        when(mockHyperfitProcessor.processRequest(eq(DataResource.class), eq(expectedHyperRequest), any(TypeInfo.class))).thenReturn(mockDataResource);
+        when(mockHyperfitProcessor.processRequest(eq(DataResource.class), eq(expectedHyperRequest), any(TypeInfo.class)))
+            .thenReturn(mockDataResource);
 
         LinkResource p = this.getHyperResourceProxy(LinkResource.class);
 
@@ -486,11 +486,14 @@ public class HyperResourceInvokeHandlerTest{
 
         String expectedStr = uniqueString();
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
-                .setMethod(Method.GET)
-                .setUrl(expectedLink.getHref());
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
+            .setMethod(Method.GET)
+            ;
 
-        when(mockHyperfitProcessor.processRequest(eq(String.class), eq(expectedHyperRequest), any(TypeInfo.class))).thenReturn(expectedStr);
+
+        when(mockHyperfitProcessor.processRequest(eq(String.class), eq(expectedHyperRequest), any(TypeInfo.class)))
+            .thenReturn(expectedStr);
+
         LinkResource linkResource = this.getHyperResourceProxy(LinkResource.class);
 
         String result = linkResource.linkString();
@@ -506,9 +509,9 @@ public class HyperResourceInvokeHandlerTest{
         HyperLink expectedLink = makeLink(rel);
         when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
-        RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
+        RequestBuilder expectedHyperRequest = new BoringRequestBuilder(expectedLink.getHref())
             .setMethod(Method.GET)
-            .setUrl(expectedLink.getHref());
+            ;
 
         Response expectedResponse = new Response.ResponseBuilder()
                 .addHeader("header", "header")
@@ -539,7 +542,9 @@ public class HyperResourceInvokeHandlerTest{
                 .setMethod(Method.GET)
                 .setUrlTemplate(expectedLink.getHref());
 
-        when(mockHyperfitProcessor.processRequest(eq(HyperLink.class), eq(expectedHyperRequest), any(TypeInfo.class))).thenReturn(expectedLink);
+        when(mockHyperfitProcessor.processRequest(eq(HyperLink.class), eq(expectedHyperRequest), any(TypeInfo.class)))
+            .thenReturn(expectedLink);
+
         LinkResource linkResource = this.getHyperResourceProxy(LinkResource.class);
 
         HyperLink result = linkResource.hyperLink();
@@ -561,7 +566,9 @@ public class HyperResourceInvokeHandlerTest{
                 .setMethod(Method.GET)
                 .setUrlTemplate("whatever");
 
-        when(mockHyperfitProcessor.processRequest(eq(HyperLink[].class), eq(expectedHyperRequest), any(TypeInfo.class))).thenReturn(expectedLinks);
+        when(mockHyperfitProcessor.processRequest(eq(HyperLink[].class), eq(expectedHyperRequest), any(TypeInfo.class)))
+            .thenReturn(expectedLinks);
+
         LinkResource linkResource = this.getHyperResourceProxy(LinkResource.class);
 
         HyperLink[] result = linkResource.hyperLinks();
@@ -630,10 +637,12 @@ public class HyperResourceInvokeHandlerTest{
 
         String relationship = "bb:datas";
 
-        when(mockHyperResource.canResolveLinkLocal(relationship)).thenReturn(true);
+        when(mockHyperResource.canResolveLinkLocal(relationship))
+            .thenReturn(true);
 
         DataResource[] expected = new DataResource[2];
-        when(mockHyperResource.resolveLinksLocal(relationship)).thenReturn(expected);
+        when(mockHyperResource.resolveLinksLocal(relationship))
+            .thenReturn(expected);
 
         LinkResource p = this.getHyperResourceProxy(LinkResource.class);
 
@@ -778,7 +787,8 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship)).thenReturn(new HyperLink[0]);
+        when(mockHyperResource.getLinks(relationship))
+            .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkEmptyNames();
 
@@ -790,7 +800,8 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship)).thenReturn(new HyperLink[0]);
+        when(mockHyperResource.getLinks(relationship))
+            .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkWildCard();
 
@@ -802,7 +813,8 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship)).thenReturn(new HyperLink[0]);
+        when(mockHyperResource.getLinks(relationship))
+            .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkNullName();
 
@@ -833,13 +845,14 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship)).thenReturn(
-            new HyperLink[]{
-                makeLink(relationship, "name1"),
-                makeLink(relationship, "name2"),
-                makeLink(relationship, "name3")
-            }
-        );
+        when(mockHyperResource.getLinks(relationship))
+            .thenReturn(
+                new HyperLink[]{
+                    makeLink(relationship, "name1"),
+                    makeLink(relationship, "name2"),
+                    makeLink(relationship, "name3")
+                }
+            );
 
         r.firstLinkNullName();
     }
@@ -850,13 +863,14 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship)).thenReturn(
-            new HyperLink[]{
-                makeLink(relationship, "name1"),
-                makeLink(relationship, "name2"),
-                makeLink(relationship, "name3")
-            }
-        );
+        when(mockHyperResource.getLinks(relationship))
+            .thenReturn(
+                new HyperLink[]{
+                    makeLink(relationship, "name1"),
+                    makeLink(relationship, "name2"),
+                    makeLink(relationship, "name3")
+                }
+            );
 
         r.firstLinkTestName();
     }

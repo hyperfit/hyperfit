@@ -1,7 +1,8 @@
 package org.hyperfit.utils;
 
-//Bringing in commons-lang for 2 functions is silly
-//also android complains a bit during compile
+//Copied from commons-lang
+//Don't want to bring it in for 2 functions
+//also android complains a bit during compile about commons-lang
 public class StringUtils {
     public static boolean isEmpty(String string) {
         return string == null || string.length() == 0 || string.trim().length() == 0;

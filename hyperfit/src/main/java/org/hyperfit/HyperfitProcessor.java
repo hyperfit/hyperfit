@@ -14,10 +14,7 @@ import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.InterfaceSelectionStrategy;
 import org.hyperfit.resource.SimpleInterfaceSelectionStrategy;
-import org.hyperfit.utils.Preconditions;
-import org.hyperfit.utils.ReflectUtils;
-import org.hyperfit.utils.StringUtils;
-import org.hyperfit.utils.TypeInfo;
+import org.hyperfit.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,11 +73,11 @@ public class HyperfitProcessor {
      * <p>Obtains a specific resource by going directly to its source.</p>
      *
      * @param classToReturn  the class that the resource should be returned as
-     * @param endpointUrl endpont url for the request
+     * @param entryPointURL a url to an entry point of the RESTful service
      * @return resource with same type specified in the resource class.
      */
-    public <T> T processRequest(Class<T> classToReturn, String endpointUrl){
-        return processRequest(classToReturn, BoringRequestBuilder.get(endpointUrl));
+    public <T> T processRequest(Class<T> classToReturn, String entryPointURL){
+        return processRequest(classToReturn, BoringRequestBuilder.get(entryPointURL));
     }
 
 
@@ -95,6 +92,28 @@ public class HyperfitProcessor {
         return processRequest(classToReturn, requestBuilder, null);
     }
 
+    /**
+     * <p>Obtains a specific resource by going directly to its source using super type tokens so a generic can be returned.</p>
+     *
+     * @param typeToReturn a super type token
+     * @param requestBuilder request object
+     * @return resource with same type specified in the resource class.
+     */
+    public <T> T processRequest(TypeRef<T> typeToReturn, RequestBuilder requestBuilder){
+        return processRequest(typeToReturn.getClazz(), requestBuilder, new TypeInfo().make(typeToReturn.getType()));
+    }
+
+    /**
+     * <p>Obtains a specific resource by going directly to its source using super type tokens so a generic can be returned.</p>
+     *
+     * @param typeToReturn a super type token
+     * @param entryPointURL request object
+     * @return resource with same type specified in the resource class.
+     */
+    public <T> T processRequest(TypeRef<T> typeToReturn, String entryPointURL){
+        return processRequest(typeToReturn, BoringRequestBuilder.get(entryPointURL));
+    }
+
 
     /**
      * <p>Obtains a specific resource by going directly to its source.</p>
@@ -106,13 +125,14 @@ public class HyperfitProcessor {
     @SuppressWarnings("unchecked")
     public <T> T processRequest(Class<T> classToReturn, RequestBuilder requestBuilder, TypeInfo typeInfo) {
 
+        if(classToReturn == null){
+            throw new IllegalArgumentException("classToReturn can not be null");
+        }
+
         if(requestBuilder == null){
             throw new IllegalArgumentException("requestBuilder can not be null");
         }
 
-        if(classToReturn == null){
-            throw new IllegalArgumentException("classToReturn can not be null");
-        }
 
         requestInterceptors.intercept(requestBuilder);
 
@@ -197,8 +217,7 @@ public class HyperfitProcessor {
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource
-    buildHyperResource(Response response, Class<T> expectedResourceInterface) {
+    protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
 
         //STAGE 1 - There's response, let's see if we understand the content type!
         ContentType responseContentType = null;
