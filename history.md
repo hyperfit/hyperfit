@@ -1,6 +1,9 @@
 ## 1.10.0 - TBD
 * HyperfitProcessor has a new processRequest overloads that takes a super type token TypeRef argument.  This allows you to return Generics from an RESTful service entry point
 ```Page<Dog> result = processor.processRequest(new TypeRef<Page<Dog>>(){}, "url-to-entry-point-that-returns-generic-like-page-of-dog");```
+* When working with missing generic arguments for embedded resources it assumed that all embedded resource are at least HyperResource interfaces, beyond that they also will implement any interfaces as defined by the resource interface selection strategy.
+ * In other words supposed you have a Page<T> with a T[] items() method.  You can now have code like ```Page menu = (Page)resource.thatHasSomethingReturningHyperResource();  Object[] items = menu.items();  if(items[0] instanceof Resourcetype)``` to get out of the generic Object and back into specialized interfaces.
+ * Very useful when you can't be sure what is being returned and send it through a view bindinging routing based on the resource you have
 
 ## 1.9.0 - 2015-12-16
 * Fixed a bug where the Response object of okhttp2 client only included the last header with a given name
