@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 
 /**
  * See <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">Super type token</a>
- * <p/>
+ *
  * References a generic type.
  *
  * @author crazybob@google.com (Bob Lee)

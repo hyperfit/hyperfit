@@ -69,7 +69,7 @@ public class ContentRegistry {
 
 
     /**
-     * returns the ContentTypeHandler that best matches the ContentType.  Best match means using the ordered list from first to last, check if media type & subtype matches exactly, if so return that one.
+     * returns the ContentTypeHandler that best matches the ContentType.  Best match means using the ordered list from first to last, check if media type and subtype matches exactly, if so return that one.
      * q factor is not considered in this implementation
      * @param type
      * @return
