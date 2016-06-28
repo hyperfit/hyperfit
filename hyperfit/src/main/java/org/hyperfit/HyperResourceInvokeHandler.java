@@ -110,7 +110,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         if (returnClass.isArray()) {
             //If config info isn't there, let's fall back assuming it's a HyperResource
             //TODO if we had the type as Page<? extends XYZ> could we then fallback to XYZ?
-            Pair<? extends Class<?>,Type> arrayTypeInfo = typeInfo.getArrayType(returnClass, genericReturnType, (Type)HyperResource.class);
+            Pair<? extends Class<?>,Type> arrayTypeInfo = typeInfo.getArrayType(returnClass, genericReturnType, HyperResource.class);
             TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getValue1());
 
             Object[] result = ReflectUtils.createArray(arrayTypeInfo.getValue0(), hyperResources.length);
