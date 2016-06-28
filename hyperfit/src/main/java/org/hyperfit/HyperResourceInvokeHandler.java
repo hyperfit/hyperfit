@@ -108,13 +108,9 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         //TODO: in the future this would actually be a strategy...not these if blocks
 
         if (returnClass.isArray()) {
-
-            Pair<? extends Class<?>,Type> arrayTypeInfo = (returnClass == Object[].class) ?
-                //special case where there's no type info, probably because they aren't using generics on their param ie Page instead of Page<SubType>
-                //TODO if we had the type as Page<? extends XYZ> could we then return XYZ?
-                Pair.with(HyperResource.class, (Type)Object.class)
-                :
-                typeInfo.getArrayType(returnClass, genericReturnType);
+            //If config info isn't there, let's fall back assuming it's a HyperResource
+            //TODO if we had the type as Page<? extends XYZ> could we then fallback to XYZ?
+            Pair<? extends Class<?>,Type> arrayTypeInfo = typeInfo.getArrayType(returnClass, genericReturnType, (Type)HyperResource.class);
             TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getValue1());
 
             Object[] result = ReflectUtils.createArray(arrayTypeInfo.getValue0(), hyperResources.length);

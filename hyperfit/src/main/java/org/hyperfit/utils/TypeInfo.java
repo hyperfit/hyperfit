@@ -21,7 +21,7 @@ public class TypeInfo {
         this.typeParamsLookup.put(s, t);
     }
 
-    public Type lookForTypeParam(TypeVariable arg) {
+    private Type lookForTypeParam(TypeVariable arg) {
         Type type = this.typeParamsLookup.get(arg.getName());
 
         if(type == null) {
@@ -31,7 +31,7 @@ public class TypeInfo {
         return type;
     }
 
-    public Pair<? extends Class<?>, Type> getArrayType(Class returnClass, Type genericReturnType) {
+    public Pair<? extends Class<?>, Type> getArrayType(Class returnClass, Type genericReturnType, Type genericFallback) {
 
         Class<?> arrayComponentType = returnClass.getComponentType();
         Type genericComponentType = arrayComponentType;
@@ -43,7 +43,12 @@ public class TypeInfo {
 
             //If the type is a variable, look it up
             if (genericComponentType instanceof TypeVariable) {
-                genericComponentType = this.lookForTypeParam(((TypeVariable) genericComponentType));
+                genericComponentType = this.typeParamsLookup.get(((TypeVariable) genericComponentType).getName());
+            }
+
+            if(genericComponentType == null){
+                //If we don't have the type info..then it's probably someone not using generics IE Page vs Page<T>, let's fallback
+                genericComponentType = genericFallback;
             }
 
             arrayComponentType = (Class) genericComponentType;
