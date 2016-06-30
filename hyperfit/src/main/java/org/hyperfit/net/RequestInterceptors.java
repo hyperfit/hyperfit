@@ -10,8 +10,6 @@ import java.util.Set;
 
 /**
  * Groups interceptors and applies them
- *
- * @author Carlos Perez
  */
 @ToString
 @EqualsAndHashCode
@@ -20,7 +18,7 @@ public class RequestInterceptors {
     private static final Logger LOG = LoggerFactory.getLogger(RequestInterceptors.class);
 
     //A set is used so the same interceptor is not added more than once
-    final Set<RequestInterceptor> requestInterceptorSet = new HashSet<RequestInterceptor>();
+    private final Set<RequestInterceptor> interceptors = new HashSet<RequestInterceptor>();
 
     /**
      * Creates a new instance containing all of the interceptors of the passed in instance.
@@ -28,7 +26,7 @@ public class RequestInterceptors {
      * @param requestInterceptors
      */
     public RequestInterceptors(RequestInterceptors requestInterceptors) {
-        this.requestInterceptorSet.addAll(requestInterceptors.requestInterceptorSet);
+        this.interceptors.addAll(requestInterceptors.interceptors);
     }
 
     public RequestInterceptors() {
@@ -38,30 +36,42 @@ public class RequestInterceptors {
     //adds a request interceptor.
     public RequestInterceptors add(RequestInterceptor requestInterceptor) {
         if (requestInterceptor != null) {
-            this.requestInterceptorSet.add(requestInterceptor);
+            this.interceptors.add(requestInterceptor);
         }
         return this;
     }
 
     //removes the interceptors in the array
     public RequestInterceptors remove(RequestInterceptor... requestInterceptor) {
-        this.requestInterceptorSet.remove(requestInterceptor);
+        this.interceptors.remove(requestInterceptor);
         return this;
     }
 
 
+    public RequestInterceptors remove(Class<? extends RequestInterceptor> typeToRemove) {
+        for (java.util.Iterator<RequestInterceptor> i = interceptors.iterator(); i.hasNext();) {
+
+            RequestInterceptor element = i.next();
+            if (typeToRemove.isInstance(element)) {
+                i.remove();
+            }
+        }
+        return this;
+    }
 
     public RequestInterceptors clear() {
-        this.requestInterceptorSet.clear();
+        this.interceptors.clear();
         return this;
     }
 
     //intercept the request applying all the interceptors
     public RequestInterceptors intercept(RequestBuilder requestBuilder) {
-        for (RequestInterceptor requestInterceptor : requestInterceptorSet) {
+        LOG.trace("Running {} interceptors for request: {}", interceptors.size(), requestBuilder);
+
+        for (RequestInterceptor requestInterceptor : interceptors) {
 
             requestInterceptor.intercept(requestBuilder);
-            LOG.trace("Request intercepted. Url: {}", requestBuilder.getURL());
+
         }
         return this;
     }

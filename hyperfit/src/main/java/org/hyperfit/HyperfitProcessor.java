@@ -383,6 +383,11 @@ public class HyperfitProcessor {
             return this;
         }
 
+        public Builder removeRequestInterceptors(Class<? extends RequestInterceptor> typeToRemove) {
+            this.requestInterceptors.remove(typeToRemove);
+            return this;
+        }
+
         public Builder clearInterceptors() {
             this.requestInterceptors.clear();
             return this;
