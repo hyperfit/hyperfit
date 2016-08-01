@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.squareup.okhttp.internal.http.HttpMethod;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.*;
 import org.hyperfit.utils.StringUtils;
@@ -92,6 +93,10 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         return new String[]{"http", "https"};
     }
 
+    //at some point after okhttp 2.1 they added the requirement of a request body for certain http methods
+    //this can happen a lot..so let's make one dummy one and reuse it.
+    private static final RequestBody EMPTY_REQUEST_BODY = RequestBody.create(null, "");
+
     /**
      * Use the request builder to build the request to be executed in the future
      * @param request {@link org.hyperfit.net.Request} includes url,method, headers information
@@ -103,6 +108,8 @@ public class OkHttp2HyperClient extends BaseHyperClient {
 
         if (request.getContentType() != null && request.getContent() != null) {
             requestBody = RequestBody.create(MediaType.parse(request.getContentType()), request.getContent());
+        } else if(HttpMethod.requiresRequestBody(request.getMethod().name())){
+            requestBody = EMPTY_REQUEST_BODY;
         }
       
         return new com.squareup.okhttp.Request.Builder()
