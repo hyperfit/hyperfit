@@ -1,3 +1,6 @@
+## 1.11.0 - TBD
+* 
+
 ## 1.10.0 - 2016-08-10
 * HyperfitProcessor has a new processRequest overloads that takes a super type token TypeRef argument.  This allows you to return Generics from an RESTful service entry point
 ```Page<Dog> result = processor.processRequest(new TypeRef<Page<Dog>>(){}, "url-to-entry-point-that-returns-generic-like-page-of-dog");```
