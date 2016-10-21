@@ -14,6 +14,7 @@
     <module>hyperfit</module>
     <module>hyperfit-okhttp1-client</module>
     <module>hyperfit-okhttp2-client</module>
+    <module>hyperfit-okhttp3-client</module>
     <module>hyperfit-hal</module>
     <module>hyperfit-html5</module>
     <module>hyperfit-java8</module>
