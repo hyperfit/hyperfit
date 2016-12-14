@@ -20,7 +20,9 @@ public class ConcurrentHashMapResourceMethodInfoCache implements ResourceMethodI
      * and returns it. However that won't corrupt the data.
      */
     public MethodInfoCache get(Class<?> clazz) {
-        if (clazz == null) throw new IllegalArgumentException("class must not be null");
+        if (clazz == null){
+            throw new IllegalArgumentException("class must not be null");
+        }
 
         MethodInfoCache methodInfoCache = resourceMethodInfoMap.get(clazz);
         if (methodInfoCache == null) {

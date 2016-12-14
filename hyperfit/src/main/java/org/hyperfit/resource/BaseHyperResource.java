@@ -69,7 +69,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
         List<HyperLink> namedLinks = new ArrayList<HyperLink>(links.length);
         for(HyperLink link : links){
-            if(StringUtils.equals(link.getName(), name)){
+            if(StringUtils.safeEquals(link.getName(), name)){
                 namedLinks.add(link);
             }
         }
@@ -77,6 +77,10 @@ public abstract class BaseHyperResource implements HyperResource {
         HyperLink[] matchedLinks = new HyperLink[namedLinks.size()];
         return namedLinks.toArray(matchedLinks);
 
+    }
+
+    public <T> T getPathAs(Class<T> classToReturn, String... path) {
+        return this.getPathAs(classToReturn, false, path);
     }
 
     public LinkedHashSet<String> getProfiles(){

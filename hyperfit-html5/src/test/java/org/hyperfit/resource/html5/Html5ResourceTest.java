@@ -455,6 +455,16 @@ public class Html5ResourceTest {
     }
 
     @Test(expected = HyperResourceException.class)
+    public void testGetPathAsMissingNodeWhenFalseNullWhenMissing() {
+        new Html5Resource(doc).getPathAs(String.class,false, "_embedded", "promotionResourceList", "title");
+    }
+
+    public void testGetPathAsMissingNodeWhenTrueNullWhenMissing() {
+        assertNull(new Html5Resource(doc).getPathAs(String.class,true, "_embedded", "promotionResourceList", "title"));
+    }
+
+
+    @Test(expected = HyperResourceException.class)
     public void testGetPathAsNullPath() {
         new Html5Resource(doc).getPathAs(String.class, null);
     }

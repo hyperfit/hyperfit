@@ -48,7 +48,7 @@ public class MethodInfo {
         }
 
         public boolean is(String o) {
-            return (nameObj instanceof Set ? ((Set) nameObj).contains(o) : o.equals(nameObj));
+            return nameObj instanceof Set ? ((Set) nameObj).contains(o) : o.equals(nameObj);
         }
     }
 

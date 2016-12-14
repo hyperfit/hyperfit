@@ -13,10 +13,10 @@ import java.net.URLEncoder;
 public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
 
 
-    private static final String encoding = "UTF-8";
-    private static final ContentType type = new ContentType("application", "x-www-form-urlencoded");
+    private static final String ENCODING = "UTF-8";
+    private static final ContentType TYPE = new ContentType("application", "x-www-form-urlencoded");
     public ContentType getDefaultContentType() {
-        return type;
+        return TYPE;
     }
 
     public HyperResource parseResponse(Response response) {
@@ -28,7 +28,7 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
     }
 
     public void prepareRequest(RequestBuilder request, Object content) {
-        request.setContentType(type.toString(false));
+        request.setContentType(TYPE.toString(false));
 
         StringBuilder body = new StringBuilder();
 
@@ -65,7 +65,7 @@ public class FormURLEncodedContentTypeHandler implements ContentTypeHandler {
 
     private static String encode(String s){
         try {
-            return URLEncoder.encode(s, encoding);
+            return URLEncoder.encode(s, ENCODING);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("error generating request body", e);
         }

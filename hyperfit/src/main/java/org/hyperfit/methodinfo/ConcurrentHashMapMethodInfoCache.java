@@ -21,10 +21,13 @@ public class ConcurrentHashMapMethodInfoCache implements MethodInfoCache {
      * and returns it. However that won't corrupt the data.
      */
     public MethodInfo get(Method method) {
-        if (method == null) throw new IllegalArgumentException("method must not be null");
+        if (method == null){
+            throw new IllegalArgumentException("method must not be null");
+        }
 
         MethodInfo methodInfo = methodInfoCache.get(method);
-        if (methodInfo == null) { //remember that local vars are thread safe
+        //remember that local vars are thread safe
+        if (methodInfo == null) {
             methodInfo = new MethodInfo(method);
             methodInfoCache.put(method, methodInfo);
         }

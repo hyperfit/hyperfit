@@ -25,7 +25,7 @@ public class SimpleInterfaceSelectionStrategyTest {
                 return new HyperLink[0];
             }
 
-            public <T> T getPathAs(Class<T> classToReturn, String... path) {
+            public <T> T getPathAs(Class<T> classToReturn, boolean nullWhenMissing, String... path) {
                 return null;
             }
 

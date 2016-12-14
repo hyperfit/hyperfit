@@ -528,6 +528,16 @@ public class HalJsonResourceTest {
         new HalJsonResource(root, null).getPathAs(String.class, "_embedded", "promotionResourceList", "title");
     }
 
+    @Test(expected = HyperResourceException.class)
+    public void testGetPathAsMissingNodeWithFalseNullWhenMissing() {
+        new HalJsonResource(root, null).getPathAs(String.class, false, "_embedded", "promotionResourceList", "title");
+    }
+
+
+    public void testGetPathAsMissingNodeWithTrueNullWhenMissing() {
+        assertNull(new HalJsonResource(root, null).getPathAs(String.class, true, "_embedded", "promotionResourceList", "title"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testGetPathAsNullPath() {
         new HalJsonResource(root, null).getPathAs(String.class, null);

@@ -1,6 +1,5 @@
 package org.hyperfit.exception;
 
-import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
 
 /**

@@ -167,7 +167,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         // Data method invocation
         Data data = methodInfo.getDataAnnotation();
         if (data != null) {
-            return hyperResource.getPathAs(methodInfo.getReturnType(), data.value());
+            return hyperResource.getPathAs(methodInfo.getReturnType(), data.nullWhenMissing(), data.value());
         }
 
         // Link method invocation
@@ -279,13 +279,13 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                         name = null;
                     }
 
-                    if(StringUtils.equals(name, FirstLink.MATCH_ANY_NAME)){
+                    if(StringUtils.safeEquals(name, FirstLink.MATCH_ANY_NAME)){
                         //If it's the wildcard, just return the first one
                         return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLinks[0].getName());
                     }
 
                     for(HyperLink relLink : relLinks){
-                        if(StringUtils.equals(name, relLink.getName())){
+                        if(StringUtils.safeEquals(name, relLink.getName())){
                             return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLink.getName());
                         }
                     }

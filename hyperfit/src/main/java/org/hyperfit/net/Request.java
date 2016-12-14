@@ -70,20 +70,4 @@ public class Request {
 
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Request that = (Request) o;
-
-        if (content != null ? !content.equals(that.content) : that.content != null) return false;
-        if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
-        if (!headers.equals(that.headers)) return false;
-        if (method != that.method) return false;
-        if (!url.equals(that.url)) return false;
-
-        return true;
-    }
-
 }
