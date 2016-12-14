@@ -14,8 +14,7 @@ import java.util.*;
 public class FormRequestBuilder implements RequestBuilder {
 
     private final String url;
-    private final static String contentType = "application/x-www-form-urlencoded";
-    private String content = null;
+    private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     private Method method = Method.GET;
     private final Form form;
 
@@ -122,7 +121,7 @@ public class FormRequestBuilder implements RequestBuilder {
 
 
     public String getContentType() {
-        return contentType;
+        return CONTENT_TYPE;
     }
 
     public String getContent() {

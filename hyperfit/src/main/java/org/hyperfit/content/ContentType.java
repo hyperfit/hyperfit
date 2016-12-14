@@ -210,8 +210,7 @@ public class ContentType {
      * @param qct
      * @return True if they match
      */
-    public final boolean compatibleWith(ContentType qct)
-    {
+    public final boolean compatibleWith(ContentType qct) {
         if (type.equals(qct.type) && subType.equals(qct.subType)) {
             return true;
         }
