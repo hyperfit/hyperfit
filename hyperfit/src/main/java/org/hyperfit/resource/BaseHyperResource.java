@@ -69,7 +69,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
         List<HyperLink> namedLinks = new ArrayList<HyperLink>(links.length);
         for(HyperLink link : links){
-            if(StringUtils.equals(link.getName(), name)){
+            if(StringUtils.safeEquals(link.getName(), name)){
                 namedLinks.add(link);
             }
         }

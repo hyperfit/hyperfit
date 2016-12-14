@@ -279,13 +279,13 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                         name = null;
                     }
 
-                    if(StringUtils.equals(name, FirstLink.MATCH_ANY_NAME)){
+                    if(StringUtils.safeEquals(name, FirstLink.MATCH_ANY_NAME)){
                         //If it's the wildcard, just return the first one
                         return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLinks[0].getName());
                     }
 
                     for(HyperLink relLink : relLinks){
-                        if(StringUtils.equals(name, relLink.getName())){
+                        if(StringUtils.safeEquals(name, relLink.getName())){
                             return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLink.getName());
                         }
                     }

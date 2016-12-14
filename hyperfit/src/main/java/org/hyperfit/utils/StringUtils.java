@@ -8,7 +8,7 @@ public class StringUtils {
         return string == null || string.length() == 0 || string.trim().length() == 0;
     }
 
-    public static boolean equals(String left, String right) {
+    public static boolean safeEquals(String left, String right) {
         return left == null ? right == null : left.equals(right);
     }
 
