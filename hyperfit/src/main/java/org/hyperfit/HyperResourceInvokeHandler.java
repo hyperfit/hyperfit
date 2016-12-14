@@ -167,7 +167,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         // Data method invocation
         Data data = methodInfo.getDataAnnotation();
         if (data != null) {
-            return hyperResource.getPathAs(methodInfo.getReturnType(), data.value());
+            return hyperResource.getPathAs(methodInfo.getReturnType(), data.nullWhenMissing(), data.value());
         }
 
         // Link method invocation

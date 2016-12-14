@@ -198,11 +198,15 @@ public class HalJsonResource extends BaseHyperResource {
         return (nodeValue != null && !nodeValue.isMissingNode());
     }
 
-    public <T> T getPathAs(Class<T> classToReturn, String... path) {
+    public <T> T getPathAs(Class<T> classToReturn, boolean nullWhenMissing, String... path) {
         JsonNode nodeValue = getJsonNode(jsonResource, path);
 
         if (nodeValue == null || nodeValue.isMissingNode()) {
-            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, jsonResource);
+            if(nullWhenMissing){
+                return null;
+            } else {
+                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, jsonResource);
+            }
         }
 
         return OBJECT_MAPPER.convertValue(nodeValue, classToReturn);

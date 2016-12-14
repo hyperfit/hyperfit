@@ -79,6 +79,10 @@ public abstract class BaseHyperResource implements HyperResource {
 
     }
 
+    public <T> T getPathAs(Class<T> classToReturn, String... path) {
+        return this.getPathAs(classToReturn, false, path);
+    }
+
     public LinkedHashSet<String> getProfiles(){
         HyperLink[] profileLinks = this.getLinks("profile");
         LinkedHashSet<String> profiles = new LinkedHashSet<String>(profileLinks.length);

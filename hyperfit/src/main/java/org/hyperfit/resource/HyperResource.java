@@ -47,7 +47,26 @@ public interface HyperResource {
     HyperLink getLink(String relationship, String name);
 
 
+    /**
+     * Traverses the resource with the given path and returns the destination as the given class
+     * @deprecated replaced with the getAsPath that takes a boolean indicating if a null should be returned
+     * @param classToReturn the class to attempt to convert the destination into
+     * @param path the path with in the resource to locate the destination.  This is resource type specific, but usually is . notation
+     * @param <T> The type to return
+     * @return the class if the path was valid, found and convertible.  Otherwise throws exceptions
+     */
+    @Deprecated
     <T> T getPathAs(Class<T> classToReturn, String... path);
+
+    /**
+     * Traverses the resource with the given path and returns the destination as the given class
+     * @param classToReturn the class to attempt to convert the destination into
+     * @param nullWhenMissing when true a path leading to no destination returns null, otherwise a path with no destination caues an exception to be thrown
+     * @param path the path with in the resource to locate the destination.  This is resource type specific, but usually is . notation
+     * @param <T> The type to return
+     * @return the class if the path was valid, found and convertible.  null if the path was not found and nullWhenMissing is true.  Otherwise throws exceptions
+     */
+    <T> T getPathAs(Class<T> classToReturn, boolean nullWhenMissing, String... path);
 
     boolean hasPath(String... path);
 

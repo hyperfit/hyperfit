@@ -1,5 +1,6 @@
 ## 1.11.0 - TBD
-* 
+* The HyperResource.getAsPath has been deprecated in favour of a new overload that takes a nullWhenMissing parameter that controls whether an exception is thrown (current behaviour) or null is returned when the data path is not found
+* The @Data annotation has a new parameter nullWhenMissing which is mapped to teh new getAsPath parameter when used with a resource interface
 
 ## 1.10.0 - 2016-08-10
 * HyperfitProcessor has a new processRequest overloads that takes a super type token TypeRef argument.  This allows you to return Generics from an RESTful service entry point

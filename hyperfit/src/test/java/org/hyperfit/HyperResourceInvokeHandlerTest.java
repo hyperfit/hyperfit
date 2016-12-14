@@ -44,58 +44,61 @@ public class HyperResourceInvokeHandlerTest{
     public interface DataResource extends HyperResource {
 
         @Data({"dataString"})
-        public String dataAsString();
+        String dataAsString();
 
         @Data({"dataIntegerWrapper"})
-        public Integer dataAsIntegerWrapper();
+        Integer dataAsIntegerWrapper();
 
         @Data({"dataIntegerPrimitive"})
-        public int dataAsIntegerPrimitive();
+        int dataAsIntegerPrimitive();
 
         @Data({"dataFloatWrapper"})
-        public Float dataAsFloatWrapper();
+        Float dataAsFloatWrapper();
 
         @Data({"dataFloatPrimitive"})
-        public float dataAsFloatPrimitive();
+        float dataAsFloatPrimitive();
 
         @Data({"dataLongWrapper"})
-        public Long dataAsLongWrapper();
+        Long dataAsLongWrapper();
 
         @Data({"dataLongPrimitive"})
-        public long dataAsLongPrimitive();
+        long dataAsLongPrimitive();
 
         @Data({"dataDoubleWrapper"})
-        public Double dataAsDoubleWrapper();
+        Double dataAsDoubleWrapper();
 
         @Data({"dataDoublePrimitive"})
-        public double dataAsDoublePrimitive();
+        double dataAsDoublePrimitive();
 
         @Data({"dataShortWrapper"})
-        public Short dataAsShortWrapper();
+        Short dataAsShortWrapper();
 
         @Data({"dataShortPrimitive"})
-        public short dataAsShortPrimitive();
+        short dataAsShortPrimitive();
 
         @Data({"dataCharacterWrapper"})
-        public Character dataAsCharacterWrapper();
+        Character dataAsCharacterWrapper();
 
         @Data({"dataCharacterPrimitive"})
-        public char dataAsCharacterPrimitive();
+        char dataAsCharacterPrimitive();
 
         @Data({"dataBooleanWrapper"})
-        public Boolean dataAsBooleanWrapper();
+        Boolean dataAsBooleanWrapper();
 
         @Data({"dataBooleanPrimitive"})
-        public boolean dataAsBooleanPrimitive();
+        boolean dataAsBooleanPrimitive();
 
         @Data({"dataDateWrapper"})
-        public Date dataAsDateWrapper();
+        Date dataAsDateWrapper();
 
         @Data({"dataDateWrapper", "missingNode"})
-        public String missingNodeError();
+        String missingNodeError();
 
         @Data("complexData")
-        public ComplexProperty complexData();
+        ComplexProperty complexData();
+
+        @Data(value = "nullableNode", nullWhenMissing = true)
+        Object iCanBeNull();
     }
 
 
@@ -1073,6 +1076,14 @@ public class HyperResourceInvokeHandlerTest{
 
         assertSame(expectedResult, actual);
 
+    }
+
+    @Test
+    public void testInvokeMissingNodeWithNullWhenMissing() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.iCanBeNull());
     }
 
 }

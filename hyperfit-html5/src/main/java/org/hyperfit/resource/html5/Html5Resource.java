@@ -149,13 +149,17 @@ public class Html5Resource extends BaseHyperResource {
         return true;
     }
 
-    public <T> T getPathAs(Class<T> classToReturn, String... path) {
+    public <T> T getPathAs(Class<T> classToReturn, boolean nullWhenMissing, String... path) {
         if(!classToReturn.equals(String.class)){
             throw new HyperResourceException("Only string is currently supported");
         }
 
         if(dataNode == null || path == null || path.length == 0){
-            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+            if(nullWhenMissing){
+                return null;
+            } else {
+                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+            }
         }
 
         Element node = dataNode;

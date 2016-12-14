@@ -321,5 +321,17 @@ public class BaseHyperResourceTest {
 
     }
 
+    @Test
+    public void testGetAsPathCallsOverload() {
+        String path = uniqueString();
+        String result = uniqueString();
+        HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
+        doReturn(result).when(resource).getPathAs(String.class, false, path);
+        String actual = resource.getPathAs(String.class, path);
+
+        assertEquals(result, actual);
+
+    }
+
 
 }
