@@ -260,7 +260,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataString() throws Exception {
 
-        when(mockHyperResource.getPathAs(String.class, "dataString")).thenReturn("some string");
+        when(mockHyperResource.getPathAs(String.class, false,"dataString")).thenReturn("some string");
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals("some string", proxyTest.dataAsString());
     }
@@ -268,28 +268,28 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataIntegerWrapper() throws Exception {
 
-        when(mockHyperResource.getPathAs(Integer.class, "dataIntegerWrapper")).thenReturn(new Integer(123));
+        when(mockHyperResource.getPathAs(Integer.class, false,"dataIntegerWrapper")).thenReturn(new Integer(123));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Integer(123), proxyTest.dataAsIntegerWrapper());
     }
 
     @Test
     public void testInvokeDataIntegerPrimitive() throws Exception {
-        when(mockHyperResource.getPathAs(int.class, "dataIntegerPrimitive")).thenReturn(123);
+        when(mockHyperResource.getPathAs(int.class, false,"dataIntegerPrimitive")).thenReturn(123);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(123, proxyTest.dataAsIntegerPrimitive(), 0);
     }
 
     @Test
     public void testInvokeDataFloatWrapper() throws Exception {
-        when(mockHyperResource.getPathAs(Float.class, "dataFloatWrapper")).thenReturn(new Float(123));
+        when(mockHyperResource.getPathAs(Float.class, false,"dataFloatWrapper")).thenReturn(new Float(123));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Float(123), proxyTest.dataAsFloatWrapper());
     }
 
     @Test
     public void testInvokeDataFloatPrimitive() throws Exception {
-        when(mockHyperResource.getPathAs(float.class, "dataFloatPrimitive")).thenReturn(123f);
+        when(mockHyperResource.getPathAs(float.class, false,"dataFloatPrimitive")).thenReturn(123f);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(123f, proxyTest.dataAsFloatPrimitive(), 0);
     }
@@ -297,14 +297,14 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataLongWrapper() throws Exception {
 
-        when(mockHyperResource.getPathAs(Long.class, "dataLongWrapper")).thenReturn(new Long(123));
+        when(mockHyperResource.getPathAs(Long.class, false,"dataLongWrapper")).thenReturn(new Long(123));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Long(123), proxyTest.dataAsLongWrapper());
     }
 
     @Test
     public void testInvokeDataLongPrimitive() throws Exception {
-        when(mockHyperResource.getPathAs(long.class, "dataLongPrimitive")).thenReturn(123L);
+        when(mockHyperResource.getPathAs(long.class, false,"dataLongPrimitive")).thenReturn(123L);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(123L, proxyTest.dataAsLongPrimitive(), 0);
     }
@@ -312,7 +312,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataDoubleWrapper() throws Exception {
 
-        when(mockHyperResource.getPathAs(Double.class, "dataDoubleWrapper")).thenReturn(new Double(123));
+        when(mockHyperResource.getPathAs(Double.class, false,"dataDoubleWrapper")).thenReturn(new Double(123));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Double(123), proxyTest.dataAsDoubleWrapper());
     }
@@ -320,7 +320,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataDoublePrimitive() throws Exception {
 
-        when(mockHyperResource.getPathAs(double.class, "dataDoublePrimitive")).thenReturn(123d);
+        when(mockHyperResource.getPathAs(double.class, false,"dataDoublePrimitive")).thenReturn(123d);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(123d, proxyTest.dataAsDoublePrimitive(), 0);
     }
@@ -328,7 +328,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataShortWrapper() throws Exception {
 
-        when(mockHyperResource.getPathAs(Short.class, "dataShortWrapper")).thenReturn(new Short((short) 123));
+        when(mockHyperResource.getPathAs(Short.class, false,"dataShortWrapper")).thenReturn(new Short((short) 123));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Short((short) 123), proxyTest.dataAsShortWrapper());
     }
@@ -336,14 +336,14 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataShortPrimitive() throws Exception {
 
-        when(mockHyperResource.getPathAs(short.class, "dataShortPrimitive")).thenReturn((short) 123);
+        when(mockHyperResource.getPathAs(short.class, false,"dataShortPrimitive")).thenReturn((short) 123);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals((short) 123, proxyTest.dataAsShortPrimitive(), 0);
     }
 
     @Test
     public void testInvokeDataCharacterWrapper() throws Exception {
-        when(mockHyperResource.getPathAs(Character.class, "dataCharacterWrapper")).thenReturn(new Character('e'));
+        when(mockHyperResource.getPathAs(Character.class, false,"dataCharacterWrapper")).thenReturn(new Character('e'));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(new Character('e'), proxyTest.dataAsCharacterWrapper());
     }
@@ -351,7 +351,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataCharacterPrimitive() throws Exception {
 
-        when(mockHyperResource.getPathAs(char.class, "dataCharacterPrimitive")).thenReturn('e');
+        when(mockHyperResource.getPathAs(char.class, false,"dataCharacterPrimitive")).thenReturn('e');
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals('e', proxyTest.dataAsCharacterPrimitive(), 0);
     }
@@ -359,7 +359,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataBooleanWrapper() throws Exception {
 
-        when(mockHyperResource.getPathAs(Boolean.class, "dataBooleanWrapper")).thenReturn(Boolean.TRUE);
+        when(mockHyperResource.getPathAs(Boolean.class, false,"dataBooleanWrapper")).thenReturn(Boolean.TRUE);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(Boolean.TRUE, proxyTest.dataAsBooleanWrapper());
     }
@@ -367,7 +367,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test
     public void testInvokeDataBooleanPrimitive() throws Exception {
 
-        when(mockHyperResource.getPathAs(boolean.class, "dataBooleanPrimitive")).thenReturn(true);
+        when(mockHyperResource.getPathAs(boolean.class, false,"dataBooleanPrimitive")).thenReturn(true);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(true, proxyTest.dataAsBooleanPrimitive());
     }
@@ -379,7 +379,7 @@ public class HyperResourceInvokeHandlerTest{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         Date date = simpleDateFormat.parse(dateString);
 
-        when(mockHyperResource.getPathAs(Date.class, "dataDateWrapper")).thenReturn(date);
+        when(mockHyperResource.getPathAs(Date.class, false,"dataDateWrapper")).thenReturn(date);
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
         assertEquals(date, proxyTest.dataAsDateWrapper());
     }
@@ -413,7 +413,7 @@ public class HyperResourceInvokeHandlerTest{
     @Test(expected = HyperResourceException.class)
     public void testInvokeMissingNode() throws Throwable {
 
-        when(mockHyperResource.getPathAs(String.class, "dataDateWrapper", "missingNode"))
+        when(mockHyperResource.getPathAs(String.class, false,"dataDateWrapper", "missingNode"))
             .thenThrow(new HyperResourceException(""));
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
