@@ -1,3 +1,6 @@
+## 1.12.0 - TBD
+* 
+
 ## 1.11.1 - 2016-12-20
 * The HyperResource.getAsPath has been deprecated in favour of a new overload that takes a nullWhenMissing parameter that controls whether an exception is thrown (current behaviour) or null is returned when the data path is not found
 * The @Data annotation has a new parameter nullWhenMissing which is mapped to teh new getAsPath parameter when used with a resource interface
