@@ -95,7 +95,14 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      */
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         try {
-            return processInvoke(proxy, method, args);
+            if(method.toString().matches(".*\\bdefault\\b.+")) {
+                // In the case of a default method on an interface we do not want / cannot
+                // invoke that method through the proxy.
+                return method.invoke(hyperResource, args);
+            }
+            else {
+                return processInvoke(proxy, method, args);
+            }
         } catch (HyperfitException hce) {
             throw hce; //don't wrap up hyperfit exceptions
         } catch (Exception e) {

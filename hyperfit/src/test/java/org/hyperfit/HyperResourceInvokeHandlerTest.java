@@ -182,7 +182,7 @@ public class HyperResourceInvokeHandlerTest{
 
 
     @Mock
-    private HyperResource mockHyperResource;
+    protected HyperResource mockHyperResource;
 
     @Mock
     private HyperfitProcessor mockHyperfitProcessor;
