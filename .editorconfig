@@ -1,0 +1,18 @@
+# not sure what this is? install the plugin at http://editorconfig.org/
+
+#stop searching
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+
+#java stuff
+[*.{java}]
+indent_size = 4
+
+
+#java stuff
+[pom.xml]
+indent_size = 2
