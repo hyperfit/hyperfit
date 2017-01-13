@@ -1,6 +1,5 @@
 package org.hyperfit;
 
-import org.hyperfit.annotation.Data;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
@@ -28,17 +27,6 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(ConsoleSpammingMockitoJUnitRunner.class)
 public class HyperResourceInvokeHandlerJdk8Test  {
-
-    public interface Jdk8Resource extends HyperResource {
-
-
-        @Data("someData")
-        Integer getSomeData();
-
-        default String imADefaultMethod() {
-            return "ok sure";
-        }
-    }
 
     @Mock
     protected Jdk8Resource mockHyperResource;

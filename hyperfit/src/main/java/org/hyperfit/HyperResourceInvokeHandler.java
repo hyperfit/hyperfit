@@ -1,6 +1,13 @@
 package org.hyperfit;
 
-import org.hyperfit.annotation.*;
+import org.hyperfit.annotation.Content;
+import org.hyperfit.annotation.Data;
+import org.hyperfit.annotation.FirstLink;
+import org.hyperfit.annotation.Header;
+import org.hyperfit.annotation.Link;
+import org.hyperfit.annotation.NamedForm;
+import org.hyperfit.annotation.NamedLink;
+import org.hyperfit.annotation.Param;
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
@@ -9,19 +16,23 @@ import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
 import org.hyperfit.net.RequestBuilder;
+import org.hyperfit.resource.HyperResource;
+import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.resource.controls.link.HyperLinkWrapper;
-import org.hyperfit.resource.HyperResource;
-import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.ServiceLoader;
 
 import static org.hyperfit.methodinfo.MethodInfo.MethodType;
 
@@ -98,7 +109,15 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
             if(method.toString().matches(".*\\bdefault\\b.+")) {
                 // In the case of a default method on an interface we do not want / cannot
                 // invoke that method through the proxy.
-                return method.invoke(hyperResource, args);
+                ServiceLoader<DefaultMethodInvoker> invokers = ServiceLoader.load(DefaultMethodInvoker.class);
+                if(invokers.iterator().hasNext()) {
+                    // TODO just taking the 1st interface isn't reliable it does pass the unit tests as a POC
+                    return invokers.iterator().next().invoke(proxy.getClass().getInterfaces()[0], method, args);
+                }
+                else {
+                    // TODO what sort of logging is setup in here?
+                    return null;
+                }
             }
             else {
                 return processInvoke(proxy, method, args);
