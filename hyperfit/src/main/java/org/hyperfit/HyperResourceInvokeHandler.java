@@ -25,13 +25,18 @@ import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import static org.hyperfit.methodinfo.MethodInfo.MethodType;
@@ -42,6 +47,8 @@ import static org.hyperfit.methodinfo.MethodInfo.MethodType;
  * for methods annotated with @Link annotation</p>
  */
 public class HyperResourceInvokeHandler implements InvocationHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HyperResourceInvokeHandler.class);
 
     private static final String MESSAGE_EXCEPTION_SOLVING_MULTI_LINK = "Cannot resolve a multi link resource";
 
@@ -109,14 +116,28 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
             if(method.toString().matches(".*\\bdefault\\b.+")) {
                 // In the case of a default method on an interface we do not want / cannot
                 // invoke that method through the proxy.
-                ServiceLoader<DefaultMethodInvoker> invokers = ServiceLoader.load(DefaultMethodInvoker.class);
-                if(invokers.iterator().hasNext()) {
-                    // TODO just taking the 1st interface isn't reliable it does pass the unit tests as a POC
-                    return invokers.iterator().next().invoke(proxy.getClass().getInterfaces()[0], method, args);
+                ServiceLoader<DefaultMethodInvoker> services = ServiceLoader.load(DefaultMethodInvoker.class);
+                List<DefaultMethodInvoker> invokers = new ArrayList<DefaultMethodInvoker>();
+
+                for(DefaultMethodInvoker dmi : services) {
+                    invokers.add(dmi);
+                }
+                if(invokers.isEmpty()) {
+                    throw new HyperfitException(
+                            "Encountered default method invocation {} but there are no {} implementations registered!",
+                            method,
+                            DefaultMethodInvoker.class
+                    );
+                }
+                else if(invokers.size() > 1) {
+                    throw new HyperfitException(
+                            "Multiple implementations of {} registered! Implementation list was {}!",
+                            DefaultMethodInvoker.class,
+                            invokers
+                    );
                 }
                 else {
-                    // TODO what sort of logging is setup in here?
-                    return null;
+                    return invokers.get(0).invoke(proxy.getClass().getInterfaces(), method, args);
                 }
             }
             else {

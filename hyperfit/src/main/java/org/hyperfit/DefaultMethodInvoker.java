@@ -1,5 +1,7 @@
 package org.hyperfit;
 
+import lombok.NonNull;
+
 import java.lang.reflect.Method;
 
 /**
@@ -7,6 +9,6 @@ import java.lang.reflect.Method;
  */
 public interface DefaultMethodInvoker<T> {
 
-    Object invoke(Class<T> targetType, Method method, Object[] args);
+    Object invoke(@NonNull final Class<T>[] targetType, @NonNull final Method method, final Object[] args);
 
 }
