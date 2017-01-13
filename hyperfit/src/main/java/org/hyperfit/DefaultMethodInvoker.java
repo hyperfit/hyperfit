@@ -1,7 +1,5 @@
 package org.hyperfit;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.lang.reflect.Method;
 
 /**
