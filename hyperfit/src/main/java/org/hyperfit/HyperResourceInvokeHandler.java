@@ -25,8 +25,6 @@ import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -35,7 +33,6 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -47,8 +44,6 @@ import static org.hyperfit.methodinfo.MethodInfo.MethodType;
  * for methods annotated with @Link annotation</p>
  */
 public class HyperResourceInvokeHandler implements InvocationHandler {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HyperResourceInvokeHandler.class);
 
     private static final String MESSAGE_EXCEPTION_SOLVING_MULTI_LINK = "Cannot resolve a multi link resource";
 
