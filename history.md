@@ -1,4 +1,7 @@
-## 1.12.0 - TBD
+## 1.13.1 - TBD
+* 
+
+## 1.12.0 - 2017-01-12
 * When running hyperfit in Java 8 default methods on interfaces are now supported!
 
 ## 1.11.1 - 2016-12-20
