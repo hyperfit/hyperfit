@@ -4,12 +4,18 @@ import org.hyperfit.exception.HyperfitException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by btilford on 1/13/17.
@@ -63,4 +69,16 @@ public class Jdk8DefaultMethodInvokerTest {
     }
 
 
+    @Test
+    public void choosesTheCorrectInterface() throws NoSuchMethodException {
+
+        Object val = new Jdk8DefaultMethodInvoker<InterfaceWithDefaultMethod>().invoke(
+                new Class[]{Iterable.class, InterfaceWithDefaultMethod.class},
+                InterfaceWithDefaultMethod.class.getMethod("someString"),
+                null
+        );
+        assertThat(val, notNullValue());
+        assertThat(val, equalTo("imastring"));
+
+    }
 }
