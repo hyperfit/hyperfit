@@ -16,6 +16,7 @@
     <module>hyperfit-okhttp2-client</module>
     <module>hyperfit-hal</module>
     <module>hyperfit-html5</module>
+    <module>hyperfit-jdk8-tests</module>
   </modules>
 
   <!-- BBCOM DEPENDENCY HANDLING -->
