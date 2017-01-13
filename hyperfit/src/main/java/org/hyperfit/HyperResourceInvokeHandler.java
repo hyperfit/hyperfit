@@ -131,7 +131,11 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                             invokers
                     );
                 }
-                return invokers.get(0).invoke(proxy.getClass().getInterfaces(), method, args);
+                return invokers.get(0).invoke(
+                        new DefaultMethodInvoker.DefaultMethodContext(
+                                proxy.getClass().getInterfaces(), this, proxy, method
+                        ), args
+                );
             }
             else {
                 return processInvoke(proxy, method, args);

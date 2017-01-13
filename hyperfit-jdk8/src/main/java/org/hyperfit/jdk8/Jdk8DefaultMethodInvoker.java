@@ -1,7 +1,9 @@
 package org.hyperfit.jdk8;
 
 import org.hyperfit.DefaultMethodInvoker;
+import org.hyperfit.HyperResourceInvokeHandler;
 import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.resource.HyperResource;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,53 +27,58 @@ public class Jdk8DefaultMethodInvoker<T> implements DefaultMethodInvoker<T> {
 
 
     @Override
-    public Object invoke(final Class<T>[] targetTypes, final Method method, final Object[] args) {
-
+    public Object invoke(
+            final DefaultMethodContext<T> context,
+            final Object[] args) {
 
         try {
-            Optional<Class<T>> targetType = Stream.of(targetTypes).filter(tClass -> {
+            Optional<Class<T>> targetType = Stream.of(context.getInterfaces()).filter(tClass -> {
                 try {
-                    tClass.getMethod(method.getName(), method.getParameterTypes());
+                    tClass.getMethod(context.getMethod().getName(), context.getMethod().getParameterTypes());
                     return true;
                 } catch (NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
+                    LOG.warn(e.getMessage(), e);
                     return false;
                 }
             }).findFirst();
 
-            if(targetType.isPresent()) {
+            if (targetType.isPresent()) {
                 T instance = targetType.get().cast(
                         Proxy.newProxyInstance(
                                 Thread.currentThread().getContextClassLoader(),
                                 new Class[]{targetType.get()},
-                                (proxy1, method1, args1) -> {
-                                    // We need a lookup that has private access to instantiate the interface
-                                    Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(
-                                            Class.class,
-                                            int.class
-                                    );
-                                    constructor.setAccessible(true);
+                                (proxy, method, params) -> {
+                                    if(method.isDefault()) {
+                                        // We need a lookup that has private access to instantiate the interface
+                                        Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(
+                                                Class.class,
+                                                int.class
+                                        );
+                                        constructor.setAccessible(true);
 
-                                    // 1. Instantiate the MethodHandle.Lookup that has private access
-                                    // 2. Builder method handle that doesn't check for overrides and will be able
-                                    // to call the default method on the interface. `unreflectSpecial()`
-                                    // 3. Bind to the Proxy created above/passed in
-                                    // 4. Invoke the method handle with the args.
-                                    return constructor.newInstance(targetType.get(), MethodHandles.Lookup.PRIVATE)
-                                            .unreflectSpecial(method1, targetType.get())
-                                            .bindTo(proxy1)
-                                            .invokeWithArguments(args1);
+                                        // 1. Instantiate the MethodHandle.Lookup that has private access
+                                        // 2. Builder method handle that doesn't check for overrides and will be able
+                                        // to call the default method on the interface. `unreflectSpecial()`
+                                        // 3. Bind to the Proxy created above/passed in
+                                        // 4. Invoke the method handle with the args.
+                                        return constructor.newInstance(targetType.get(), MethodHandles.Lookup.PRIVATE)
+                                                .unreflectSpecial(method, targetType.get())
+                                                .bindTo(proxy)
+                                                .invokeWithArguments(params);
+                                    }
+                                    else {
+                                        return context.getHyperHandler().invoke(context.getHyperProxy(), method, args);
+                                    }
                                 }
                         )
                 );
                 // Invoke the custom proxy able to invoke default methods.
-                return method.invoke(instance, args);
-            }
-            else {
+                return context.getMethod().invoke(instance, args);
+            } else {
                 throw new HyperfitException(
                         "No interface in {} has default method {}!",
-                        targetTypes,
-                        method.toString()
+                        context.getInterfaces(),
+                        context.getMethod().toString()
                 );
             }
 
@@ -84,4 +91,6 @@ public class Jdk8DefaultMethodInvoker<T> implements DefaultMethodInvoker<T> {
         }
 
     }
+
+
 }
