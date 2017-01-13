@@ -124,16 +124,14 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                             DefaultMethodInvoker.class
                     );
                 }
-                else if(invokers.size() > 1) {
+                if(invokers.size() > 1) {
                     throw new HyperfitException(
                             "Multiple implementations of {} registered! Implementation list was {}!",
                             DefaultMethodInvoker.class,
                             invokers
                     );
                 }
-                else {
-                    return invokers.get(0).invoke(proxy.getClass().getInterfaces(), method, args);
-                }
+                return invokers.get(0).invoke(proxy.getClass().getInterfaces(), method, args);
             }
             else {
                 return processInvoke(proxy, method, args);
