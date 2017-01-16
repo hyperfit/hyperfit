@@ -1,9 +1,7 @@
 package org.hyperfit.jdk8;
 
 import org.hyperfit.DefaultMethodInvoker;
-import org.hyperfit.HyperResourceInvokeHandler;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.resource.HyperResource;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**

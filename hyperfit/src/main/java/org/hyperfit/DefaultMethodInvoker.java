@@ -1,8 +1,12 @@
 package org.hyperfit;
 
 import lombok.NonNull;
+import org.hyperfit.exception.HyperfitException;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * Created by btilford on 1/13/17.
@@ -14,17 +18,16 @@ public interface DefaultMethodInvoker<T> {
             final Object[] args);
 
     class DefaultMethodContext<T> {
-        private final Class<T>[] interfaces;
+        private final Class<?>[] interfaces;
         private final HyperResourceInvokeHandler hyperHandler;
         private final T hyperProxy;
         private final Method method;
 
         public DefaultMethodContext(
-                @NonNull Class<T>[] interfaces,
                 HyperResourceInvokeHandler hyperHandler,
                 T hyperProxy,
                 @NonNull Method method) {
-            this.interfaces = interfaces;
+            this.interfaces = hyperProxy.getClass().getInterfaces();
             this.hyperHandler = hyperHandler;
             this.hyperProxy = hyperProxy;
             this.method = method;
@@ -34,7 +37,7 @@ public interface DefaultMethodInvoker<T> {
             return method;
         }
 
-        public Class<T>[] getInterfaces() {
+        public Class<?>[] getInterfaces() {
             return interfaces;
         }
 

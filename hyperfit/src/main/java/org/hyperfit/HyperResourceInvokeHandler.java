@@ -133,7 +133,9 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 }
                 return invokers.get(0).invoke(
                         new DefaultMethodInvoker.DefaultMethodContext(
-                                proxy.getClass().getInterfaces(), this, proxy, method
+                                this,
+                                proxy,
+                                method
                         ), args
                 );
             }
