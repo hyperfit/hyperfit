@@ -27,10 +27,15 @@ public class Jdk8DefaultMethodInvoker<T> implements DefaultMethodInvoker<T> {
             final Object[] args) {
 
         try {
-            Optional<Class<T>> targetType = Stream.of(context.getInterfaces()).filter(tClass -> {
+            Optional<Class<?>> targetType = Stream.of(context.getInterfaces()).filter(tClass -> {
                 try {
-                    tClass.getMethod(context.getMethod().getName(), context.getMethod().getParameterTypes());
-                    return true;
+                    if(tClass.isAssignableFrom(context.getHyperProxy().getClass())) {
+                        tClass.getMethod(context.getMethod().getName(), context.getMethod().getParameterTypes());
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 } catch (NoSuchMethodException e) {
                     LOG.warn(e.getMessage(), e);
                     return false;
@@ -38,7 +43,7 @@ public class Jdk8DefaultMethodInvoker<T> implements DefaultMethodInvoker<T> {
             }).findFirst();
 
             if (targetType.isPresent()) {
-                T instance = targetType.get().cast(
+                T instance = ((Class<T>)targetType.get()).cast(
                         Proxy.newProxyInstance(
                                 Thread.currentThread().getContextClassLoader(),
                                 new Class[]{targetType.get()},
