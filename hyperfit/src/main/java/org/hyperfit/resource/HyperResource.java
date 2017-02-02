@@ -29,7 +29,7 @@ public interface HyperResource {
      * @param relationship the link relationship name used to limit the results
      * @return a collection of all links present within this resource that have the given relationship
      */
-    HyperLink[] getLinks(String relationship);
+    HyperLink[] getLinks(String relationship, boolean nullWhenMissing);
 
     /**
      *
@@ -39,12 +39,12 @@ public interface HyperResource {
      * @param name the link name used to limit the results
      * @return a collection of all links present within this resource that have the given relationship and name
      */
-    HyperLink[] getLinks(String relationship, String name);
+    HyperLink[] getLinks(String relationship, String name, boolean nullWhenMissing);
 
 
-    HyperLink getLink(String relationship);
+    HyperLink getLink(String relationship, boolean nullWhenMissing);
 
-    HyperLink getLink(String relationship, String name);
+    HyperLink getLink(String relationship, String name, boolean nullWhenMissing);
 
 
     /**

@@ -82,10 +82,10 @@ public class HyperfitProcessorBuilderTest {
         //Need to verify the proxied result is wrapping the mocked underlying resource
         String fakeRel = uniqueString();
         HyperLink fakeLink = makeLink(fakeRel);
-        when(mockHyperResource.getLink(fakeRel))
+        when(mockHyperResource.getLink(fakeRel, false))
             .thenReturn(fakeLink);
 
-        assertEquals(fakeLink, result.getLink(fakeRel));
+        assertEquals(fakeLink, result.getLink(fakeRel, false));
 
 
     }
