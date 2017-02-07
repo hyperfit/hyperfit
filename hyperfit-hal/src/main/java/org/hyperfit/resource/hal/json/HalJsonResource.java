@@ -31,7 +31,7 @@ public class HalJsonResource extends BaseHyperResource {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
+
     private static final ObjectReader OBJECT_READER = OBJECT_MAPPER.reader(JsonNode.class);
     private final JsonNode jsonResource;
     private final String baseURI;
@@ -99,13 +99,13 @@ public class HalJsonResource extends BaseHyperResource {
         List<HyperLink> links = new ArrayList<HyperLink>();
 
         while(rels.hasNext()){
-            Collections.addAll(links, getLinks(rels.next()));
+            Collections.addAll(links, getLinks(rels.next(), false));
         }
 
         return links.toArray(new HyperLink[links.size()]);
     }
 
-    public HyperLink[] getLinks(String relationship) {
+    public HyperLink[] getLinks(String relationship, boolean nullWhenMissing) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }

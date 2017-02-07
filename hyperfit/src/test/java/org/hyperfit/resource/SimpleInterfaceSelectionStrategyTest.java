@@ -21,7 +21,7 @@ public class SimpleInterfaceSelectionStrategyTest {
                 return new HyperLink[0];
             }
 
-            public HyperLink[] getLinks(String relationship) {
+            public HyperLink[] getLinks(String relationship, boolean nullWhenMissing) {
                 return new HyperLink[0];
             }
 
