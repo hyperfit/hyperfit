@@ -11,7 +11,7 @@
   </parent>
 
   <packaging>jar</packaging>
-  <name>Hyperfit JDK8 Extensions</name>
+  <name>Hyperfit Java 8 Extensions</name>
 
   <dependencies>
 
