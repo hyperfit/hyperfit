@@ -65,6 +65,7 @@ public class MethodInfo {
     private final Annotation[][] parameterAnnotations;
     private final org.hyperfit.net.Method requestMethod;
 
+    private final boolean defaultMethod;
 
     /**
      * Builds it from a method
@@ -114,6 +115,8 @@ public class MethodInfo {
         org.hyperfit.annotation.Method methodAnnotation = method.getAnnotation(org.hyperfit.annotation.Method.class);
         this.requestMethod = methodAnnotation == null ? org.hyperfit.net.Method.GET : methodAnnotation.value();
 
+        this.defaultMethod = method.toString().matches(".*\\bdefault\\b.+");
+
     }
 
     public MethodType getMethodType() {
@@ -160,5 +163,12 @@ public class MethodInfo {
 
     public boolean isNullWhenMissing() {
         return nullWhenMissingAnnotation != null;
+    }
+
+    /**
+     * @return true when the method is a java8 interface default method, false otherwise
+     */
+    public boolean isDefaultMethod(){
+        return defaultMethod;
     }
 }

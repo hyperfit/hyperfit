@@ -1,28 +1,31 @@
-package org.hyperfit;
+package org.hyperfit.handlers;
 
 import lombok.NonNull;
+import org.hyperfit.HyperResourceInvokeHandler;
 
 import java.lang.reflect.Method;
 
 /**
- * Created by btilford on 1/13/17.
+ * Exposes a method for invoking java8 default methods in a java6 safe way
  */
-public interface DefaultMethodInvoker<T> {
+public interface Java8DefaultMethodHandler {
 
     Object invoke(
-            @NonNull final DefaultMethodContext<T> context,
-            final Object[] args);
+        @NonNull final DefaultMethodContext context,
+        final Object[] args
+    );
 
-    class DefaultMethodContext<T> {
+    class DefaultMethodContext {
         private final Class<?>[] interfaces;
         private final HyperResourceInvokeHandler hyperHandler;
-        private final T hyperProxy;
+        private final Object hyperProxy;
         private final Method method;
 
         public DefaultMethodContext(
-                HyperResourceInvokeHandler hyperHandler,
-                T hyperProxy,
-                @NonNull Method method) {
+            HyperResourceInvokeHandler hyperHandler,
+            Object hyperProxy,
+            @NonNull Method method
+        ) {
             this.interfaces = hyperProxy.getClass().getInterfaces();
             this.hyperHandler = hyperHandler;
             this.hyperProxy = hyperProxy;
@@ -41,7 +44,7 @@ public interface DefaultMethodInvoker<T> {
             return hyperHandler;
         }
 
-        public T getHyperProxy() {
+        public Object getHyperProxy() {
             return hyperProxy;
         }
     }

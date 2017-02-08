@@ -1,12 +1,15 @@
 package org.hyperfit;
 
 
+import lombok.NonNull;
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
+import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.exception.NoClientRegisteredForSchemeException;
+import org.hyperfit.handlers.Java8DefaultMethodHandler;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
@@ -44,6 +47,7 @@ public class HyperfitProcessor {
     private final ErrorHandler errorHandler;
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
     private final Map<String, HyperClient> schemeClientMap;
+    private final Java8DefaultMethodHandler java8DefaultMethodHandler;
 
     private HyperfitProcessor(Builder builder) {
 
@@ -52,6 +56,7 @@ public class HyperfitProcessor {
         resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
         requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
+        java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
 
         if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
             throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT);
@@ -209,7 +214,13 @@ public class HyperfitProcessor {
         }
 
 
-        InvocationHandler handler = new HyperResourceInvokeHandler(hyperResource, this, this.resourceMethodInfoCache.get(classToReturn), typeInfo);
+        InvocationHandler handler = new HyperResourceInvokeHandler(
+            hyperResource,
+            this,
+            this.resourceMethodInfoCache.get(classToReturn),
+            typeInfo,
+            java8DefaultMethodHandler
+        );
 
 
         Object proxy = Proxy.newProxyInstance(
@@ -297,6 +308,11 @@ public class HyperfitProcessor {
         private RequestInterceptors requestInterceptors = new RequestInterceptors();
         private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
         private Map<String, HyperClient> schemeClientMap = new HashMap<String, HyperClient>();
+        private Java8DefaultMethodHandler java8DefaultMethodHandler = new Java8DefaultMethodHandler() {
+            public Object invoke(@NonNull DefaultMethodContext context, Object[] args) {
+                throw new HyperfitException("No Java8DefaultMethodHandler implementation specified.  Are you missing a call to the HyperfitProcessor builder?");
+            }
+        };
 
         public Builder addContentTypeHandler(ContentTypeHandler handler) {
             this.contentRegistry.add(handler);
@@ -398,7 +414,15 @@ public class HyperfitProcessor {
             return this;
         }
 
+        public Builder defaultMethodInvoker(Java8DefaultMethodHandler methodInvoker) {
+            if( methodInvoker == null){
+                throw new IllegalArgumentException("methodInvoker can not be null");
+            }
 
+            this.java8DefaultMethodHandler = methodInvoker;
+
+            return this;
+        }
 
         public HyperfitProcessor build() {
             return new HyperfitProcessor(this);

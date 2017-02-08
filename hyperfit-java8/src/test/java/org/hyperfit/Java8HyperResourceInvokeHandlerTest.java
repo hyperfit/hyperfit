@@ -1,5 +1,6 @@
 package org.hyperfit;
 
+import org.hyperfit.java8.Java8DefaultMethodHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.resource.HyperResource;
@@ -17,22 +18,19 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.lang.reflect.Proxy;
 import java.util.LinkedHashSet;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-/**
- * Created by btilford on 1/12/17.
- */
+
 @RunWith(ConsoleSpammingMockitoJUnitRunner.class)
-public class HyperResourceInvokeHandlerJdk8Test  {
+public class Java8HyperResourceInvokeHandlerTest {
 
     @Mock
-    protected Jdk8Resource mockHyperResource;
+    protected Java8Resource mockHyperResource;
 
 
-    protected Jdk8Resource concretehyperResource;
+    protected Java8Resource concretehyperResource;
 
 
     @Mock
@@ -42,11 +40,17 @@ public class HyperResourceInvokeHandlerJdk8Test  {
 
     <T> T getHyperResourceProxy(Class<T> clazz, HyperResource resource) {
         return clazz.cast(
-                Proxy.newProxyInstance(
-                        clazz.getClassLoader(),
-                        new Class[]{clazz},
-                        new HyperResourceInvokeHandler(resource, mockHyperfitProcessor, resourceMethodInfoCache.get(clazz), null)
+            Proxy.newProxyInstance(
+                clazz.getClassLoader(),
+                new Class[]{clazz},
+                new HyperResourceInvokeHandler(
+                    resource,
+                    mockHyperfitProcessor,
+                    resourceMethodInfoCache.get(clazz),
+                    null,
+                    new Java8DefaultMethodHandler()
                 )
+            )
         );
     }
 
@@ -58,7 +62,7 @@ public class HyperResourceInvokeHandlerJdk8Test  {
     @Before
     public void before() {
         // Mockito cannot call through to default methods without a concrete implementation.
-        concretehyperResource = new Jdk8Resource() {
+        concretehyperResource = new Java8Resource() {
             @Override
             public Integer getSomeData() {
                 throw new NotImplementedException();
@@ -159,7 +163,7 @@ public class HyperResourceInvokeHandlerJdk8Test  {
 
     @Test
     public void defaultMethodsInvoked() {
-        Jdk8Resource resource = getHyperResourceProxy(Jdk8Resource.class, concretehyperResource);
+        Java8Resource resource = getHyperResourceProxy(Java8Resource.class, concretehyperResource);
 
         assertThat(resource.imADefaultMethod(), equalTo("ok sure"));
     }
@@ -168,7 +172,7 @@ public class HyperResourceInvokeHandlerJdk8Test  {
     public void getPathAsStillWorks() {
         when(mockHyperResource.getPathAs(Integer.class, false, "someData"))
                 .thenReturn(100);
-        Jdk8Resource resource = getHyperResourceProxy(Jdk8Resource.class, mockHyperResource);
+        Java8Resource resource = getHyperResourceProxy(Java8Resource.class, mockHyperResource);
         Integer result = resource.getSomeData();
         verify(mockHyperResource).getPathAs(Integer.class, false, "someData");
         assertThat(result, equalTo(100));

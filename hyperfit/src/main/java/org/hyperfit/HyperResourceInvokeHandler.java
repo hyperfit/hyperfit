@@ -12,6 +12,7 @@ import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.handlers.Java8DefaultMethodHandler;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
@@ -31,10 +32,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.ServiceLoader;
 
 import static org.hyperfit.methodinfo.MethodInfo.MethodType;
 
@@ -51,15 +49,25 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     private final HyperfitProcessor requestProcessor;
 
     private final MethodInfoCache methodInfoCache;
-    private TypeInfo typeInfo;
+    private final TypeInfo typeInfo;
 
-    public HyperResourceInvokeHandler(HyperResource hyperResource, HyperfitProcessor requestProcessor, MethodInfoCache methodInfoCache, TypeInfo typeInfo) {
+    private final Java8DefaultMethodHandler java8DefaultMethodHandler;
+
+    public HyperResourceInvokeHandler(
+        HyperResource hyperResource,
+        HyperfitProcessor requestProcessor,
+        MethodInfoCache methodInfoCache,
+        TypeInfo typeInfo,
+        Java8DefaultMethodHandler java8DefaultMethodHandler
+    ) {
         this.hyperResource = hyperResource;
         this.requestProcessor = requestProcessor;
 
         this.typeInfo = (typeInfo != null) ? typeInfo : new TypeInfo();
 
         this.methodInfoCache = methodInfoCache;
+
+        this.java8DefaultMethodHandler = java8DefaultMethodHandler;
     }
 
     protected HyperLink extendHyperLink(HyperLink hyperLink) {
@@ -108,40 +116,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      */
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         try {
-            if(method.toString().matches(".*\\bdefault\\b.+")) {
-                // In the case of a default method on an interface we do not want / cannot
-                // invoke that method through the proxy.
-                ServiceLoader<DefaultMethodInvoker> services = ServiceLoader.load(DefaultMethodInvoker.class);
-                List<DefaultMethodInvoker> invokers = new ArrayList<DefaultMethodInvoker>();
-
-                for(DefaultMethodInvoker dmi : services) {
-                    invokers.add(dmi);
-                }
-                if(invokers.isEmpty()) {
-                    throw new HyperfitException(
-                            "Encountered default method invocation {} but there are no {} implementations registered!",
-                            method,
-                            DefaultMethodInvoker.class
-                    );
-                }
-                if(invokers.size() > 1) {
-                    throw new HyperfitException(
-                            "Multiple implementations of {} registered! Implementation list was {}!",
-                            DefaultMethodInvoker.class,
-                            invokers
-                    );
-                }
-                return invokers.get(0).invoke(
-                        new DefaultMethodInvoker.DefaultMethodContext(
-                                this,
-                                proxy,
-                                method
-                        ), args
-                );
-            }
-            else {
-                return processInvoke(proxy, method, args);
-            }
+            return processInvoke(proxy, method, args);
         } catch (HyperfitException hce) {
             throw hce; //don't wrap up hyperfit exceptions
         } catch (Exception e) {
@@ -184,6 +159,20 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     protected Object processInvoke(Object proxy, Method method, Object[] args) throws Exception {
 
         MethodInfo methodInfo = this.methodInfoCache.get(method);
+
+        if(methodInfo.isDefaultMethod()) {
+            // In the case of a default method on an interface we need to do this a bit differently.
+
+            return java8DefaultMethodHandler.invoke(
+                new Java8DefaultMethodHandler.DefaultMethodContext(
+                    this,
+                    proxy,
+                    method
+                ),
+                args
+            );
+        }
+
 
         MethodType methodType = methodInfo.getMethodType();
 
