@@ -20,12 +20,12 @@ public abstract class BaseHyperResource implements HyperResource {
      * @param relationship
      * @return
      */
-    public HyperLink getLink(String relationship, boolean nullWhenMissing) {
+    public HyperLink getLink(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
-        HyperLink[] links = this.getLinks(relationship, nullWhenMissing);
+        HyperLink[] links = this.getLinks(relationship);
         if (links.length == 0) {
             throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
         }
@@ -38,12 +38,12 @@ public abstract class BaseHyperResource implements HyperResource {
     }
 
 
-    public HyperLink getLink(String relationship, String name, boolean nullWhenMissing) {
+    public HyperLink getLink(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
-        HyperLink[] links = this.getLinks(relationship, name, nullWhenMissing);
+        HyperLink[] links = this.getLinks(relationship, name);
         if (links.length == 0) {
             throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, name);
         }
@@ -56,12 +56,12 @@ public abstract class BaseHyperResource implements HyperResource {
     }
 
 
-    public HyperLink[] getLinks(String relationship, String name, boolean nullWhenMissing) {
+    public HyperLink[] getLinks(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
 
-        HyperLink[] links = this.getLinks(relationship, nullWhenMissing);
+        HyperLink[] links = this.getLinks(relationship);
 
         if (links.length == 0){
             return new HyperLink[0];
@@ -84,7 +84,7 @@ public abstract class BaseHyperResource implements HyperResource {
     }
 
     public LinkedHashSet<String> getProfiles(){
-        HyperLink[] profileLinks = this.getLinks("profile", false);
+        HyperLink[] profileLinks = this.getLinks("profile");
         LinkedHashSet<String> profiles = new LinkedHashSet<String>(profileLinks.length);
         for(HyperLink l : profileLinks){
             profiles.add(l.getHref());
@@ -95,10 +95,10 @@ public abstract class BaseHyperResource implements HyperResource {
     }
 
     public boolean hasLink(String relationship, String name) {
-        return this.getLinks(relationship, name, false).length > 0;
+        return this.getLinks(relationship, name).length > 0;
     }
 
     public boolean hasLink(String relationship) {
-        return this.getLinks(relationship, false).length > 0;
+        return this.getLinks(relationship).length > 0;
     }
 }

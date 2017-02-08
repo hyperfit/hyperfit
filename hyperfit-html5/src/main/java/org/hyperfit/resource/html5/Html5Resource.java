@@ -67,7 +67,7 @@ public class Html5Resource extends BaseHyperResource {
 
     private static final String anchorByRelSelector = "a[rel=%s]";
     private static final String linkByRelSelector = "link[rel=%s]";
-    public HyperLink[] getLinks(String relationship, boolean nullWhenMissing) {
+    public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }
@@ -121,7 +121,7 @@ public class Html5Resource extends BaseHyperResource {
 
     public boolean isMultiLink(String relationship) {
         //TODO: decide about this...this is aroudn so we know not to try to fetch multi links in HAL..but does same apply to HTML?
-        return getLinks(relationship, false).length > 1;
+        return getLinks(relationship).length > 1;
     }
 
 

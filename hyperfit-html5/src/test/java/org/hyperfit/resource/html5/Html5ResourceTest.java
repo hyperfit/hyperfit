@@ -112,7 +112,7 @@ public class Html5ResourceTest {
         body.appendChild(makeAnchor(rel, href, title));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink hyperLink = resource.getLink(rel, false);
+        HyperLink hyperLink = resource.getLink(rel);
         assertEquals(href, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
         assertEquals(null, hyperLink.getName());
@@ -128,7 +128,7 @@ public class Html5ResourceTest {
         head.appendChild(makeLink(rel, href, title));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink hyperLink = resource.getLink(rel, false);
+        HyperLink hyperLink = resource.getLink(rel);
         assertEquals(href, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
         assertEquals(null, hyperLink.getName());
@@ -144,7 +144,7 @@ public class Html5ResourceTest {
         body.appendChild(makeAnchor(rel, href, title));
 
         Html5Resource resource = new Html5Resource(doc);
-        resource.getLink(rel, false);
+        resource.getLink(rel);
     }
 
 
@@ -158,7 +158,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href, title, name));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink hyperLink = resource.getLink(rel, name, false);
+        HyperLink hyperLink = resource.getLink(rel, name);
         assertEquals(href, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
         assertEquals(name, hyperLink.getName());
@@ -180,7 +180,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href2, title2, name2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink hyperLink = resource.getLink(rel, name2, false);
+        HyperLink hyperLink = resource.getLink(rel, name2);
         assertEquals(href2, hyperLink.getHref());
         assertEquals(title2, hyperLink.getTitle());
         assertEquals(name2, hyperLink.getName());
@@ -200,7 +200,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href2, title2, name2));
 
         Html5Resource resource = new Html5Resource(doc);
-        resource.getLink(rel, UUID.randomUUID().toString(), false);
+        resource.getLink(rel, UUID.randomUUID().toString());
     }
 
 
@@ -286,7 +286,7 @@ public class Html5ResourceTest {
         body.appendChild(makeAnchor(rel, href, title));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] hyperLinks = resource.getLinks(rel, false);
+        HyperLink[] hyperLinks = resource.getLinks(rel);
         assertEquals(1, hyperLinks.length);
         assertEquals(href, hyperLinks[0].getHref());
         assertEquals(title, hyperLinks[0].getTitle());
@@ -303,7 +303,7 @@ public class Html5ResourceTest {
         head.appendChild(makeLink(rel, href, title));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] hyperLinks = resource.getLinks(rel, false);
+        HyperLink[] hyperLinks = resource.getLinks(rel);
         assertEquals(1, hyperLinks.length);
         assertEquals(href, hyperLinks[0].getHref());
         assertEquals(title, hyperLinks[0].getTitle());
@@ -325,7 +325,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href2, title2, name2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] links = resource.getLinks(rel, false);
+        HyperLink[] links = resource.getLinks(rel);
         assertEquals(2, links.length);
         assertEquals(href1, links[0].getHref());
         assertEquals(title1, links[0].getTitle());
@@ -348,7 +348,7 @@ public class Html5ResourceTest {
         head.appendChild(makeLink(rel, href2, title2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] links = resource.getLinks(rel, false);
+        HyperLink[] links = resource.getLinks(rel);
         assertEquals(2, links.length);
         assertEquals(href1, links[0].getHref());
         assertEquals(title1, links[0].getTitle());
@@ -373,7 +373,7 @@ public class Html5ResourceTest {
         head.appendChild(makeLink(rel, href2, title2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] links = resource.getLinks(rel, false);
+        HyperLink[] links = resource.getLinks(rel);
         assertEquals(2, links.length);
         //TODO: probably shoudl change this to arrayContainingInAnyOrder
         assertEquals(href1, links[0].getHref());
@@ -398,7 +398,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href2, title2, name2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] links = resource.getLinks(rel, name2, false);
+        HyperLink[] links = resource.getLinks(rel, name2);
         assertEquals(1, links.length);
         assertEquals(href2, links[0].getHref());
         assertEquals(title2, links[0].getTitle());
@@ -418,7 +418,7 @@ public class Html5ResourceTest {
         head.appendChild(makeAnchor(rel, href2, title2, name2));
 
         Html5Resource resource = new Html5Resource(doc);
-        HyperLink[] links = resource.getLinks(rel, name2, false);
+        HyperLink[] links = resource.getLinks(rel, name2);
         assertEquals(1, links.length);
         assertEquals(href2, links[0].getHref());
         assertEquals(title2, links[0].getTitle());
@@ -432,18 +432,18 @@ public class Html5ResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkMissingNode() {
-        new Html5Resource(doc).getLink("bb:promotions", false);
+        new Html5Resource(doc).getLink("bb:promotions");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetLinkNullPath() {
-        new Html5Resource(doc).getLink(null, false);
+        new Html5Resource(doc).getLink(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetLinkEmptyRelationship() {
 
-        new Html5Resource(doc).getLink("", false);
+        new Html5Resource(doc).getLink("");
     }
 
 

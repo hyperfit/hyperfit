@@ -9,7 +9,6 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.net.URI;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -99,13 +98,13 @@ public class HalJsonResource extends BaseHyperResource {
         List<HyperLink> links = new ArrayList<HyperLink>();
 
         while(rels.hasNext()){
-            Collections.addAll(links, getLinks(rels.next(), false));
+            Collections.addAll(links, getLinks(rels.next()));
         }
 
         return links.toArray(new HyperLink[links.size()]);
     }
 
-    public HyperLink[] getLinks(String relationship, boolean nullWhenMissing) {
+    public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
             throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
         }

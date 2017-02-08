@@ -20,11 +20,4 @@ public @interface Data {
      */
     String[] value();
 
-    /**
-     * @deprecated Prefer using {@link NullWhenMissing}
-     * default value is false.  This may change in the next major version.
-     * @return when true, if the path results in no destination a null will be returned, otherwise an exception will be thrown
-     */
-    @Deprecated
-    boolean nullWhenMissing() default false;
 }

@@ -189,12 +189,20 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
             //single hyper link
             if (HyperLink.class.isAssignableFrom(methodInfo.getReturnType())) {
-                return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship, methodInfo.isNullWhenMissing());
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
+                return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship);
             }
 
             //hyper links
             if (HyperLink[].class.isAssignableFrom(methodInfo.getReturnType())) {
-                return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship, methodInfo.isNullWhenMissing());
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
+                return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship);
             }
 
             //If we can get it locally...do it!
@@ -214,19 +222,18 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                throw new UnsupportedOperationException(MESSAGE_EXCEPTION_SOLVING_MULTI_LINK);
             }
 
-            //At this point we know it's a single link that's not embedded
-            HyperLink hyperLink = hyperResource.getLink(linkRelationship, methodInfo.isNullWhenMissing());
-            if(null == hyperLink && methodInfo.isNullWhenMissing()) {
+            if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
                 return null;
             }
-            else {
-                RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
-                // Set method type (default=GET)
-                requestBuilder.setMethod(methodInfo.getRequestMethod());
-                assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
-                //If follow supported parameters..we could just pass those and call hyperlink.follow(params)..if we could figure out the TypeRef thing...
-                return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
-            }
+
+            //At this point we know it's a single link that's not embedded and is expected to be present
+            HyperLink hyperLink = hyperResource.getLink(linkRelationship);
+            RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
+            // Set method type (default=GET)
+            requestBuilder.setMethod(methodInfo.getRequestMethod());
+            assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
+            //If follow supported parameters..we could just pass those and call hyperlink.follow(params)..if we could figure out the TypeRef thing...
+            return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
         }
 
 
@@ -250,31 +257,39 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
             //single hyper link
             if (HyperLink.class.isAssignableFrom(methodInfo.getReturnType())) {
-                return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship, linkName, methodInfo.isNullWhenMissing());
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
+                return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship, linkName);
             }
 
             //hyper links
             if (HyperLink[].class.isAssignableFrom(methodInfo.getReturnType())) {
-                return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship, linkName, methodInfo.isNullWhenMissing());
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
+                return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship, linkName);
             }
 
             //TODO: we have no concept of resolving a named link locally.  We would need a canResolveLocal(rel, name) and resolveLocal(rel, name)
             //HAL has no way to identify a named embedded link so for now we don't even bother checking for that..
 
 
-            //At this point we know it's a single link that's not embedded
-            HyperLink hyperLink = hyperResource.getLink(linkRelationship, linkName, methodInfo.isNullWhenMissing());
-            if(null == hyperLink && methodInfo.isNullWhenMissing()) {
+            if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship, linkName)){
                 return null;
             }
-            else {
-                RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
-                // Set method type (default=GET)
-                requestBuilder.setMethod(methodInfo.getRequestMethod());
-                assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
-                //If follow supported parameters..we could just pass those and call hyperlink.follow(params)..if we could figure out the TypeRef thing...
-                return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
-            }
+
+            //At this point we know it's a single link that's not embedded  and is expected to be present
+            HyperLink hyperLink = hyperResource.getLink(linkRelationship, linkName);
+            RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
+            // Set method type (default=GET)
+            requestBuilder.setMethod(methodInfo.getRequestMethod());
+            assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
+            //If follow supported parameters..we could just pass those and call hyperlink.follow(params)..if we could figure out the TypeRef thing...
+            return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
+
         }
 
 
@@ -286,7 +301,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
             if (HyperLink.class.isAssignableFrom(methodInfo.getReturnType())) {
 
                 String relationship = firstLink.rel();
-                HyperLink[] relLinks = hyperResource.getLinks(relationship, methodInfo.isNullWhenMissing());
+                HyperLink[] relLinks = hyperResource.getLinks(relationship);
 
                 if(relLinks.length == 0){
                     throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
@@ -300,12 +315,12 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
                     if(StringUtils.safeEquals(name, FirstLink.MATCH_ANY_NAME)){
                         //If it's the wildcard, just return the first one
-                        return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLinks[0].getName(), methodInfo.isNullWhenMissing());
+                        return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLinks[0].getName());
                     }
 
                     for(HyperLink relLink : relLinks){
                         if(StringUtils.safeEquals(name, relLink.getName())){
-                            return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLink.getName(), methodInfo.isNullWhenMissing());
+                            return ReflectUtils.cast(HyperResource.class, proxy).getLink(relationship, relLink.getName());
                         }
                     }
                 }

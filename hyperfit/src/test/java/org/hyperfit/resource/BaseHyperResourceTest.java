@@ -25,9 +25,9 @@ public class BaseHyperResourceTest {
     public void testGetLinkByRelZeroLinksForRel() {
         String rel = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[0]).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
-        resource.getLink(rel, false);
+        resource.getLink(rel);
     }
 
     @Test
@@ -36,9 +36,9 @@ public class BaseHyperResourceTest {
 
         HyperLink link = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel);
 
-        HyperLink result = resource.getLink(rel, false);
+        HyperLink result = resource.getLink(rel);
         assertEquals(link, result);
     }
 
@@ -49,9 +49,9 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel);
         HyperLink link2 = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
-        resource.getLink(rel, false);
+        resource.getLink(rel);
 
     }
 
@@ -61,7 +61,7 @@ public class BaseHyperResourceTest {
     public void testHasLinkByRelZeroLinksForRel() {
         String rel = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[0]).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
         assertFalse(resource.hasLink(rel));
     }
@@ -72,7 +72,7 @@ public class BaseHyperResourceTest {
 
         HyperLink link = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel);
 
         assertTrue(resource.hasLink(rel));
     }
@@ -84,7 +84,7 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel);
         HyperLink link2 = makeLink(rel);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
         assertTrue(resource.hasLink(rel));
 
@@ -96,9 +96,9 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[0]).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
-        resource.getLink(rel, name, false);
+        resource.getLink(rel, name);
     }
 
     @Test(expected = HyperResourceException.class)
@@ -106,9 +106,9 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
-        resource.getLink(rel, name, false);
+        resource.getLink(rel, name);
     }
 
     @Test
@@ -118,9 +118,9 @@ public class BaseHyperResourceTest {
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel);
 
-        HyperLink result = resource.getLink(rel, name, false);
+        HyperLink result = resource.getLink(rel, name);
         assertEquals(link, result);
     }
 
@@ -132,9 +132,9 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
-        resource.getLink(rel, name, false);
+        resource.getLink(rel, name);
 
     }
 
@@ -146,10 +146,10 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
 
 
-        assertEquals(link2, resource.getLink(rel, name, false));
+        assertEquals(link2, resource.getLink(rel, name));
 
     }
 
@@ -161,9 +161,9 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
-        resource.getLink(rel, name, false);
+        resource.getLink(rel, name);
 
     }
 
@@ -174,7 +174,7 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[0]).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
         assertFalse(resource.hasLink(rel, name));
     }
@@ -184,7 +184,7 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
         assertFalse(resource.hasLink(rel, name));
     }
@@ -196,7 +196,7 @@ public class BaseHyperResourceTest {
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel);
 
         assertTrue(resource.hasLink(rel, name));
     }
@@ -209,7 +209,7 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
         assertFalse(resource.hasLink(rel, name));
 
@@ -223,7 +223,7 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
 
 
         assertTrue(resource.hasLink(rel, name));
@@ -238,7 +238,7 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
         assertTrue(resource.hasLink(rel));
 
@@ -251,9 +251,9 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[0]).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[0]).when(resource).getLinks(rel);
 
-        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name));
     }
 
     @Test
@@ -261,9 +261,9 @@ public class BaseHyperResourceTest {
         String rel = uniqueString();
         String name = uniqueString();
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{makeLink(rel, uniqueString())}).when(resource).getLinks(rel);
 
-        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name));
     }
 
     @Test
@@ -273,9 +273,9 @@ public class BaseHyperResourceTest {
 
         HyperLink link = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link}).when(resource).getLinks(rel);
 
-        assertArrayEquals(new HyperLink[]{link}, resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[]{link}, resource.getLinks(rel, name));
     }
 
     @Test
@@ -286,9 +286,9 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, uniqueString());
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
-        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[0], resource.getLinks(rel, name));
 
     }
 
@@ -300,10 +300,10 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, uniqueString());
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link1, link2}).when(resource).getLinks(rel);
 
 
-        assertArrayEquals(new HyperLink[]{link2}, resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[]{link2}, resource.getLinks(rel, name));
 
     }
 
@@ -315,9 +315,9 @@ public class BaseHyperResourceTest {
         HyperLink link1 = makeLink(rel, name);
         HyperLink link2 = makeLink(rel, name);
         HyperResource resource = mock(BaseHyperResource.class, CALLS_REAL_METHODS);
-        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel, false);
+        doReturn(new HyperLink[]{link2, link1}).when(resource).getLinks(rel);
 
-        assertArrayEquals(new HyperLink[]{link2, link1}, resource.getLinks(rel, name, false));
+        assertArrayEquals(new HyperLink[]{link2, link1}, resource.getLinks(rel, name));
 
     }
 

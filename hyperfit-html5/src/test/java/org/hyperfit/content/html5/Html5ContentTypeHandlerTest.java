@@ -64,7 +64,7 @@ public class Html5ContentTypeHandlerTest {
         when(responseMock.getBody()).thenReturn("");
         HyperResource result = html5ContentTypeHandler.parseResponse(responseMock);
 
-        assertArrayEquals("if this work, anything should", new HyperLink[0], result.getLinks("somerel", false));
+        assertArrayEquals("if this work, anything should", new HyperLink[0], result.getLinks("somerel"));
 
     }
 

@@ -76,7 +76,7 @@ public class HalJsonResourceTest {
         promosLink.put("title", title);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink hyperLink = resource.getLink("bb:promotions", false);
+        HyperLink hyperLink = resource.getLink("bb:promotions");
         assertEquals(linkHref, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
         assertEquals(null, hyperLink.getName());
@@ -93,7 +93,7 @@ public class HalJsonResourceTest {
         links.put("bb:one", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink hyperLink = resource.getLink("bb:one", false);
+        HyperLink hyperLink = resource.getLink("bb:one");
         assertEquals("/only-item", hyperLink.getHref());
         assertEquals("only-item-title", hyperLink.getTitle());
         assertEquals(null, hyperLink.getName());
@@ -114,7 +114,7 @@ public class HalJsonResourceTest {
         links.put("bb:multi", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        resource.getLink("bb:multi", false);
+        resource.getLink("bb:multi");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class HalJsonResourceTest {
         promosLink.put("name", name);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink hyperLink = resource.getLink("bb:promotions", name, false);
+        HyperLink hyperLink = resource.getLink("bb:promotions", name);
         assertEquals(linkHref, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
         assertEquals(name, hyperLink.getName());
@@ -148,7 +148,7 @@ public class HalJsonResourceTest {
         links.put("bb:one", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink hyperLink = resource.getLink("bb:one", "only-item-value", false);
+        HyperLink hyperLink = resource.getLink("bb:one", "only-item-value");
         assertEquals("/only-item", hyperLink.getHref());
         assertEquals("only-item-title", hyperLink.getTitle());
         assertEquals("only-item-value", hyperLink.getName());
@@ -171,7 +171,7 @@ public class HalJsonResourceTest {
         links.put("bb:multi", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink hyperLink = resource.getLink("bb:multi", "second-item-value", false);
+        HyperLink hyperLink = resource.getLink("bb:multi", "second-item-value");
         assertEquals("/second-item", hyperLink.getHref());
         assertEquals("second-item-title", hyperLink.getTitle());
         assertEquals("second-item-value", hyperLink.getName());
@@ -194,7 +194,7 @@ public class HalJsonResourceTest {
         links.put("bb:multi", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        resource.getLink("bb:multi", "unknown-item-value", false);
+        resource.getLink("bb:multi", "unknown-item-value");
     }
 
 
@@ -276,7 +276,7 @@ public class HalJsonResourceTest {
         links.put("bb:promotions", promosLink);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:promotions", false);
+        HyperLink[] links = resource.getLinks("bb:promotions");
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(1));
         assertThat(links[0].getHref(), is(linkHref));
@@ -294,7 +294,7 @@ public class HalJsonResourceTest {
         links.put("bb:one", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:one", false);
+        HyperLink[] links = resource.getLinks("bb:one");
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(1));
         assertThat(links[0].getHref(), is("/only-item"));
@@ -316,7 +316,7 @@ public class HalJsonResourceTest {
         links.put("bb:multi", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:multi", false);
+        HyperLink[] links = resource.getLinks("bb:multi");
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(2));
         assertThat(links[0].getHref(), is("/first-item"));
@@ -338,7 +338,7 @@ public class HalJsonResourceTest {
         links.put("bb:promotions", promosLink);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:promotions", name, false);
+        HyperLink[] links = resource.getLinks("bb:promotions", name);
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(1));
         assertThat(links[0].getHref(), is(linkHref));
@@ -358,7 +358,7 @@ public class HalJsonResourceTest {
         links.put("bb:one", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:one", "only-item-value", false);
+        HyperLink[] links = resource.getLinks("bb:one", "only-item-value");
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(1));
         assertThat(links[0].getHref(), is("/only-item"));
@@ -388,7 +388,7 @@ public class HalJsonResourceTest {
         links.put("bb:multi", linkArray);
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        HyperLink[] links = resource.getLinks("bb:multi", "second-item-value", false);
+        HyperLink[] links = resource.getLinks("bb:multi", "second-item-value");
         assertThat(links, is(not(nullValue())));
         assertThat(links.length, is(2));
         assertThat(links[0].getHref(), is("/second-item"));
@@ -493,18 +493,18 @@ public class HalJsonResourceTest {
 
     @Test(expected = HyperResourceException.class)
     public void testGetLinkMissingNode() {
-        new HalJsonResource(root, null).getLink("bb:promotions", false);
+        new HalJsonResource(root, null).getLink("bb:promotions");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetLinkNullPath() {
-        new HalJsonResource(root, null).getLink(null, false);
+        new HalJsonResource(root, null).getLink(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetLinkEmptyRelationship() {
 
-        new HalJsonResource(root, null).getLink("", false);
+        new HalJsonResource(root, null).getLink("");
     }
 
 
@@ -1016,11 +1016,11 @@ public class HalJsonResourceTest {
 
 
 
-        assertEquals("proto://host.net:70/root-relative{?params}", resource.getLink("root-relative", false).getHref());
+        assertEquals("proto://host.net:70/root-relative{?params}", resource.getLink("root-relative").getHref());
         //assertEquals("proto://host.net:70/stuff/path/relative", resource.getLink("path-relative").getHref());
         //assertEquals("proto://host.net:70/parent/path", resource.getLink("path-relative-parent").getHref());
         //assertEquals("proto://host.net:70/parent/path", resource.getLink("scheme-relative").getHref());
-        assertEquals("proto://host/path{?params}", resource.getLink("absolute", false).getHref());
+        assertEquals("proto://host/path{?params}", resource.getLink("absolute").getHref());
 
 
     }

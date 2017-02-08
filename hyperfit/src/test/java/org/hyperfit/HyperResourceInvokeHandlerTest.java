@@ -97,20 +97,34 @@ public class HyperResourceInvokeHandlerTest{
         @Data("complexData")
         ComplexProperty complexData();
 
-        @Data(value = "nullableNode", nullWhenMissing = true)
-        Object iCanBeNull();
-
         @Data(value = "anotherNullableNode")
         @NullWhenMissing
-        Object iCanAlsoBeNull();
+        Object iCanBeNull();
 
         @Link(value = "nullableLink")
         @NullWhenMissing
-        Object aNullLink();
+        Object followNullWhenMissingLink();
 
         @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
         @NullWhenMissing
-        Object aNamedNullLink();
+        Object followNullWhenMissingNamedLink();
+
+        @Link(value = "nullableLink")
+        @NullWhenMissing
+        HyperLink getNullWhenMissingLink();
+
+        @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
+        @NullWhenMissing
+        HyperLink getNullWhenMissingNamedLink();
+
+
+        @Link(value = "nullableLink")
+        @NullWhenMissing
+        HyperLink[] getNullWhenMissingLinkArray();
+
+        @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
+        @NullWhenMissing
+        HyperLink[] getNullWhenMissingNamedLinkArray();
     }
 
 
@@ -253,8 +267,8 @@ public class HyperResourceInvokeHandlerTest{
 
         String fakeRelationship = uniqueString();
         HyperLink expectedLink = makeLink(fakeRelationship);
-        when(mockHyperResource.getLink(fakeRelationship, false)).thenReturn(expectedLink);
-        assertEquals(expectedLink, proxyTest.getLink(fakeRelationship, false));
+        when(mockHyperResource.getLink(fakeRelationship)).thenReturn(expectedLink);
+        assertEquals(expectedLink, proxyTest.getLink(fakeRelationship));
 
 
         when(mockHyperResource.canResolveLinkLocal(fakeRelationship)).thenReturn(false);
@@ -475,7 +489,7 @@ public class HyperResourceInvokeHandlerTest{
         String rel = "bb:data";
 
         HyperLink expectedLink = makeLink(rel);
-        when(mockHyperResource.getLink(rel, false)).thenReturn(expectedLink);
+        when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
         DataResource mockDataResource = mock(DataResource.class);
 
@@ -498,7 +512,7 @@ public class HyperResourceInvokeHandlerTest{
 
         String rel = "bb:linkstring";
         HyperLink expectedLink = makeLink(rel);
-        when(mockHyperResource.getLink(rel, false)).thenReturn(expectedLink);
+        when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
         String expectedStr = uniqueString();
 
@@ -524,7 +538,7 @@ public class HyperResourceInvokeHandlerTest{
 
         String rel = "bb:linkHyperResponse";
         HyperLink expectedLink = makeLink(rel);
-        when(mockHyperResource.getLink(rel, false)).thenReturn(expectedLink);
+        when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
         RequestBuilder expectedHyperRequest = new BoringRequestBuilder()
             .setUrl(expectedLink.getHref())
@@ -554,7 +568,7 @@ public class HyperResourceInvokeHandlerTest{
 
         String rel = "bb:hyperLink";
         HyperLink expectedLink = makeLink(rel);
-        when(mockHyperResource.getLink(rel, false)).thenReturn(expectedLink);
+        when(mockHyperResource.getLink(rel)).thenReturn(expectedLink);
 
         RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
@@ -570,7 +584,7 @@ public class HyperResourceInvokeHandlerTest{
         //equals but not the same
         assertEquals(expectedLink, result);
 
-        assertEquals(expectedLink, linkResource.getLink(rel, false));
+        assertEquals(expectedLink, linkResource.getLink(rel));
     }
 
     @Test
@@ -578,7 +592,7 @@ public class HyperResourceInvokeHandlerTest{
 
         String rel = "bb:hyperLinks";
         HyperLink[] expectedLinks = {makeLink(rel), makeLink(rel), makeLink(rel)};
-        when(mockHyperResource.getLinks(rel, false)).thenReturn(expectedLinks);
+        when(mockHyperResource.getLinks(rel)).thenReturn(expectedLinks);
 
         RequestBuilder expectedHyperRequest = new RFC6570RequestBuilder()
                 .setMethod(Method.GET)
@@ -594,7 +608,7 @@ public class HyperResourceInvokeHandlerTest{
         //equals but not the same
         assertArrayEquals(expectedLinks, result);
 
-        assertArrayEquals(expectedLinks, linkResource.getLinks(rel, false));
+        assertArrayEquals(expectedLinks, linkResource.getLinks(rel));
 
     }
 
@@ -629,8 +643,8 @@ public class HyperResourceInvokeHandlerTest{
         //Now resolve the relationship via HyperLink retrieved directly
 
         HyperLink fakeLink = makeLink(relationship);
-        when(mockHyperResource.getLink(relationship, false)).thenReturn(fakeLink);
-        HyperLink hyperLink = linkResource.getLink(relationship, false);
+        when(mockHyperResource.getLink(relationship)).thenReturn(fakeLink);
+        HyperLink hyperLink = linkResource.getLink(relationship);
 
         when(mockHyperfitProcessor.processRequest(eq(DataResource.class), any(RequestBuilder.class), any(TypeInfo.class)))
             .thenReturn(expected);
@@ -640,7 +654,7 @@ public class HyperResourceInvokeHandlerTest{
 
 
         //Now resolve the relationship via HyperLink retrieved via method
-        when(mockHyperResource.getLink(relationship, false)).thenReturn(fakeLink);
+        when(mockHyperResource.getLink(relationship)).thenReturn(fakeLink);
         hyperLink = linkResource.dataLink();
         actual2 = hyperLink.follow(new TypeRef<DataResource>() {});
 
@@ -805,7 +819,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false))
+        when(mockHyperResource.getLinks(relationship))
             .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkEmptyNames();
@@ -818,7 +832,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false))
+        when(mockHyperResource.getLinks(relationship))
             .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkWildCard();
@@ -831,7 +845,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false))
+        when(mockHyperResource.getLinks(relationship))
             .thenReturn(new HyperLink[0]);
 
         HyperLink results = r.firstLinkNullName();
@@ -846,7 +860,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 makeLink(relationship, "name1"),
                 makeLink(relationship, "name2"),
@@ -863,7 +877,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false))
+        when(mockHyperResource.getLinks(relationship))
             .thenReturn(
                 new HyperLink[]{
                     makeLink(relationship, "name1"),
@@ -881,7 +895,7 @@ public class HyperResourceInvokeHandlerTest{
 
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
-        when(mockHyperResource.getLinks(relationship, false))
+        when(mockHyperResource.getLinks(relationship))
             .thenReturn(
                 new HyperLink[]{
                     makeLink(relationship, "name1"),
@@ -901,14 +915,14 @@ public class HyperResourceInvokeHandlerTest{
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
         HyperLink link1 = makeLink(relationship, "name1");
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 link1,
                 makeLink(relationship, "name2"),
                 makeLink(relationship, "name3")
             }
         );
-        when(mockHyperResource.getLink(relationship, "name1", false)).thenReturn(link1);
+        when(mockHyperResource.getLink(relationship, "name1")).thenReturn(link1);
 
         HyperLink result = r.firstLinkWildCard();
         assertEquals(link1, result);
@@ -922,14 +936,14 @@ public class HyperResourceInvokeHandlerTest{
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
         HyperLink link1 = makeLink(relationship, "name1");
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 link1,
                 makeLink(relationship, "name2"),
                 makeLink(relationship, "name3")
             }
         );
-        when(mockHyperResource.getLink(relationship, "name1", false)).thenReturn(link1);
+        when(mockHyperResource.getLink(relationship, "name1")).thenReturn(link1);
 
         HyperLink result = r.firstLinkTestNameThenWildCard();
         assertEquals(link1, result);
@@ -943,14 +957,14 @@ public class HyperResourceInvokeHandlerTest{
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
         HyperLink link1 = makeLink(relationship, "test");
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 makeLink(relationship, "name2"),
                 link1,
                 makeLink(relationship, "name3")
             }
         );
-        when(mockHyperResource.getLink(relationship, "test", false)).thenReturn(link1);
+        when(mockHyperResource.getLink(relationship, "test")).thenReturn(link1);
 
         HyperLink result = r.firstLinkTestNameThenWildCard();
         assertEquals(link1, result);
@@ -964,14 +978,14 @@ public class HyperResourceInvokeHandlerTest{
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
         HyperLink link1 = makeLink(relationship, "");
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 makeLink(relationship, null),
                 makeLink(relationship, "name3"),
                 link1,
             }
         );
-        when(mockHyperResource.getLink(relationship, "", false)).thenReturn(link1);
+        when(mockHyperResource.getLink(relationship, "")).thenReturn(link1);
 
         HyperLink result = r.firstLinkTestNameThenEmptyName();
         assertEquals(link1, result);
@@ -984,14 +998,14 @@ public class HyperResourceInvokeHandlerTest{
         FirstLinkResource r = this.getHyperResourceProxy(FirstLinkResource.class);
 
         HyperLink link1 = makeLink(relationship, null);
-        when(mockHyperResource.getLinks(relationship, false)).thenReturn(
+        when(mockHyperResource.getLinks(relationship)).thenReturn(
             new HyperLink[]{
                 makeLink(relationship, ""),
                 makeLink(relationship, "name3"),
                 link1,
             }
         );
-        when(mockHyperResource.getLink(relationship, null, false)).thenReturn(link1);
+        when(mockHyperResource.getLink(relationship, null)).thenReturn(link1);
 
         HyperLink result = r.firstLinkTestNameThenNullName();
         assertEquals(link1, result);
@@ -1096,27 +1110,54 @@ public class HyperResourceInvokeHandlerTest{
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
         assertNull(proxyTest.iCanBeNull());
-    } @Test
-    public void testInvokeMissingNodeWithNullWhenMissing_Annotation() {
-
-        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
-
-        assertNull(proxyTest.iCanAlsoBeNull());
     }
 
     @Test
-    public void testInvokeMissingLink() {
+    public void testInvokeFollowMissingLink() {
 
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
-        assertNull(proxyTest.aNullLink());
+        assertNull(proxyTest.followNullWhenMissingLink());
     }
     @Test
-    public void testInvokeMissingNamedLink() {
+    public void testInvokeFollowMissingNamedLink() {
 
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
-        assertNull(proxyTest.aNamedNullLink());
+        assertNull(proxyTest.followNullWhenMissingNamedLink());
+    }
+
+
+
+    @Test
+    public void testInvokeGetMissingLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingLink());
+    }
+    @Test
+    public void testInvokeGetMissingNamedLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingNamedLink());
+    }
+
+
+    @Test
+    public void testInvokeGetMissingLinkArray() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingLinkArray());
+    }
+    @Test
+    public void testInvokeGetMissingNamedLinkArray() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingNamedLinkArray());
     }
 
 }

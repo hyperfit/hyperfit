@@ -82,22 +82,22 @@ public class HyperResourceInvokeHandlerJdk8Test  {
             }
 
             @Override
-            public HyperLink[] getLinks(String relationship, boolean nullWhenMissing) {
+            public HyperLink[] getLinks(String relationship) {
                 return new HyperLink[0];
             }
 
             @Override
-            public HyperLink[] getLinks(String relationship, String name, boolean nullWhenMissing) {
+            public HyperLink[] getLinks(String relationship, String name) {
                 return new HyperLink[0];
             }
 
             @Override
-            public HyperLink getLink(String relationship, boolean nullWhenMissing) {
+            public HyperLink getLink(String relationship) {
                 return null;
             }
 
             @Override
-            public HyperLink getLink(String relationship, String name, boolean nullWhenMissing) {
+            public HyperLink getLink(String relationship, String name) {
                 return null;
             }
 

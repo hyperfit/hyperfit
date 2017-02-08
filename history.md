@@ -1,5 +1,6 @@
 ## 1.13.1 - TBD
-* 
+* The nullWhenMissing parameter added in 1.11 has been removed and replaced with a full blown @NullWhenMissing annotation
+ * this does break backwards compatability..but this library does that all the time and no one was using that annotation anyways.
 
 ## 1.12.0 - 2017-01-12
 * When running hyperfit in Java 8 default methods on interfaces are now supported!

@@ -159,6 +159,6 @@ public class MethodInfo {
     }
 
     public boolean isNullWhenMissing() {
-        return nullWhenMissingAnnotation != null || (getDataAnnotation() != null && getDataAnnotation().nullWhenMissing());
+        return nullWhenMissingAnnotation != null;
     }
 }
