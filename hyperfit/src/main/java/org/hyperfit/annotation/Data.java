@@ -20,9 +20,4 @@ public @interface Data {
      */
     String[] value();
 
-    /**
-     * default value is false.  This may change in the next major version.
-     * @return when true, if the path results in no destination a null will be returned, otherwise an exception will be thrown
-     */
-    boolean nullWhenMissing() default false;
 }

@@ -97,8 +97,34 @@ public class HyperResourceInvokeHandlerTest{
         @Data("complexData")
         ComplexProperty complexData();
 
-        @Data(value = "nullableNode", nullWhenMissing = true)
+        @Data(value = "anotherNullableNode")
+        @NullWhenMissing
         Object iCanBeNull();
+
+        @Link(value = "nullableLink")
+        @NullWhenMissing
+        Object followNullWhenMissingLink();
+
+        @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
+        @NullWhenMissing
+        Object followNullWhenMissingNamedLink();
+
+        @Link(value = "nullableLink")
+        @NullWhenMissing
+        HyperLink getNullWhenMissingLink();
+
+        @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
+        @NullWhenMissing
+        HyperLink getNullWhenMissingNamedLink();
+
+
+        @Link(value = "nullableLink")
+        @NullWhenMissing
+        HyperLink[] getNullWhenMissingLinkArray();
+
+        @NamedLink(rel= "namedNullableLink", name = "goingToBeNull")
+        @NullWhenMissing
+        HyperLink[] getNullWhenMissingNamedLinkArray();
     }
 
 
@@ -449,7 +475,7 @@ public class HyperResourceInvokeHandlerTest{
 //        Resource proxyTest = getHyperResourceProxy(Resource.class, mockHyperResource, spy);
 //        doReturn(
 //                getHyperResourceProxy(ResourceInResource.class, resourceInResource, spy)).when(
-//                        spy, PowerMockito.method(HyperClient.class, "doProcessResource", 
+//                        spy, PowerMockito.method(HyperClient.class, "doProcessResource",
 //                                Class.class, HyperResource.class, Boolean.TYPE) );
 //
 //        assertEquals(proxyTest.dataAsResource().dataAsString1(), "string test 1");
@@ -1084,6 +1110,54 @@ public class HyperResourceInvokeHandlerTest{
         DataResource proxyTest = getHyperResourceProxy(DataResource.class);
 
         assertNull(proxyTest.iCanBeNull());
+    }
+
+    @Test
+    public void testInvokeFollowMissingLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.followNullWhenMissingLink());
+    }
+    @Test
+    public void testInvokeFollowMissingNamedLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.followNullWhenMissingNamedLink());
+    }
+
+
+
+    @Test
+    public void testInvokeGetMissingLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingLink());
+    }
+    @Test
+    public void testInvokeGetMissingNamedLink() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingNamedLink());
+    }
+
+
+    @Test
+    public void testInvokeGetMissingLinkArray() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingLinkArray());
+    }
+    @Test
+    public void testInvokeGetMissingNamedLinkArray() {
+
+        DataResource proxyTest = getHyperResourceProxy(DataResource.class);
+
+        assertNull(proxyTest.getNullWhenMissingNamedLinkArray());
     }
 
 }

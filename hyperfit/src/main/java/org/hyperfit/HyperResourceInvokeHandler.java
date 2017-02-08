@@ -174,7 +174,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         // Data method invocation
         Data data = methodInfo.getDataAnnotation();
         if (data != null) {
-            return hyperResource.getPathAs(methodInfo.getReturnType(), data.nullWhenMissing(), data.value());
+            return hyperResource.getPathAs(methodInfo.getReturnType(), methodInfo.isNullWhenMissing(), data.value());
         }
 
         // Link method invocation
@@ -189,11 +189,19 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
             //single hyper link
             if (HyperLink.class.isAssignableFrom(methodInfo.getReturnType())) {
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
                 return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship);
             }
 
             //hyper links
             if (HyperLink[].class.isAssignableFrom(methodInfo.getReturnType())) {
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
                 return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship);
             }
 
@@ -214,8 +222,13 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                throw new UnsupportedOperationException(MESSAGE_EXCEPTION_SOLVING_MULTI_LINK);
             }
 
-            //At this point we know it's a single link that's not embedded
-            RequestBuilder requestBuilder = hyperResource.getLink(linkRelationship).toRequestBuilder();
+            if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                return null;
+            }
+
+            //At this point we know it's a single link that's not embedded and is expected to be present
+            HyperLink hyperLink = hyperResource.getLink(linkRelationship);
+            RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
             // Set method type (default=GET)
             requestBuilder.setMethod(methodInfo.getRequestMethod());
             assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
@@ -244,11 +257,19 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
             //single hyper link
             if (HyperLink.class.isAssignableFrom(methodInfo.getReturnType())) {
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
                 return ReflectUtils.cast(HyperResource.class, proxy).getLink(linkRelationship, linkName);
             }
 
             //hyper links
             if (HyperLink[].class.isAssignableFrom(methodInfo.getReturnType())) {
+                if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship)){
+                    return null;
+                }
+                //TODO: why do we cast this?
                 return ReflectUtils.cast(HyperResource.class, proxy).getLinks(linkRelationship, linkName);
             }
 
@@ -256,13 +277,19 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
             //HAL has no way to identify a named embedded link so for now we don't even bother checking for that..
 
 
-            //At this point we know it's a single link that's not embedded
-            RequestBuilder requestBuilder = hyperResource.getLink(linkRelationship, linkName).toRequestBuilder();
+            if(methodInfo.isNullWhenMissing() && !hyperResource.hasLink(linkRelationship, linkName)){
+                return null;
+            }
+
+            //At this point we know it's a single link that's not embedded  and is expected to be present
+            HyperLink hyperLink = hyperResource.getLink(linkRelationship, linkName);
+            RequestBuilder requestBuilder = hyperLink.toRequestBuilder();
             // Set method type (default=GET)
             requestBuilder.setMethod(methodInfo.getRequestMethod());
             assignAnnotatedValues(requestBuilder, methodInfo.getParameterAnnotations(), args);
             //If follow supported parameters..we could just pass those and call hyperlink.follow(params)..if we could figure out the TypeRef thing...
             return requestProcessor.processRequest(methodInfo.getReturnType(), requestBuilder, typeInfo.make(methodInfo.getGenericReturnType()));
+
         }
 
 

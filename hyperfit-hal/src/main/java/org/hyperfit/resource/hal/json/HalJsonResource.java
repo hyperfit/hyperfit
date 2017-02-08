@@ -9,7 +9,6 @@ import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.HyperResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.net.URI;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +30,7 @@ public class HalJsonResource extends BaseHyperResource {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
+
     private static final ObjectReader OBJECT_READER = OBJECT_MAPPER.reader(JsonNode.class);
     private final JsonNode jsonResource;
     private final String baseURI;
