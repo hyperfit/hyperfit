@@ -1,8 +1,8 @@
-## 1.13.1 - TBD
+## 1.13.1 - 2017-02-09
 * The nullWhenMissing parameter added in 1.11 has been removed and replaced with a full blown @NullWhenMissing annotation
  * this does break backwards compatability..but this library does that all the time and no one was using that annotation field anyways.
 * Java8 default methods now work moar betterer
- * You must register a Java8DefaultMethodHandler during HyperfitProcessor building.  Lucky for you we implementd one in the hyperfit-java8 module!
+ * You must register a Java8DefaultMethodHandler during HyperfitProcessor building to get this functionality.  Lucky for you we implemented one in the hyperfit-java8 module!
  
  
 ## 1.12.0 - 2017-01-12
@@ -66,7 +66,7 @@
 * New type FieldSet which eventually will contain a collection of fields, but for now lets you get a label for a field set
 * Form has method getFieldSet(String name) that gets the field set for the given name or throws if not exactly one is found
 
-## 1.5.0-SNAPSHOT - 2015-04-21
+## 1.5.0 - 2015-04-21
 * HyperLink was move to resource.controls.link package as a hyperlink is a hypermedia control
   * other types moved there
 * resource.controls.form package was added to contain interfaces and types for working with form controls
@@ -78,7 +78,7 @@
 * New content type plugin hyperfit-Html5
 * The getProfiles implementation on HalJsonResource was moved to the lower level BaseHyperResource class
 
-## 1.4.0-SNAPSHOT - 2015-04-01
+## 1.4.0 - 2015-04-01
 * The concept of the ResourceRegistry was replaced with the much more general ResourceInterfaceSelectionStrategy plugin architecture.
 * A ResourceInterfaceSelectionStrategy plugin must implement the determineInterfaces method that takes the expected return interface and the HyperResource for which interfaces should be selected and returns an array of all the HyperResource interfaces that have been selected
  * The resulting array may not include the expected resource interface!
@@ -98,7 +98,7 @@
 * The Response type now includes a getRequest method to get a handle to the Request that was processed into the Response
 * The ErrorHandler's signature was changed to take a reference to the HyperfitProcessor in use when the error was encountered.
 
-## 1.3.0-SNAPSHOT - 2015-03-18
+## 1.3.0 - 2015-03-18
 * Extracted OkHttp 2.x Client library as a hyperfit plugin - artifact org.hyperfit:hyperfit-okhttp2-client
  * This now depends on OkHttp 2.1.0 and okhttp-urlconnection 2.1.0 if you are explicitly overriding the transitive dependencies consider upgrading because of the cache reasons listed at https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-210-rc1
 * Added OkHttp 1.x Client library - artifact org.hyperfit:hyperfit-okhttp1-client 
@@ -120,7 +120,7 @@
 * The Request type no longer has any concept of parameters, it functions as an immutable POJO representing a full formed request.
 
 
-## 1.1.0-SNAPSHOT - 2015-03-04
+## 1.1.0 - 2015-03-04
 * Hyperfit now allows you to specify the content of requests (like post bodies). Various changes here:
 * The org.hyperfit.mediatype package was renamed org.hyperfit.content
 * New class ContentType for negotiating and matching content types (EG: application/hal+json;charset=UTF-8 matching application/hal+json)
@@ -150,7 +150,7 @@ CheckoutStep login(
 ```
 Makes a POST request to the URL identified by the REL_LOGIN link relationship filling in the URL CSRF parameter and serializing the LoginCredentials instance use the ContentTypeHandler implementation registered as compatible with "application/x-www-form-urlencoded".  The serialized content is used as the content of the request, in the case of HTTP this is the request body.
 
-## 1.0.2-SNAPSHOT - 2015-02-09
+## 1.0.2 - 2015-02-09
 * The HyperLink type has two new follow method signatures()
  * R follow(Class<R>) - useful when you aren't trying to return a generic type.  For example the Response.class to get a raw Response object from a follow.
  * R follow(Class<R> class, Type genericInfo) - If you already have a generic type reference you can use it with this method.  This is actually what the follow(TypeRef<R>) calls, just using the TypeRef as an intermediate step.
@@ -158,7 +158,7 @@ Makes a POST request to the URL identified by the REL_LOGIN link relationship fi
  * The Request.Builder has methods to add to the request specific accepted content types.
 * If a link has a type parameter, then when it is followed (by any method including follow() and or an annotated method on a resource interface) that type is set as a request specific accepted content type.  This type gets a higher priority than any accept content types registered with the underlying Hyperfit client.
 
-## 1.0.1-SNAPSHOT - 2015-01-25
+## 1.0.1 - 2015-01-25
 * Initial release version.  These notes are here to help understand the history of pre-release versions.
 
 * All resources interfaces now must extend the HyperResource base interface, this exposes the useful hasLink method to check for arbitrary link presence as well as some other lower level stuff to retrieve as needed.
