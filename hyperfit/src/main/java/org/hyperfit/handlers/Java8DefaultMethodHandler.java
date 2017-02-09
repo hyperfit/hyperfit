@@ -6,7 +6,7 @@ import org.hyperfit.resource.HyperResource;
 import java.lang.reflect.Method;
 
 /**
- * Exposes a method for invoking java8 default methods in a java6 safe way
+ * Defines an interface for invoking java8 default methods in a java6 safe way
  */
 public interface Java8DefaultMethodHandler {
 

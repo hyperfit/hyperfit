@@ -10,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.stream.Stream;
 
-
+/**
+ * Provides an implementation for invoking java8 default methods.  This class requires java 8 runtime.
+ */
 public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8DefaultMethodHandler {
     private static final Logger LOG = LoggerFactory.getLogger(Java8DefaultMethodHandler.class);
 
