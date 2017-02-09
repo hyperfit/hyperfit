@@ -57,22 +57,16 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
                     t.getClassLoader(),
                     new Class[]{t},
                     (proxy, method, params) -> {
-                        if(method.isDefault()) {
-
-
-                            // 1. Instantiate the MethodHandle.Lookup that has private access
-                            // 2. Builder method handle that doesn't check for overrides and will be able
-                            // to call the default method on the interface. `unreflectSpecial()`
-                            // 3. Bind to the Proxy created above/passed in
-                            // 4. Invoke the method handle with the args.
-                            return LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
-                                .unreflectSpecial(method, t)
-                                .bindTo(proxy)
-                                .invokeWithArguments(params);
-                        }
-                        else {
-                            return context.getHyperHandler().invoke(context.getHyperProxy(), method, args);
-                        }
+                        //This technique was stolen from https://zeroturnaround.com/rebellabs/recognize-and-conquer-java-proxies-default-methods-and-method-handles/
+                        // 1. Instantiate the MethodHandle.Lookup that has private access
+                        // 2. Builder method handle that doesn't check for overrides and will be able
+                        // to call the default method on the interface. `unreflectSpecial()`
+                        // 3. Bind to the Proxy created above/passed in
+                        // 4. Invoke the method handle with the args.
+                        return LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
+                            .unreflectSpecial(method, t)
+                            .bindTo(context.getHyperProxy())
+                            .invokeWithArguments(params);
                     }
                 )
             )

@@ -17,17 +17,14 @@ public interface Java8DefaultMethodHandler {
 
     class DefaultMethodContext {
         private final Class<?>[] interfaces;
-        private final HyperResourceInvokeHandler hyperHandler;
         private final Object hyperProxy;
         private final Method method;
 
         public DefaultMethodContext(
-            HyperResourceInvokeHandler hyperHandler,
             Object hyperProxy,
             @NonNull Method method
         ) {
             this.interfaces = hyperProxy.getClass().getInterfaces();
-            this.hyperHandler = hyperHandler;
             this.hyperProxy = hyperProxy;
             this.method = method;
         }
@@ -40,9 +37,6 @@ public interface Java8DefaultMethodHandler {
             return interfaces;
         }
 
-        public HyperResourceInvokeHandler getHyperHandler() {
-            return hyperHandler;
-        }
 
         public Object getHyperProxy() {
             return hyperProxy;

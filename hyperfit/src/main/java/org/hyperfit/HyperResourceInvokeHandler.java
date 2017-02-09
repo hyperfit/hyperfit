@@ -165,7 +165,6 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
             return java8DefaultMethodHandler.invoke(
                 new Java8DefaultMethodHandler.DefaultMethodContext(
-                    this,
                     proxy,
                     method
                 ),
