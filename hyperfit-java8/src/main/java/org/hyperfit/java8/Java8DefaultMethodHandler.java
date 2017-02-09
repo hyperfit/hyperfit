@@ -41,7 +41,7 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
         return Stream.of(context.getInterfaces())
             .filter(tClass -> {
                 try {
-                    if(tClass.isAssignableFrom(context.getHyperProxy().getClass())) {
+                    if(tClass.isAssignableFrom(context.getHyperResource().getClass())) {
                         //Make sure the method exists. TODO: is there a better way that doesn't throw?
                         tClass.getMethod(context.getMethod().getName(), context.getMethod().getParameterTypes());
                         return true;
@@ -56,18 +56,18 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
             .map(t -> Proxy.newProxyInstance(
                     t.getClassLoader(),
                     new Class[]{t},
-                    (proxy, method, params) -> {
+                    (proxy, method, params) ->
                         //This technique was stolen from https://zeroturnaround.com/rebellabs/recognize-and-conquer-java-proxies-default-methods-and-method-handles/
-                        // 1. Instantiate the MethodHandle.Lookup that has private access
+                        // 1. Instantiate the MethodHandle.Lookup with the private access constructor
                         // 2. Builder method handle that doesn't check for overrides and will be able
                         // to call the default method on the interface. `unreflectSpecial()`
                         // 3. Bind to the Proxy created above/passed in
                         // 4. Invoke the method handle with the args.
-                        return LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
+                         LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
                             .unreflectSpecial(method, t)
-                            .bindTo(context.getHyperProxy())
-                            .invokeWithArguments(params);
-                    }
+                            .bindTo(context.getHyperResource())
+                            .invokeWithArguments(params)
+
                 )
             )
             .map(

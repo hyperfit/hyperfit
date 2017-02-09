@@ -390,18 +390,6 @@ public class Java8DefaultMethodHandlerTest {
         );
     }
 
-    @Test
-    public void invoke_withEmptyInterfaceArray() throws Exception {
-        ee.expect(HyperfitException.class);
-
-        new Java8DefaultMethodHandler().invoke(
-            new org.hyperfit.handlers.Java8DefaultMethodHandler.DefaultMethodContext(
-                new Object(),
-                InterfaceWithDefaultMethod.class.getMethod("someString")
-            ),
-            null
-        );
-    }
 
 
     @Test

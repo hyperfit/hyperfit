@@ -1,7 +1,7 @@
 package org.hyperfit.handlers;
 
 import lombok.NonNull;
-import org.hyperfit.HyperResourceInvokeHandler;
+import org.hyperfit.resource.HyperResource;
 
 import java.lang.reflect.Method;
 
@@ -17,15 +17,15 @@ public interface Java8DefaultMethodHandler {
 
     class DefaultMethodContext {
         private final Class<?>[] interfaces;
-        private final Object hyperProxy;
+        private final HyperResource hyperResource;
         private final Method method;
 
         public DefaultMethodContext(
-            Object hyperProxy,
+            HyperResource hyperResource,
             @NonNull Method method
         ) {
-            this.interfaces = hyperProxy.getClass().getInterfaces();
-            this.hyperProxy = hyperProxy;
+            this.interfaces = hyperResource.getClass().getInterfaces();
+            this.hyperResource = hyperResource;
             this.method = method;
         }
 
@@ -38,8 +38,8 @@ public interface Java8DefaultMethodHandler {
         }
 
 
-        public Object getHyperProxy() {
-            return hyperProxy;
+        public HyperResource getHyperResource() {
+            return hyperResource;
         }
     }
 }
