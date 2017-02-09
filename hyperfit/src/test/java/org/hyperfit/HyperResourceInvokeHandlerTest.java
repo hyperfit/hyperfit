@@ -230,7 +230,13 @@ public class HyperResourceInvokeHandlerTest{
             Proxy.newProxyInstance(
                 clazz.getClassLoader(),
                 new Class[]{clazz},
-                new HyperResourceInvokeHandler(mockHyperResource, mockHyperfitProcessor, resourceMethodInfoCache.get(clazz), null)
+                new HyperResourceInvokeHandler(
+                    mockHyperResource,
+                    mockHyperfitProcessor,
+                    resourceMethodInfoCache.get(clazz),
+                    null,
+                    null
+                )
             )
         );
     }

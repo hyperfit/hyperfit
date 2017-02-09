@@ -1,26 +1,37 @@
 package org.hyperfit;
 
-import org.hyperfit.annotation.*;
+import org.hyperfit.annotation.Content;
+import org.hyperfit.annotation.Data;
+import org.hyperfit.annotation.FirstLink;
+import org.hyperfit.annotation.Header;
+import org.hyperfit.annotation.Link;
+import org.hyperfit.annotation.NamedForm;
+import org.hyperfit.annotation.NamedLink;
+import org.hyperfit.annotation.Param;
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
+import org.hyperfit.handlers.Java8DefaultMethodHandler;
 import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
 import org.hyperfit.net.RequestBuilder;
+import org.hyperfit.resource.HyperResource;
+import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.resource.controls.link.HyperLinkWrapper;
-import org.hyperfit.resource.HyperResource;
-import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.utils.ReflectUtils;
 import org.hyperfit.utils.StringUtils;
 import org.hyperfit.utils.TypeInfo;
 import org.javatuples.Pair;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 import static org.hyperfit.methodinfo.MethodInfo.MethodType;
@@ -38,15 +49,25 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     private final HyperfitProcessor requestProcessor;
 
     private final MethodInfoCache methodInfoCache;
-    private TypeInfo typeInfo;
+    private final TypeInfo typeInfo;
 
-    public HyperResourceInvokeHandler(HyperResource hyperResource, HyperfitProcessor requestProcessor, MethodInfoCache methodInfoCache, TypeInfo typeInfo) {
+    private final Java8DefaultMethodHandler java8DefaultMethodHandler;
+
+    public HyperResourceInvokeHandler(
+        HyperResource hyperResource,
+        HyperfitProcessor requestProcessor,
+        MethodInfoCache methodInfoCache,
+        TypeInfo typeInfo,
+        Java8DefaultMethodHandler java8DefaultMethodHandler
+    ) {
         this.hyperResource = hyperResource;
         this.requestProcessor = requestProcessor;
 
         this.typeInfo = (typeInfo != null) ? typeInfo : new TypeInfo();
 
         this.methodInfoCache = methodInfoCache;
+
+        this.java8DefaultMethodHandler = java8DefaultMethodHandler;
     }
 
     protected HyperLink extendHyperLink(HyperLink hyperLink) {
@@ -95,14 +116,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
      */
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         try {
-            if(method.toString().matches(".*\\bdefault\\b.+")) {
-                // In the case of a default method on an interface we do not want / cannot
-                // invoke that method through the proxy.
-                return method.invoke(hyperResource, args);
-            }
-            else {
-                return processInvoke(proxy, method, args);
-            }
+            return processInvoke(proxy, method, args);
         } catch (HyperfitException hce) {
             throw hce; //don't wrap up hyperfit exceptions
         } catch (Exception e) {
@@ -145,6 +159,19 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     protected Object processInvoke(Object proxy, Method method, Object[] args) throws Exception {
 
         MethodInfo methodInfo = this.methodInfoCache.get(method);
+
+        if(methodInfo.isDefaultMethod()) {
+            // In the case of a default method on an interface we need to do this a bit differently.
+
+            return java8DefaultMethodHandler.invoke(
+                new Java8DefaultMethodHandler.DefaultMethodContext(
+                    (HyperResource) proxy,
+                    method
+                ),
+                args
+            );
+        }
+
 
         MethodType methodType = methodInfo.getMethodType();
 
