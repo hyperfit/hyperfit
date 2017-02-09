@@ -67,6 +67,7 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
                         // 4. Invoke the method handle with the args.
                          LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
                             .unreflectSpecial(method, t)
+                             //bind it to the underlying hyper resource so default methods can call proxied @Link or @Data methods
                             .bindTo(context.getHyperResource())
                             .invokeWithArguments(params)
 
