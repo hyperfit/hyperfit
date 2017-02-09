@@ -66,6 +66,7 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
                         // 3. Bind to the Proxy created above/passed in
                         // 4. Invoke the method handle with the args.
                          LOOKUP_CONSTRUCTOR.newInstance(t, MethodHandles.Lookup.PRIVATE)
+                             //TODO: could/should we cache the result after this call instead of calling new instance each time?
                             .unreflectSpecial(method, t)
                              //bind it to the underlying hyper resource so default methods can call proxied @Link or @Data methods
                             .bindTo(context.getHyperResource())
