@@ -126,6 +126,6 @@ public abstract class JsoupHtml5Field implements Field {
         }
 
 
-        throw new HyperResourceException("Field type for tag [" + tagName + "] is not known", tagName);
+        throw new HyperResourceException("Field type for tag [" + tagName + "] is not known");
     }
 }
