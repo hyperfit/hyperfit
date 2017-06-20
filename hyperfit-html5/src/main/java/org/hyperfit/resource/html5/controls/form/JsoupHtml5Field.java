@@ -2,7 +2,6 @@ package org.hyperfit.resource.html5.controls.form;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hyperfit.message.Messages;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.utils.StringUtils;
@@ -127,6 +126,6 @@ public abstract class JsoupHtml5Field implements Field {
         }
 
 
-        throw new HyperResourceException(Messages.MSG_ERROR_FIELD_TYPE_NOT_KNOWN, tagName);
+        throw new HyperResourceException("Field type for tag [" + tagName + "] is not known", tagName);
     }
 }

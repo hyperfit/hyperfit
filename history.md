@@ -1,5 +1,5 @@
 ## 1.14.1 - TBD
-* 
+* The Messages class has been removed in favour of inline exception messages.  This is a backwards breaking change...but we're still pretty fluid on those things for now.  If you were importing our messages...we'd like ot know why!
 
 ## 1.13.1 - 2017-02-09
 * The nullWhenMissing parameter added in 1.11 has been removed and replaced with a full blown @NullWhenMissing annotation

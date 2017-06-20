@@ -13,7 +13,6 @@ import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.handlers.Java8DefaultMethodHandler;
-import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.MethodInfo;
 import org.hyperfit.methodinfo.MethodInfoCache;
 import org.hyperfit.net.RequestBuilder;
@@ -120,7 +119,10 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
         } catch (HyperfitException hce) {
             throw hce; //don't wrap up hyperfit exceptions
         } catch (Exception e) {
-            throw new HyperfitException(e, Messages.MSG_ERROR_PROXY_UNEXPECTED_ERROR, method, proxy, args);
+            throw new HyperfitException(
+                "Unexpected error occurred when handling proxy method invocation [" + method + "] in [" + proxy + "] with arguments: " + Arrays.toString(args),
+                e
+            );
         }
     }
 
@@ -331,7 +333,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 HyperLink[] relLinks = hyperResource.getLinks(relationship);
 
                 if(relLinks.length == 0){
-                    throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
+                    throw new HyperResourceException("Could not find a link with relationship " + relationship);
                 }
 
                 for(String name : firstLink.names()){
@@ -353,7 +355,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 }
 
                 //If it was never found indicate that.
-                throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, Arrays.toString(firstLink.names()));
+                throw new HyperResourceException("Could not find a link with relationship [" + relationship + "] and name [" +  Arrays.toString(firstLink.names()) + "]");
 
             }
 
@@ -378,7 +380,7 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
 
         }
 
-        throw new HyperfitException(Messages.MSG_ERROR_PROXY_CANNOT_HANDLE_METHOD_INVOCATION, method, proxy, args);
+        throw new HyperfitException("Cannot handle proxy method invocation [" + method + "] in [" + proxy + "]");
     }
 
 

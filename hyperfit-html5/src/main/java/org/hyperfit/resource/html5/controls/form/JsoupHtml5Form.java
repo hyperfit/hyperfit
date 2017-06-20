@@ -2,7 +2,6 @@ package org.hyperfit.resource.html5.controls.form;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hyperfit.message.Messages;
 import org.hyperfit.net.FormRequestBuilder;
 import org.hyperfit.net.Method;
 import org.hyperfit.net.RequestBuilder;
@@ -31,7 +30,7 @@ public class JsoupHtml5Form implements Form {
 
     public JsoupHtml5Form(Element formElement){
         if(!formElement.tagName().equalsIgnoreCase("form")){
-            throw new HyperResourceException(Messages.MSG_ERROR_NOT_FORM_ELEMENT);
+            throw new HyperResourceException("formElement must be a form tag");
         }
 
         this.formElement = formElement;
@@ -66,7 +65,7 @@ public class JsoupHtml5Form implements Form {
     @Override
     public Field getField(String fieldName) {
         if (StringUtils.isEmpty(fieldName)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_FIELD_NAME_REQUIRED);
+            throw new IllegalArgumentException("fieldName is required");
         }
 
         if(!fieldCache.containsKey(fieldName)){
@@ -75,11 +74,11 @@ public class JsoupHtml5Form implements Form {
             Elements matches = formElement.select(selector);
 
             if(matches.size() == 0){
-                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_WITH_NAME_NOT_FOUND, fieldName);
+                throw new HyperResourceException("Could not find a field with name [" + fieldName + "]");
             }
 
             if (matches.size() > 1) {
-                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_FOUND_MORE_THAN_ONE, fieldName);
+                throw new HyperResourceException("Found more than one field with name [" + fieldName + "]");
             }
 
             fieldCache.put(fieldName, JsoupHtml5Field.fieldFactory(matches.get(0), formElement));
@@ -91,7 +90,7 @@ public class JsoupHtml5Form implements Form {
     @Override
     public boolean hasField(String fieldName) {
         if (StringUtils.isEmpty(fieldName)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_FIELD_NAME_REQUIRED);
+            throw new IllegalArgumentException("fieldName is required");
         }
 
         String selector = String.format(fieldSelector, fieldName, fieldName);
@@ -131,7 +130,7 @@ public class JsoupHtml5Form implements Form {
     @Override
     public FieldSet getFieldSet(String fieldSetName) {
         if (StringUtils.isEmpty(fieldSetName)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_FIELD_SET_NAME_REQUIRED);
+            throw new IllegalArgumentException("The provided element is not a form");
         }
 
         if(!fieldSetCache.containsKey(fieldSetName)){
@@ -140,11 +139,11 @@ public class JsoupHtml5Form implements Form {
             Elements matches = formElement.select(selector);
 
             if(matches.size() == 0){
-                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_SET_WITH_NAME_NOT_FOUND, fieldSetName);
+                throw new HyperResourceException("Could not find a field set with name [" + fieldSetName + "]");
             }
 
             if (matches.size() > 1) {
-                throw new HyperResourceException(Messages.MSG_ERROR_FIELD_SET_FOUND_MORE_THAN_ONE, fieldSetName);
+                throw new HyperResourceException("Found more than one field set with name [" + fieldSetName + "]");
             }
 
             fieldSetCache.put(fieldSetName, new JsoupHtml5FieldSet(matches.get(0), formElement));

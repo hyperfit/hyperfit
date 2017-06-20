@@ -4,7 +4,6 @@ package org.hyperfit.resource.html5;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.BaseHyperResource;
 import org.hyperfit.resource.HyperResource;
@@ -41,16 +40,15 @@ public class Html5Resource extends BaseHyperResource {
             this.dataNode = this.htmlResource.select("section.data").first();
         } catch (Exception ex) {
             throw new HyperfitException(
-                ex,
-                Messages.MSG_ERROR_MEDIATYPE_CANNOT_CREATE_RESOURCE,
-                response, Html5Resource.class
+                "The response [" + response + "] cannot be read into an html dom.",
+                ex
             );
         }
     }
 
     public Html5Resource(Document htmlDoc) {
         if (htmlDoc == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
+            throw new IllegalArgumentException("htmlDoc cannot be null");
         }
 
         this.htmlResource = htmlDoc;
@@ -69,7 +67,7 @@ public class Html5Resource extends BaseHyperResource {
     private static final String linkByRelSelector = "link[rel=%s]";
     public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
+            throw new IllegalArgumentException("relationship cannot be empty");
         }
 
         String anchor = String.format(anchorByRelSelector, relationship);
@@ -110,11 +108,11 @@ public class Html5Resource extends BaseHyperResource {
     }
 
     public HyperResource resolveLinkLocal(String relationship) {
-        throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, relationship, this.htmlResource);
+        throw new HyperResourceException("resolving links locally in html5 representations is not currently supported");
     }
 
     public HyperResource[] resolveLinksLocal(String relationship) {
-        throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, relationship, htmlResource);
+        throw new HyperResourceException("resolving links locally in html5 representations is not currently supported");
     }
 
 
@@ -158,7 +156,7 @@ public class Html5Resource extends BaseHyperResource {
             if(nullWhenMissing){
                 return null;
             } else {
-                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+                throw new HyperResourceException("Resource data with path [" + Arrays.toString(path) + "] was not found in [" + htmlResource + "]");
             }
         }
 
@@ -166,7 +164,7 @@ public class Html5Resource extends BaseHyperResource {
         for(String step : path){
             node = node.select("*[name=" + step + "]").first();
             if(node == null){
-                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, htmlResource);
+                throw new HyperResourceException("Resource data with path [" + Arrays.toString(path) + "] was not found in [" + htmlResource + "]");
             }
 
         }
@@ -180,7 +178,7 @@ public class Html5Resource extends BaseHyperResource {
     @Override
     public Form getForm(String formName) {
         if (StringUtils.isEmpty(formName)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_FORM_NAME_REQUIRED);
+            throw new IllegalArgumentException("Form name is required");
         }
 
 
@@ -190,11 +188,11 @@ public class Html5Resource extends BaseHyperResource {
             Elements matches = htmlResource.select(formSelector);
 
             if(matches.size() == 0){
-                throw new HyperResourceException(Messages.MSG_ERROR_FORM_WITH_NAME_NOT_FOUND, formName);
+                throw new HyperResourceException("Could not find a form with name [" + formName + "]");
             }
 
             if (matches.size() > 1) {
-                throw new HyperResourceException(Messages.MSG_ERROR_FORM_FOUND_MORE_THAN_ONE, formName);
+                throw new HyperResourceException("Found more than one form with name [" + formName + "]");
             }
 
             formCache.put(formName, new JsoupHtml5Form(matches.get(0)));

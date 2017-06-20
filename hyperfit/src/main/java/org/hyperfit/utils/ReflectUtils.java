@@ -2,7 +2,6 @@ package org.hyperfit.utils;
 
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 
 import java.lang.reflect.Array;
 
@@ -26,12 +25,12 @@ public class ReflectUtils {
         try {
             return clazz.cast(value);
         } catch (Exception ex) {
-            throw new HyperfitException(ex, Messages.MSG_ERROR_REFLECTION_CANNOT_CAST, value, clazz);
+            throw new HyperfitException("Cannot cast object [" + value + "] to " + clazz, ex );
         }
     }
 
     /**
-     * Creates an empty array. 
+     * Creates an empty array.
      * @param type type of the array
      * @param size size of the array
      * @return array with the specified type.

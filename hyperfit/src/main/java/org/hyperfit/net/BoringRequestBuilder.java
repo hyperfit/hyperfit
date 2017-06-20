@@ -2,7 +2,6 @@ package org.hyperfit.net;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hyperfit.message.Messages;
 import org.hyperfit.utils.StringUtils;
 
 import java.util.*;
@@ -46,7 +45,7 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     public BoringRequestBuilder setUrl(String url) {
         if (StringUtils.isEmpty(url)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_EMPTY);
+            throw new IllegalArgumentException("url cannot be empty");
         }
 
         this.url = url;
@@ -55,7 +54,7 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     public BoringRequestBuilder setContentType(String contentType) {
         if (StringUtils.isEmpty(contentType)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_CONTENT_TYPE_EMPTY);
+            throw new IllegalArgumentException("contentType cannot be empty");
         }
 
         this.contentType = contentType;
@@ -65,7 +64,7 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     public BoringRequestBuilder setMethod(Method method) {
         if (method == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_REQUEST_METHOD_NULL);
+            throw new IllegalArgumentException("method cannot be null");
         }
 
         this.method = method;
@@ -74,7 +73,7 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     public BoringRequestBuilder setContent(String content) {
         if (content == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_REQUEST_CONTENT_BODY_NULL);
+            throw new IllegalArgumentException("content cannot be null");
         }
 
         this.content = content;
@@ -83,7 +82,7 @@ public class BoringRequestBuilder implements RequestBuilder {
 
     public BoringRequestBuilder addHeader(String name, String value) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_HEADER_NAME_EMPTY);
+            throw new IllegalArgumentException("name cannot be empty");
         }
 
         if (value != null) {
@@ -94,12 +93,12 @@ public class BoringRequestBuilder implements RequestBuilder {
     }
 
 
-    public BoringRequestBuilder addAcceptedContentType(String name) {
-        if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY);
+    public BoringRequestBuilder addAcceptedContentType(String contentType) {
+        if (StringUtils.isEmpty(contentType)) {
+            throw new IllegalArgumentException("contentType cannot be empty");
         }
 
-        this.acceptedContentTypes.add(name);
+        this.acceptedContentTypes.add(contentType);
 
         return this;
     }

@@ -1,7 +1,6 @@
 package org.hyperfit.net;
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.resource.controls.form.CheckboxField;
 import org.hyperfit.resource.controls.form.Field;
 import org.hyperfit.resource.controls.form.Form;
@@ -60,7 +59,7 @@ public class FormRequestBuilder implements RequestBuilder {
 
     public FormRequestBuilder addHeader(String name, String value) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_HEADER_NAME_EMPTY);
+            throw new IllegalArgumentException("name cannot be empty");
         }
 
         if (value != null) {
@@ -71,19 +70,19 @@ public class FormRequestBuilder implements RequestBuilder {
     }
 
     //TODO: take a ContentType type instead of a string
-    public FormRequestBuilder addAcceptedContentType(String name) {
-        if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY);
+    public FormRequestBuilder addAcceptedContentType(String contentType) {
+        if (StringUtils.isEmpty(contentType)) {
+            throw new IllegalArgumentException("contentType cannot be empty");
         }
 
-        this.acceptedContentTypes.add(name);
+        this.acceptedContentTypes.add(contentType);
 
         return this;
     }
 
     public FormRequestBuilder setParam(String name, Object value) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY);
+            throw new IllegalArgumentException("name cannot be empty");
         }
 
 

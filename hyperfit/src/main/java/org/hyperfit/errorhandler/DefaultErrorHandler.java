@@ -5,8 +5,6 @@ import org.hyperfit.HyperfitProcessor;
 import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.hyperfit.exception.ResponseException;
 
@@ -17,8 +15,6 @@ import org.hyperfit.exception.ResponseException;
  * @see ErrorHandler
  */
 public class DefaultErrorHandler implements ErrorHandler {
-    
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorHandler.class);
 
 
     public HyperResource unhandledContentType(HyperfitProcessor processor, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface) {
@@ -30,8 +26,8 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     public HyperResource contentParseError(HyperfitProcessor processor, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, Exception parseException) {
         throw new ResponseException(
-            parseException,
             String.format("Response from [%s] with code [%s] could not be parsed into a hyper resource of content type [%s] because [%s]", response.getRequest().getUrl(), response.getCode(), response.getContentType(), parseException.getMessage()),
+            parseException,
             response
         );
     }

@@ -290,7 +290,7 @@ public class Java8DefaultMethodHandlerTest {
     @Test
     public void invoke_withNoValidInterfaces() throws Exception {
         ee.expect(HyperfitException.class);
-        ee.expectMessage("No interface in [interface org.hyperfit.resource.HyperResource] has default method public default java.lang.String org.hyperfit.java8.Java8DefaultMethodHandlerTest$InterfaceWithDefaultMethod.someString()!");
+        ee.expectMessage("No interface in [interface org.hyperfit.resource.HyperResource] has default method public default java.lang.String org.hyperfit.java8.Java8DefaultMethodHandlerTest$InterfaceWithDefaultMethod.someString()");
         new Java8DefaultMethodHandler().invoke(
             new org.hyperfit.handlers.Java8DefaultMethodHandler.DefaultMethodContext(
                 new HyperResource() {

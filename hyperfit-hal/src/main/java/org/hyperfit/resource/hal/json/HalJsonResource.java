@@ -2,7 +2,6 @@ package org.hyperfit.resource.hal.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.BaseHyperResource;
 import org.hyperfit.resource.HyperResource;
@@ -43,21 +42,19 @@ public class HalJsonResource extends BaseHyperResource {
 
         } catch (Exception ex) {
             throw new HyperfitException(
-                ex,
-                Messages.MSG_ERROR_MEDIATYPE_CANNOT_CREATE_RESOURCE,
-                response,
-                HalJsonResource.class
+                "The response [" + response + "] cannot be read into a json tree.",
+                ex
             );
         }
 
         if (this.jsonResource == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
+            throw new IllegalArgumentException("jsonResource cannot be null.");
         }
     }
 
     public HalJsonResource(JsonNode jsonResource, String baseURI) {
         if (jsonResource == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
+            throw new IllegalArgumentException("jsonResource cannot be null.");
         }
 
         this.baseURI = baseURI;
@@ -73,12 +70,13 @@ public class HalJsonResource extends BaseHyperResource {
      */
     protected JsonNode getJsonNode(JsonNode root, String... path) {
         if (root == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_NULL);
+            throw new IllegalArgumentException("root cannot be null.");
         }
 
         if (path == null || path.length <= 0) {
             throw new IllegalArgumentException(
-                    String.format(Messages.MSG_ERROR_RESOURCE_DATA_SOURCE_CANNOT_BE_TRAVERSED, Arrays.toString(path)));
+                "Resource data source [" + Arrays.toString(path) + "] cannot be traversed. Search path is either null or empty."
+            );
         }
 
         JsonNode result = root.path(path[0]);
@@ -106,7 +104,7 @@ public class HalJsonResource extends BaseHyperResource {
 
     public HyperLink[] getLinks(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
+            throw new IllegalArgumentException("relationship cannot be empty");
         }
 
         if(!linkCache.containsKey(relationship)){
@@ -145,7 +143,7 @@ public class HalJsonResource extends BaseHyperResource {
         JsonNode node = jsonResource.path("_embedded").path(relationship);
 
         if (node.isMissingNode()) {
-            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, relationship, jsonResource);
+            throw new HyperResourceException("Embedded Resource with rel [" + relationship + "] was not found in [" + jsonResource + "]");
         }
 
         return new HalJsonResource(node, this.baseURI);
@@ -155,7 +153,7 @@ public class HalJsonResource extends BaseHyperResource {
         JsonNode node = jsonResource.path("_embedded").path(relationship);
 
         if (node.isMissingNode()) {
-            throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_LINK_NOT_FOUND, relationship, jsonResource);
+            throw new HyperResourceException("Embedded Resource with rel [" + relationship + "] was not found in [" + jsonResource + "]");
         }
 
         if(node.isArray()){
@@ -204,7 +202,7 @@ public class HalJsonResource extends BaseHyperResource {
             if(nullWhenMissing){
                 return null;
             } else {
-                throw new HyperResourceException(Messages.MSG_ERROR_RESOURCE_DATA_PATH_NOT_FOUND, path, jsonResource);
+                throw new HyperResourceException("Resource data with path [" + Arrays.toString(path) + "] was not found in [" + jsonResource + "]");
             }
         }
 

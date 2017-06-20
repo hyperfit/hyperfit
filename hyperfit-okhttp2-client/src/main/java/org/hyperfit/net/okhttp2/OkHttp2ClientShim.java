@@ -1,6 +1,5 @@
 package org.hyperfit.net.okhttp2;
 
-import org.hyperfit.message.Messages;
 import com.squareup.okhttp.*;
 
 
@@ -22,7 +21,7 @@ public class OkHttp2ClientShim {
 
     public OkHttp2ClientShim(OkHttpClient wrappedClient){
         if (wrappedClient == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
+            throw new IllegalArgumentException("wrappedClient cannot be null");
         }
 
         this.wrappedClient = wrappedClient;

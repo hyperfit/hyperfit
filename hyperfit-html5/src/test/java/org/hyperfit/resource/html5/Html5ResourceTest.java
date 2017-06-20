@@ -97,7 +97,7 @@ public class Html5ResourceTest {
     }
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDataSourceNull() {
         new Html5Resource((Document)null);
     }

@@ -6,17 +6,11 @@ import com.google.common.collect.Maps;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
-import org.hyperfit.net.BoringRequestBuilder;
-import org.hyperfit.net.Method;
-import org.hyperfit.net.Request;
-import org.hyperfit.net.Response;
+import org.hyperfit.net.*;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Matchers;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,14 +20,13 @@ import java.net.CookieHandler;
 import java.net.HttpURLConnection;
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class OkHttp1HyperClientTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+
 
     OkHttpClient okHttpClient;
 
@@ -53,9 +46,14 @@ public class OkHttp1HyperClientTest {
     @Test
     public void testExecute_WhenRequestNull() throws Exception {
 
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage(Messages.MSG_ERROR_CLIENT_REQUEST_NULL);
-        client.execute(null);
+
+        try{
+            client.execute(null);
+            fail("expected exception not thrown");
+        }catch(IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("request cannot be null"));
+        }
+
 
     }
 
@@ -64,9 +62,14 @@ public class OkHttp1HyperClientTest {
         Request request = mock(Request.class);
         when(request.getMethod()).thenReturn(null);
 
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage(Messages.MSG_ERROR_CLIENT_REQUEST_METHOD_NULL);
-        client.execute(request);
+
+        try{
+            client.execute(request);
+            fail("expected exception not thrown");
+        }catch(IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("request's method cannot be null"));
+        }
+
     }
 
     @Test
@@ -75,10 +78,12 @@ public class OkHttp1HyperClientTest {
         Request request = mock(Request.class);
         when(request.getMethod()).thenReturn(Method.CONNECT);
 
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage(Messages.MSG_ERROR_CLIENT_REQUEST_URL_NULL);
-        client.execute(request);
-
+        try{
+            client.execute(request);
+            fail("expected exception not thrown");
+        }catch(IllegalArgumentException e){
+            assertThat(e.getMessage(), containsString("request's url cannot be empty"));
+        }
     }
 
 
@@ -92,9 +97,14 @@ public class OkHttp1HyperClientTest {
         final IOException exception = new IOException("FooBar");
         doThrow(exception).when(client).openConnection(request);
 
-        thrown.expect(HyperfitException.class);
 
-        client.execute(request);
+        try{
+            client.execute(request);
+            fail("expected exception not thrown");
+        }catch(HyperfitException e){
+            assertSame(exception, e.getCause());
+        }
+
     }
 
     @Test
@@ -121,7 +131,7 @@ public class OkHttp1HyperClientTest {
         HttpURLConnection connection = client.openConnection(request);
 
         String actualUrl = connection.getURL().toString();
-        assertThat(actualUrl).isEqualTo(url);
+        assertEquals(url, actualUrl);
 
     }
 
@@ -222,21 +232,21 @@ public class OkHttp1HyperClientTest {
 
         String body = "body";
 
-        doNothing().when(client).addHeadersToResponse(eq(connection), any(Response.ResponseBuilder.class));
+        doNothing().when(client).addHeadersToResponse(eq(connection), Matchers.any(Response.ResponseBuilder.class));
         doReturn(body).when(client).convertResponseBodyToString(connection);
 
-        Integer returnCode = 100;
+        int returnCode = 100;
         when(connection.getResponseCode()).thenReturn(returnCode);
         String contentType = "bar/foo";
         when(connection.getContentType()).thenReturn(contentType);
 
         Response actual = client.readResponse(connection, mockRequest);
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getCode()).isEqualTo(returnCode);
-        assertThat(actual.getContentType()).isEqualTo(contentType);
-        assertThat(actual.getBody()).isEqualTo(body);
-        assertThat(actual.getRequest()).isSameAs(mockRequest);
+        assertNotNull(actual);
+        assertEquals(returnCode, actual.getCode());
+        assertEquals(contentType, actual.getContentType());
+        assertEquals(body, actual.getBody());
+        assertEquals(mockRequest, actual.getRequest());
 
     }
 
@@ -254,7 +264,7 @@ public class OkHttp1HyperClientTest {
 
 
         String actual = client.convertResponseBodyToString(connection);
-        assertThat(actual).isEqualTo(body);
+        assertEquals(body, actual);
 
 
     }
@@ -270,13 +280,13 @@ public class OkHttp1HyperClientTest {
         for (int i = 0 ; i < 400 ;i++) {
             when(connection.getResponseCode()).thenReturn(i);
             InputStream actual = client.getResponseInputStream(connection);
-            assertThat(actual).isSameAs(is);
+            assertSame(is, actual);
         }
 
         for (int i = 400 ; i < 1000 ;i++) {
             when(connection.getResponseCode()).thenReturn(i);
             InputStream actual = client.getResponseInputStream(connection);
-            assertThat(actual).isSameAs(isError);
+            assertSame(isError, actual);
         }
     }
 
@@ -313,10 +323,14 @@ public class OkHttp1HyperClientTest {
             headers.put(header.getKey(), header.getValue());
         }
 
-        assertThat(headers)
-                .containsEntry("entry1", "value1")
-                .containsEntry("entry2", "value2")
-                .containsEntry("entry3", "value4");
+        assertThat(
+            headers,
+            allOf(
+                hasEntry("entry1", "value1"),
+                hasEntry("entry2", "value2"),
+                hasEntry("entry3", "value4")
+            )
+        );
     }
 
     @Test

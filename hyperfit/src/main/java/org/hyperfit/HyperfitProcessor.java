@@ -10,7 +10,6 @@ import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.handlers.Java8DefaultMethodHandler;
-import org.hyperfit.message.Messages;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
 import org.hyperfit.net.*;
@@ -59,7 +58,7 @@ public class HyperfitProcessor {
         java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
 
         if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
-            throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT);
+            throw new IllegalArgumentException("at least one scheme client mapping must be registered");
         }
         schemeClientMap = builder.schemeClientMap;
 
@@ -168,8 +167,7 @@ public class HyperfitProcessor {
 
         HyperClient hyperClient = schemeClientMap.get(scheme);
         if(hyperClient == null){
-            Set<String> registeredSchemes = schemeClientMap.keySet();
-            throw new NoClientRegisteredForSchemeException(Messages.MSG_ERROR_NO_CLIENT_FOR_SCHEME, scheme, registeredSchemes);
+            throw new NoClientRegisteredForSchemeException(scheme);
         }
 
         Response response = hyperClient.execute(request);

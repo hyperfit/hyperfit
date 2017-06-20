@@ -60,7 +60,7 @@ public class HalJsonResourceTest {
         return linkNode;
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDataSourceNull() {
         new HalJsonResource((JsonNode)null, null);
     }

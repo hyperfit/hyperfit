@@ -256,7 +256,7 @@ public class HyperfitProcessorBuilderTest {
         requestProcessor.processRequest(RootResource.class, "scheme1://host.com");
     }
 
-    @Test(expected = NoClientRegisteredForSchemeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAtLeastOneClientRegistered(){
         HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
                 .addContentTypeHandler(mockContentTypeHandler)

@@ -4,7 +4,6 @@ import com.damnhandy.uri.template.UriTemplate;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.utils.StringUtils;
 
 import java.util.*;
@@ -45,7 +44,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
     public RFC6570RequestBuilder setUrlTemplate(String urlTemplate) {
         if (StringUtils.isEmpty(urlTemplate)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_EMPTY);
+            throw new IllegalArgumentException("urlTemplate cannot be empty");
         }
 
         this.urlTemplate = urlTemplate;
@@ -54,7 +53,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
     public RFC6570RequestBuilder setContentType(String contentType) {
         if (StringUtils.isEmpty(contentType)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_CONTENT_TYPE_EMPTY);
+            throw new IllegalArgumentException("contentType cannot be empty");
         }
 
         this.contentType = contentType;
@@ -63,7 +62,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
     public RFC6570RequestBuilder setMethod(Method method) {
         if (method == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_REQUEST_METHOD_NULL);
+            throw new IllegalArgumentException("method cannot be null");
         }
 
         this.method = method;
@@ -72,7 +71,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
     public RFC6570RequestBuilder setContent(String content) {
         if (content == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_REQUEST_CONTENT_BODY_NULL);
+            throw new IllegalArgumentException("contentType cannot be null");
         }
 
         this.content = content;
@@ -81,7 +80,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
     public RFC6570RequestBuilder addHeader(String name, String value) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_HEADER_NAME_EMPTY);
+            throw new IllegalArgumentException("name cannot be empty");
         }
 
         if (value != null) {
@@ -92,19 +91,19 @@ public class RFC6570RequestBuilder implements RequestBuilder {
     }
 
     //TODO: take a ContentType type instead of a string
-    public RFC6570RequestBuilder addAcceptedContentType(String name) {
-        if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_ACCEPTED_CONTENT_TYPE_EMPTY);
+    public RFC6570RequestBuilder addAcceptedContentType(String contentType) {
+        if (StringUtils.isEmpty(contentType)) {
+            throw new IllegalArgumentException("contentType cannot be empty");
         }
 
-        this.acceptedContentTypes.add(name);
+        this.acceptedContentTypes.add(contentType);
 
         return this;
     }
 
     public RFC6570RequestBuilder setParam(String name, Object value) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_REQUEST_URL_PARAM_NAME_EMPTY);
+            throw new IllegalArgumentException("name cannot be empty");
         }
 
         if (value != null) {
@@ -154,7 +153,7 @@ public class RFC6570RequestBuilder implements RequestBuilder {
 
             return uriTemplateBuilder.expand();
         } catch (Exception e) {
-            throw new HyperfitException(e, Messages.MSG_ERROR_REQUEST_URL_CANNOT_BE_EXPANDED, urlTemplate, params);
+            throw new HyperfitException("URL Template [" + urlTemplate + "] cannot be expanded with params", e);
         }
     }
 

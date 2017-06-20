@@ -1,7 +1,6 @@
 package org.hyperfit.utils;
 
 import org.hyperfit.exception.ParameterizedTypeException;
-import org.hyperfit.message.Messages;
 import org.javatuples.Pair;
 
 import java.lang.reflect.GenericArrayType;
@@ -25,7 +24,7 @@ public class TypeInfo {
         Type type = this.typeParamsLookup.get(arg.getName());
 
         if(type == null) {
-            throw new ParameterizedTypeException(Messages.MSG_ERROR_LOOKING_FOR_PARAM, arg.getName());
+            throw new ParameterizedTypeException("No type param called [" + arg.getName() + "] was found in typeParamsLookup map");
         }
 
         return type;

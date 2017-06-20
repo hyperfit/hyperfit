@@ -7,7 +7,6 @@ import com.google.common.io.Closeables;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.net.BaseHyperClient;
 import org.hyperfit.net.HyperClient;
 import org.hyperfit.net.Request;
@@ -22,13 +21,12 @@ import java.net.CookieHandler;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class OkHttp1HyperClient extends BaseHyperClient {
     public static final Charset UTF_8 = Charset.forName("UTF-8");
-    private static Logger log = LoggerFactory.getLogger(OkHttp1HyperClient.class);
+    private static Logger LOG = LoggerFactory.getLogger(OkHttp1HyperClient.class);
     private final OkHttpClient okHttpClient;
 
     public OkHttp1HyperClient() {
@@ -37,7 +35,7 @@ public class OkHttp1HyperClient extends BaseHyperClient {
 
     public OkHttp1HyperClient(OkHttpClient okHttpClient){
         if (okHttpClient == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
+            throw new IllegalArgumentException("okHttpClient cannot be null");
         }
         this.okHttpClient = okHttpClient;
     }
@@ -47,17 +45,17 @@ public class OkHttp1HyperClient extends BaseHyperClient {
     public Response execute(Request request) {
         // Validate required elements
         if (request == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_NULL);
+            throw new IllegalArgumentException("request cannot be null.");
         }
 
         // in practice this should never happen, but just in case
         if (request.getMethod() == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_METHOD_NULL);
+            throw new IllegalArgumentException("request's method cannot be null.");
         }
 
         // in practice this should never happen, but just in case
         if (Strings.isNullOrEmpty(request.getUrl())) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_CLIENT_REQUEST_URL_NULL);
+            throw new IllegalArgumentException("request's url cannot be empty.");
         }
 
         try {
@@ -65,8 +63,8 @@ public class OkHttp1HyperClient extends BaseHyperClient {
             prepareRequest(connection, request);
             return readResponse(connection, request);
         } catch (IOException ex) {
-            log.debug("Unable to Execute Request", ex);
-            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
+            LOG.error("Unable to Execute Request", ex);
+            throw new HyperfitException("The request [" + request + "] could not be executed.", ex);
         }
     }
 
@@ -127,7 +125,7 @@ public class OkHttp1HyperClient extends BaseHyperClient {
                 .addBody(body)
                 .build();
 
-        log.trace(Messages.MSG_DEBUG_CLIENT_RESPONSE, response);
+        LOG.trace("Provider generating response [{}].", response);
         return response;
     }
 

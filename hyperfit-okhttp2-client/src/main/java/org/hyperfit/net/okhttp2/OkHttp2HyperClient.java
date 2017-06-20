@@ -14,7 +14,6 @@ import org.hyperfit.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.hyperfit.message.Messages;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -40,7 +39,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
      */
     public OkHttp2HyperClient(OkHttp2ClientShim okHttpClient) {
         if (okHttpClient == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
+            throw new IllegalArgumentException("okHttpClient cannot be null");
         }
 
         this.okHttpClient = okHttpClient;
@@ -52,7 +51,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
      */
     public OkHttp2HyperClient(OkHttpClient okHttpClient) {
         if (okHttpClient == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
+            throw new IllegalArgumentException("okHttpClient cannot be null");
         }
 
         this.okHttpClient = new OkHttp2ClientShim(okHttpClient);
@@ -66,20 +65,20 @@ public class OkHttp2HyperClient extends BaseHyperClient {
     public Response execute(Request request) {
         // Validate required elements
         if (request == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_NULL);
+            throw new IllegalArgumentException("request cannot be null.");
         }
 
         if (request.getMethod() == null) {
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_METHOD_NULL);
+            throw new IllegalArgumentException("request's method cannot be null.");
         }
 
         if (StringUtils.isEmpty(request.getUrl())) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_CLIENT_REQUEST_URL_NULL);
+            throw new IllegalArgumentException("request's url cannot be empty.");
         }
 
         return doResponse(doRequest(prepareRequest(request)), request);
     }
-   
+
     public OkHttp2HyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
         return (OkHttp2HyperClient)super.setAcceptedContentTypes(acceptedContentTypes);
     }
@@ -111,7 +110,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         } else if(HttpMethod.requiresRequestBody(request.getMethod().name())){
             requestBody = EMPTY_REQUEST_BODY;
         }
-      
+
         return new com.squareup.okhttp.Request.Builder()
                 .url(request.getUrl())
                 .method(request.getMethod().name(), requestBody)
@@ -127,12 +126,13 @@ public class OkHttp2HyperClient extends BaseHyperClient {
      */
     protected com.squareup.okhttp.Response doRequest(com.squareup.okhttp.Request request) {
 
-        LOG.trace(Messages.MSG_DEBUG_CLIENT_REQUEST, request.url(), request.method(), request.headers(), request.body());
-        
+        LOG.trace("Provider executing request url=[{}], method={}, headers={}, body=[{}].", request.url(), request.method(), request.headers(), request.body());
+
         try {
             return okHttpClient.newCall(request).execute();
         } catch (Exception ex) {
-            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
+            LOG.error("Unable to Execute Request", ex);
+            throw new HyperfitException("The request [" + request + "] could not be executed.", ex);
         }
     }
 
@@ -163,10 +163,10 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         try {
             responseBuilder.addBody(response.body().string());
         } catch (Exception ex) {
-            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_RESPONSE_FAILURE, response);
+            throw new HyperfitException("The response [" + response + "] could not be generated correctly.", ex);
         }
 
-        LOG.trace(Messages.MSG_DEBUG_CLIENT_RESPONSE, response);
+        LOG.trace("Response is {}", response);
         return responseBuilder.build();
     }
 

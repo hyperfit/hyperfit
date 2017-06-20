@@ -39,60 +39,60 @@ public class RFC6570RequestBuilderTest {
     public void testGetUrlNonTemplated() {
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
                 .build()
                 .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
     }
 
     @Test
     public void testGetUrlTemplated() {
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
                         //Note we don't set a param
                 .build()
                 .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
     }
 
     @Test
     public void testGetUrlExpand() {
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
                 .setParam("param", "1")
                 .build()
                 .getUrl();
 
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=1", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?param=1", actual);
     }
 
     @Test
     public void testGetUrlExpandNullParam() {
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
                 .setParam("param", null)
                 .build()
                 .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
     }
 
     @Test
     public void testGetUrlExpandEmptyParam() {
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
                 .setParam("param", "")
                 .build()
                 .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?param=", actual);
     }
 
     @Test
@@ -102,12 +102,12 @@ public class RFC6570RequestBuilderTest {
         //and thus the client can't set the parameter.
 
         String actual = new RFC6570RequestBuilder()
-                .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+                .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
                 .setParam("paramNotThere", "")
                 .build()
                 .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
     }
 
 
@@ -141,13 +141,13 @@ public class RFC6570RequestBuilderTest {
         VarExploder exploder = new Selections("1","2");
 
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?x,param*}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?x,param*}")
             .setParam("param", exploder)
             .setParam("x", xValue)
             .build()
             .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?x=" + xValue + "&param=1&param=2", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?x=" + xValue + "&param=1&param=2", actual);
     }
 
 
@@ -163,13 +163,13 @@ public class RFC6570RequestBuilderTest {
         val.put("y", "cat");
 
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?x,param*}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?x,param*}")
             .setParam("param", val)
             .setParam("x", xValue)
             .build()
             .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?x=" + xValue + "&x=1&y=cat", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?x=" + xValue + "&x=1&y=cat", actual);
     }
 
 
@@ -178,43 +178,43 @@ public class RFC6570RequestBuilderTest {
     public void testGetUrlTemplate() {
 
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
             .build()
             .getUrl();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
     }
 
     @Test
     public void testBuildURLWithValueForParam() {
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
             .setParam("param", "1")
             .getURL();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=1", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?param=1", actual);
 
     }
 
     @Test
     public void testBuildURLNullParamValue() {
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
             .setParam("param", null)
             .getURL();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/", actual);
 
     }
 
     @Test
     public void testBuildURLEmptyParamValue() {
         String actual = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
             .setParam("param", "")
             .getURL();
 
-        assertEquals("http://api-cloud-01.qa:8080/commerce-hyper-api/?param=", actual);
+        assertEquals("http://host.domain:8080/hypermedia-app/?param=", actual);
 
 
     }
@@ -222,66 +222,66 @@ public class RFC6570RequestBuilderTest {
     @Test
     public void testGetContentBody() {
         assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                        setUrlTemplate("http://host.domain:8080/hypermedia-app/").
         setContent("{test:\"ok\"}").build().getContent(),
                 "{test:\"ok\"}");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testGetContentBodyNull() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/").
         setContent(null).build().getContent();
     }
 
     @Test
     public void testGetContentType() {
         assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                        setUrlTemplate("http://host.domain:8080/hypermedia-app/").
         setContent("application/json").build().getContent(),
                 "application/json");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testGetContentTypeNull() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/").
         setContent(null).build().getContent();
     }
 
     @Test
     public void testGetMethod() {
         assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                        setUrlTemplate("http://host.domain:8080/hypermedia-app/").
                         setMethod(Method.GET).build().getMethod(),
                 Method.GET);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testGetMethodNull() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/").
                 setMethod(null).build().getMethod();
     }
 
     @Test
     public void testgetParam() {
         RequestBuilder builder = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}")
             .setParam("param", "1");
-        
+
         assertEquals("1", builder.getParam("param"));
     }
 
     @Test
     public void testgetParamNullValue() {
         assertEquals(new RFC6570RequestBuilder().
-                        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
+                        setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}").
         setParam("param", null).getParam("param"),
                 null);
 
         RFC6570RequestBuilder request = new RFC6570RequestBuilder().
-        setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
+        setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}").
         setParam("param", null);
 
         assertEquals(0, (request.getParams().keySet().size()));
@@ -290,14 +290,14 @@ public class RFC6570RequestBuilderTest {
     @Test(expected = IllegalArgumentException.class)
     public void testgetParamNullKey() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}").
         setParam("", "1").getParam("param");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testgetParamEmptyKey() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param}").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param}").
         setParam(null, "1").getParam("param");
     }
 
@@ -310,7 +310,7 @@ public class RFC6570RequestBuilderTest {
         String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
             .addHeader(header1Name, header1Value)
             .addHeader(header2Name, header2Value)
             .build();
@@ -327,7 +327,7 @@ public class RFC6570RequestBuilderTest {
         String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
             .addHeader(header1Name, header1Value)
             .addHeader(header2Name, header2Value)
             .build();
@@ -340,21 +340,21 @@ public class RFC6570RequestBuilderTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetHeaderNullKey() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/").
                 addHeader("", "application/json").build().getHeader("param");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetHeaderEmptyKey() {
         new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/").
                 addHeader(null, "application/json").build().getHeader("param");
     }
 
     @Test
     public void testGetParams() {
         RequestBuilder request = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param1,param2}")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param1,param2}")
             .setParam("param1", "1")
             .setParam("param2", "2")
         ;
@@ -378,7 +378,7 @@ public class RFC6570RequestBuilderTest {
     @Test
     public void testGetParamsNullParam() {
         RequestBuilder request = new RFC6570RequestBuilder().
-                setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/{?param1,param2}").
+                setUrlTemplate("http://host.domain:8080/hypermedia-app/{?param1,param2}").
         setParam("param1", "1").
         setParam("param2", null)
                 ;
@@ -407,7 +407,7 @@ public class RFC6570RequestBuilderTest {
         String header2Value = uniqueString();
 
         Request request = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
             .addHeader(header1Name, header1Value)
             .addHeader(header2Name, header2Value)
             .build();
@@ -444,7 +444,7 @@ public class RFC6570RequestBuilderTest {
         String header2Value = null;
 
         Request request = new RFC6570RequestBuilder()
-            .setUrlTemplate("http://api-cloud-01.qa:8080/commerce-hyper-api/")
+            .setUrlTemplate("http://host.domain:8080/hypermedia-app/")
             .addHeader(header1Name, header1Value)
             .addHeader(header2Name, header2Value)
             .build();
@@ -472,50 +472,50 @@ public class RFC6570RequestBuilderTest {
 
     @Test
     public void testGet() {
-        assertEquals(RFC6570RequestBuilder.get("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.get("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.GET);
-        assertEquals(RFC6570RequestBuilder.get("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.get("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
     @Test
     public void testPost() {
-        assertEquals(RFC6570RequestBuilder.post("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.post("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.POST);
-        assertEquals(RFC6570RequestBuilder.post("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.post("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
     @Test
     public void testPut() {
-        assertEquals(RFC6570RequestBuilder.put("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.put("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.PUT);
-        assertEquals(RFC6570RequestBuilder.put("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.put("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
     @Test
     public void testDelete() {
-        assertEquals(RFC6570RequestBuilder.delete("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.delete("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.DELETE);
-        assertEquals(RFC6570RequestBuilder.delete("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.delete("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
     @Test
     public void testOptions() {
-        assertEquals(RFC6570RequestBuilder.options("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.options("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.OPTIONS);
-        assertEquals(RFC6570RequestBuilder.options("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.options("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
     @Test
     public void testHead() {
-        assertEquals(RFC6570RequestBuilder.head("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").build().getMethod(),
+        assertEquals(RFC6570RequestBuilder.head("http://host.domain:8080/hypermedia-app/{?superParam}").build().getMethod(),
                 Method.HEAD);
-        assertEquals(RFC6570RequestBuilder.head("http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}").getUrlTemplate(),
-                "http://api-cloud-01.qa:8080/commerce-hyper-api/{?superParam}");
+        assertEquals(RFC6570RequestBuilder.head("http://host.domain:8080/hypermedia-app/{?superParam}").getUrlTemplate(),
+                "http://host.domain:8080/hypermedia-app/{?superParam}");
     }
 
 

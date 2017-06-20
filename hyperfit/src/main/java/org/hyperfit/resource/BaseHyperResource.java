@@ -1,6 +1,5 @@
 package org.hyperfit.resource;
 
-import org.hyperfit.message.Messages;
 import org.hyperfit.resource.controls.link.HyperLink;
 import org.hyperfit.utils.StringUtils;
 import java.util.ArrayList;
@@ -22,16 +21,16 @@ public abstract class BaseHyperResource implements HyperResource {
      */
     public HyperLink getLink(String relationship) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
+            throw new IllegalArgumentException("Link relationship is required");
         }
 
         HyperLink[] links = this.getLinks(relationship);
         if (links.length == 0) {
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_REL_NOT_FOUND, relationship);
+            throw new HyperResourceException("Could not find a link with relationship " + relationship);
         }
 
         if (links.length > 1) {
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_FOUND_MORE_THAN_ONE, relationship);
+            throw new HyperResourceException("Found more than one link with relationship " + relationship);
         }
 
         return links[0];
@@ -40,16 +39,16 @@ public abstract class BaseHyperResource implements HyperResource {
 
     public HyperLink getLink(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
+            throw new IllegalArgumentException("Link relationship is required");
         }
 
         HyperLink[] links = this.getLinks(relationship, name);
         if (links.length == 0) {
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_NOT_FOUND, relationship, name);
+            throw new HyperResourceException("Could not find a link with relationship [" + relationship + "] and name [" +  name + "]");
         }
 
         if (links.length > 1) {
-            throw new HyperResourceException(Messages.MSG_ERROR_LINK_WITH_NAME_FOUND_MORE_THAN_ONE, relationship, name);
+            throw new HyperResourceException("Found more than one link with relationship [" + relationship + "] and name [" + name + "]");
         }
 
         return links[0];
@@ -58,7 +57,7 @@ public abstract class BaseHyperResource implements HyperResource {
 
     public HyperLink[] getLinks(String relationship, String name) {
         if (StringUtils.isEmpty(relationship)) {
-            throw new IllegalArgumentException(Messages.MSG_ERROR_LINK_RELATIONSHIP_REQUIRED);
+            throw new IllegalArgumentException("Link relationship is required");
         }
 
         HyperLink[] links = this.getLinks(relationship);

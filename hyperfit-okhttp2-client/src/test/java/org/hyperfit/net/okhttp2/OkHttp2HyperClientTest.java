@@ -1,8 +1,6 @@
 package org.hyperfit.net.okhttp2;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.*;
 import com.google.common.base.Charsets;
@@ -69,12 +67,12 @@ public class OkHttp2HyperClientTest {
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullRequest() {
         okHttp2HyperClient.execute(null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullMethod() {
 
         when(hyperfitRequestMock.getMethod()).thenReturn(null);
@@ -97,7 +95,7 @@ public class OkHttp2HyperClientTest {
         okHttp2HyperClient.execute(hyperfitRequestMock);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testNullClient() {
         OkHttpClient client = null;
         new OkHttp2HyperClient(client);

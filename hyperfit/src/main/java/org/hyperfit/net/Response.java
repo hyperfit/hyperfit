@@ -1,6 +1,5 @@
 package org.hyperfit.net;
 
-import org.hyperfit.message.Messages;
 
 import java.util.*;
 
@@ -91,7 +90,7 @@ public class Response {
 
         public ResponseBuilder addHeader(String name, String value) {
             if (StringUtils.isEmpty(name)) {
-                throw new IllegalArgumentException(Messages.MSG_ERROR_RESPONSE_HEADER_NAME_EMPTY);
+                throw new IllegalArgumentException("name cannot be empty");
             }
 
             if (value != null) {

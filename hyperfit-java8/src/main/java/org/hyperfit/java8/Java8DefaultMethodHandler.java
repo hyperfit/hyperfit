@@ -8,6 +8,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -85,9 +86,7 @@ public class Java8DefaultMethodHandler implements org.hyperfit.handlers.Java8Def
             )
             .orElseThrow(
                 () -> new HyperfitException(
-                    "No interface in {} has default method {}!",
-                    context.getInterfaces(),
-                    context.getMethod().toString()
+                    "No interface in " + Arrays.toString(context.getInterfaces()) + " has default method " + context.getMethod().toString()
                 )
             )
             ;

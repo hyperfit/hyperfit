@@ -18,16 +18,10 @@ public class HyperResourceException extends HyperfitException {
         super(MessageFormatter.arrayFormat(message, args).getMessage());
     }
 
-    public HyperResourceException(Exception cause, String message, Object... args) {
-        super(MessageFormatter.arrayFormat(message, args).getMessage(), cause);
-    }
 
     public HyperResourceException(Exception cause, String message) {
         super(message, cause);
     }
 
-    public HyperResourceException(Exception cause) {
-        super(cause);
-    }
 
 }

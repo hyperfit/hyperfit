@@ -13,7 +13,7 @@ public interface RequestBuilder {
     RequestBuilder addHeader(String name, String value);
 
     //TODO: take a ContentType type instead of a string
-    RequestBuilder addAcceptedContentType(String name);
+    RequestBuilder addAcceptedContentType(String contentType);
 
     RequestBuilder setParam(String name, Object value);
 
