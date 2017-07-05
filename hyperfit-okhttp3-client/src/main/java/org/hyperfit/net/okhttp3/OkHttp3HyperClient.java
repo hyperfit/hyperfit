@@ -1,7 +1,6 @@
 package org.hyperfit.net.okhttp3;
 
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.message.Messages;
 import org.hyperfit.net.BaseHyperClient;
 import org.hyperfit.net.HyperClient;
 import org.hyperfit.net.Request;
@@ -36,7 +35,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      * @param okHttpClient {@link okhttp3.OkHttpClient}
      */
     public OkHttp3HyperClient(OkHttpClient okHttpClient) {
-        if (okHttpClient == null) throw new NullPointerException(Messages.MSG_ERROR_CLIENT_NULL);
+        if (okHttpClient == null) throw new NullPointerException("Client cannot be null");
         this.client = okHttpClient;
     }
 
@@ -45,15 +44,14 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      * @return {@inheritDoc}
      */
     public Response execute(Request request) {
-        if (request == null) throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_NULL);
+        if (request == null) throw new NullPointerException("Client request cannot be null");
         if (request.getMethod() == null)
-            throw new NullPointerException(Messages.MSG_ERROR_CLIENT_REQUEST_METHOD_NULL);
+            throw new NullPointerException("Client request method cannot be null");
         if (StringUtils.isEmpty(request.getUrl()))
-            throw new IllegalArgumentException(Messages.MSG_ERROR_CLIENT_REQUEST_URL_NULL);
+            throw new IllegalArgumentException("Client request url cannot be null");
         return doResponse(doRequest(prepareRequest(request)), request);
     }
 
-    @Override
     public HyperClient setCookieHandler(CookieHandler handler) {
         throw new UnsupportedOperationException();
     }
@@ -96,7 +94,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
         try {
             return client.newCall(request).execute();
         } catch (Exception ex) {
-            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_FAILURE, request);
+            throw new HyperfitException("Client request failed", ex);
         }
     }
 
@@ -118,7 +116,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
         try {
             b.addBody(response.body().string());
         } catch (Exception ex) {
-            throw new HyperfitException(ex, Messages.MSG_ERROR_CLIENT_REQUEST_RESPONSE_FAILURE, response);
+            throw new HyperfitException("Client request response failed", ex);
         }
         return b.build();
     }
