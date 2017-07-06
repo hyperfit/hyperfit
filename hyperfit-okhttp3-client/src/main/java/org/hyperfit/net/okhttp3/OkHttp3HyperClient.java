@@ -35,7 +35,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      * @param okHttpClient {@link okhttp3.OkHttpClient}
      */
     public OkHttp3HyperClient(OkHttpClient okHttpClient) {
-        if (okHttpClient == null) throw new NullPointerException("Client cannot be null");
+        if (okHttpClient == null) throw new NullPointerException("Error while creating http client. Client cannot be null.");
         this.client = okHttpClient;
     }
 
@@ -44,11 +44,11 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      * @return {@inheritDoc}
      */
     public Response execute(Request request) {
-        if (request == null) throw new NullPointerException("Client request cannot be null");
+        if (request == null) throw new NullPointerException("Error while generating client request. Request cannot be null.");
         if (request.getMethod() == null)
-            throw new NullPointerException("Client request method cannot be null");
+            throw new NullPointerException("Error while generating client request. Request method cannot be null.");
         if (StringUtils.isEmpty(request.getUrl()))
-            throw new IllegalArgumentException("Client request url cannot be null");
+            throw new IllegalArgumentException("Error while generating client request. Request url cannot be empty.");
         return doResponse(doRequest(prepareRequest(request)), request);
     }
 
@@ -94,7 +94,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
         try {
             return client.newCall(request).execute();
         } catch (Exception ex) {
-            throw new HyperfitException("Client request failed", ex);
+            throw new HyperfitException("The request [{}] could not be executed.", ex);
         }
     }
 
@@ -116,7 +116,7 @@ public class OkHttp3HyperClient extends BaseHyperClient {
         try {
             b.addBody(response.body().string());
         } catch (Exception ex) {
-            throw new HyperfitException("Client request response failed", ex);
+            throw new HyperfitException("The response [{}] could not be generated correctly.", ex);
         }
         return b.build();
     }
