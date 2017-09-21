@@ -428,6 +428,34 @@ public class HalJsonResourceTest {
 
     }
 
+
+    @Test
+    public void testGetSimpleDataNullValues() {
+
+
+        root.put("string", (String)null)
+            .put("bool", (Boolean)null)
+            .put("double", (Double)null)
+            .put("int", (Integer)null)
+        ;
+
+
+        HalJsonResource resource = new HalJsonResource(root, null);
+
+        assertNull(resource.getPathAs(String.class, "string"));
+
+        //wrapped
+        assertNull(resource.getPathAs(Boolean.class, "bool"));
+        assertNull(resource.getPathAs(Double.class, "double"));
+        assertNull(resource.getPathAs(Integer.class, "int"));
+
+        //primitive
+        assertFalse(resource.getPathAs(boolean.class, "bool"));
+        assertEquals(0.0, resource.getPathAs(double.class, "double"), 0d);
+        assertEquals(0, (int)resource.getPathAs(int.class, "int"));
+
+    }
+
     static class POJO {
         private String someString;
         private Double someDouble;
