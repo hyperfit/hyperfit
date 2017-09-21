@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
-import static org.hyperfit.Helpers.makeSet;
+import static test.Helpers.makeSet;
 import static org.junit.Assert.*;
 
 

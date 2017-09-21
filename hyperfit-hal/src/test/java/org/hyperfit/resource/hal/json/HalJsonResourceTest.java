@@ -10,10 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
-import static org.hyperfit.Helpers.makeSet;
+import static org.mockito.Mockito.when;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static test.Helpers.random;
+import static test.Helpers.uniqueString;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hyperfit.resource.controls.form.Form;
@@ -25,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.UUID;
 
 
 
@@ -55,7 +55,7 @@ public class HalJsonResourceTest {
 
     public static ObjectNode makeValidLinkNode(){
         ObjectNode linkNode = nodeFactory.objectNode();
-        linkNode.put("href", "http://url/to/" + UUID.randomUUID().toString());
+        linkNode.put("href", "http://url/to/" + uniqueString());
 
         return linkNode;
     }
@@ -401,13 +401,30 @@ public class HalJsonResourceTest {
 
     @Test
     public void testGetSimpleData() {
-        String value = UUID.randomUUID().toString();
+        String stringValue = uniqueString();
+        boolean boolValue = random(true, false);
+        double doubleValue = Math.random();
 
-        root.put("somekey", value);
+        root.put("string", stringValue)
+            .put("bool", boolValue)
+            .put("double", doubleValue)
+            .put("int", -1)
+        ;
+
 
         HalJsonResource resource = new HalJsonResource(root, null);
 
-        assertEquals(value, resource.getPathAs(String.class, "somekey"));
+        assertEquals(stringValue, resource.getPathAs(String.class, "string"));
+
+        //wrapped
+        assertEquals(boolValue, resource.getPathAs(Boolean.class, "bool"));
+        assertEquals(doubleValue, resource.getPathAs(Double.class, "double"), 0d);
+        assertEquals(-1, (int)resource.getPathAs(Integer.class, "int"));
+
+        //primitive
+        assertEquals(boolValue, resource.getPathAs(boolean.class, "bool"));
+        assertEquals(doubleValue, resource.getPathAs(double.class, "double"), 0d);
+        assertEquals(-1, (int)resource.getPathAs(int.class, "int"));
 
     }
 
@@ -429,7 +446,7 @@ public class HalJsonResourceTest {
 
         ObjectNode complexPropNode = nodeFactory.objectNode();
 
-        String stringValue = UUID.randomUUID().toString();
+        String stringValue = uniqueString();
         complexPropNode.put("someString", stringValue);
 
         Double doubleValue =  Math.random();
@@ -448,17 +465,17 @@ public class HalJsonResourceTest {
     }
 
     @Test
-    public void testGetPOJOExtaProps() {
+    public void testGetPOJOExtraProps() {
 
         ObjectNode complexPropNode = nodeFactory.objectNode();
 
-        String stringValue = UUID.randomUUID().toString();
+        String stringValue = uniqueString();
         complexPropNode.put("someString", stringValue);
 
         Double doubleValue =  Math.random();
         complexPropNode.put("someDouble", doubleValue);
 
-        complexPropNode.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        complexPropNode.put(uniqueString(), uniqueString());
 
 
         root.put("somekey", complexPropNode);
@@ -475,7 +492,7 @@ public class HalJsonResourceTest {
 
     @Test
     public void testGetSimpleNestedData() {
-        String value = UUID.randomUUID().toString();
+        String value = uniqueString();
 
         ObjectNode complexProp = nodeFactory.objectNode();
 
@@ -513,7 +530,7 @@ public class HalJsonResourceTest {
         assertTrue(!new HalJsonResource(root, null).hasPath("_embedded", "promotionResourceList", "title"));
         assertTrue(!new HalJsonResource(root, null).hasPath());
 
-        String value = UUID.randomUUID().toString();
+        String value = uniqueString();
 
         root.put("complexProp", nodeFactory.objectNode().put("somekey", value));
 
@@ -804,7 +821,7 @@ public class HalJsonResourceTest {
         ObjectNode promo1SelfLink = nodeFactory.objectNode();
         promo1Links.put("self", promo1SelfLink);
 
-        String value1 = UUID.randomUUID().toString();
+        String value1 = uniqueString();
         promo1.put("some thing", value1);
 
         promos.add(promo1);
@@ -816,7 +833,7 @@ public class HalJsonResourceTest {
         ObjectNode promo2SelfLink = nodeFactory.objectNode();
         promo1Links.put("self", promo2SelfLink);
 
-        String value2 = UUID.randomUUID().toString();
+        String value2 = uniqueString();
         promo1.put("some thing", value2);
 
         promos.add(promo2);
@@ -909,9 +926,13 @@ public class HalJsonResourceTest {
         root.remove("_embedded");
 
         HalJsonResource resource = new HalJsonResource(root, null);
-        LinkedHashSet<String> actual = resource.getProfiles();
 
-        assertEquals(makeSet(linkHref1), actual);
+        assertThat(
+            resource.getProfiles(),
+            contains(
+                linkHref1
+            )
+        );
 
     }
 
@@ -939,7 +960,14 @@ public class HalJsonResourceTest {
         HalJsonResource resource = new HalJsonResource(root, null);
         LinkedHashSet<String> actual = resource.getProfiles();
 
-        assertEquals(makeSet(linkHref1, linkHref2), actual);
+
+        assertThat(
+            resource.getProfiles(),
+            contains(
+                linkHref1,
+                linkHref2
+            )
+        );
 
 
     }
@@ -959,7 +987,13 @@ public class HalJsonResourceTest {
         HalJsonResource resource = new HalJsonResource(root, null);
         LinkedHashSet<String> actual = resource.getProfiles();
 
-        assertEquals(makeSet(linkHref), actual);
+
+        assertThat(
+            resource.getProfiles(),
+            contains(
+                linkHref
+            )
+        );
 
 
     }

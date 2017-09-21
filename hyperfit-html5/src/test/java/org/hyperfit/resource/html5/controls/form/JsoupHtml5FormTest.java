@@ -1,7 +1,7 @@
 package org.hyperfit.resource.html5.controls.form;
 
 
-import org.hyperfit.Helpers;
+import test.Helpers;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Method;
 import org.hyperfit.net.RequestBuilder;

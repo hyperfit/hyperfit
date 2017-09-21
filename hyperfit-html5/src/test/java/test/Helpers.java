@@ -1,4 +1,4 @@
-package org.hyperfit;
+package test;
 
 
 
@@ -27,27 +27,6 @@ public class Helpers {
         return new LinkedHashSet<String>(Arrays.asList(strings));
     }
 
-
-
-    public static void validateImageLink(String url, Set<String> alreadyValidated) throws IOException {
-        if(alreadyValidated.contains(url)){
-            return;
-        }
-
-        alreadyValidated.add(url);
-
-        assertThat(url, not(isEmptyOrNullString()));
-        //TODO: it really should be absolute..
-        if(url.startsWith("//")){
-            url = "http:" + url;
-        }
-        URI uri = URI.create(url);
-
-        assertTrue("should be absolute: " + uri.toString(), uri.isAbsolute());
-        assertEquals(url + " should return 200", 200, ((HttpURLConnection)uri.toURL().openConnection()).getResponseCode());
-
-
-    }
 
     private static Random r = new Random();
     public static <T> T random(T... array) {
