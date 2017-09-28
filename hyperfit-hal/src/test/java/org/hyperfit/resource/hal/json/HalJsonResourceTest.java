@@ -24,9 +24,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-
+import java.util.*;
 
 
 public class HalJsonResourceTest {
@@ -530,6 +528,61 @@ public class HalJsonResourceTest {
         HalJsonResource resource = new HalJsonResource(root, null);
 
         assertEquals(value, resource.getPathAs(String.class, "complexProp", "somekey"));
+
+    }
+
+
+    @Test
+    public void testGetEmbeddedAsJsonNode() {
+        String value = uniqueString();
+
+        ObjectNode subResource = nodeFactory.objectNode();
+
+        subResource.put("somekey", value);
+        embedded.put("bb:resource", subResource);
+
+        ObjectNode complexProp = nodeFactory.objectNode();
+        complexProp.put("propKey", value);
+        subResource.put("complexProp", complexProp);
+
+        HalJsonResource resource = new HalJsonResource(root, null);
+
+
+
+        ObjectNode expected = nodeFactory.objectNode();
+        expected.put("somekey", value);
+        expected.put("complexProp", complexProp);
+
+        assertEquals(expected, resource.getPathAs(JsonNode.class, "_embedded", "bb:resource"));
+
+    }
+
+
+
+    @Test
+    public void testGetEmbeddedAsMap() {
+        final String value = uniqueString();
+
+        ObjectNode subResource = nodeFactory.objectNode();
+
+        subResource.put("somekey", value);
+        embedded.put("bb:resource", subResource);
+
+        ObjectNode complexProp = nodeFactory.objectNode();
+        complexProp.put("propKey", value);
+        subResource.put("complexProp", complexProp);
+
+        HalJsonResource resource = new HalJsonResource(root, null);
+
+        LinkedHashMap<String,Object> expected = new LinkedHashMap<String, Object>(){{
+            put("somekey", value);
+            put("complexProp", new HashMap<String, Object>(){{
+                put("propKey", value);
+            }});
+        }};
+
+
+        assertEquals(expected, resource.getPathAs(Map.class, "_embedded", "bb:resource"));
 
     }
 
