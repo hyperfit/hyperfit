@@ -60,5 +60,18 @@ public class ResponseInterceptorsTest {
 
     }
 
+    @Test
+    public void testEmptyInterceptor(){
+
+        ResponseInterceptors subject = new ResponseInterceptors();
+
+        Response response = mock(Response.class);
+
+        subject.intercept(response);
+
+        verifyZeroInteractions(response);
+
+    }
+
 
 }
