@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -265,6 +266,40 @@ public class HyperfitProcessorTest {
 
     }
 
+    @Test
+    public void testResponseInterceptor(){
 
+        ResponseInterceptor responseInterceptor = mock(ResponseInterceptor.class);
+
+        HyperClient mockClient = mock(HyperClient.class);
+
+
+        HyperfitProcessor processor = builder
+                .addResponseInterceptor(responseInterceptor)
+                .hyperClient(mockClient, "xyz")
+                .build();
+
+        BoringRequestBuilder request = new BoringRequestBuilder()
+                .setUrl("xyz://local");
+
+        String fakeResponseBody = uniqueString();
+
+        Response response = Response.builder()
+                .addRequest(request.build())
+                .addBody(fakeResponseBody)
+                .build();
+
+        when(mockClient.execute(request.build()))
+                .thenReturn(response);
+
+        String actual = processor.processRequest(String.class, request, null);
+
+
+        assertEquals(fakeResponseBody, actual);
+
+        verify(responseInterceptor, times(1)).intercept(Matchers.any(Response.class));
+        verify(responseInterceptor, times(1)).intercept(response);
+
+    }
 
 }
