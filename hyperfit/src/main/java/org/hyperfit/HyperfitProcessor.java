@@ -47,6 +47,7 @@ public class HyperfitProcessor {
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
     private final Map<String, HyperClient> schemeClientMap;
     private final Java8DefaultMethodHandler java8DefaultMethodHandler;
+    private final ResponseInterceptors responseInterceptors;
 
     private HyperfitProcessor(Builder builder) {
 
@@ -54,6 +55,7 @@ public class HyperfitProcessor {
         errorHandler = firstNonNull(builder.errorHandler, new DefaultErrorHandler());
         resourceMethodInfoCache = firstNonNull(builder.resourceMethodInfoCache, new ConcurrentHashMapResourceMethodInfoCache());
         requestInterceptors = firstNonNull(builder.requestInterceptors, new RequestInterceptors());
+        responseInterceptors = firstNonNull(builder.responseInterceptors, new ResponseInterceptors());
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
         java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
 
@@ -171,6 +173,8 @@ public class HyperfitProcessor {
         }
 
         Response response = hyperClient.execute(request);
+
+        responseInterceptors.intercept(response);
 
         return processResponse(classToReturn, response, typeInfo);
     }
@@ -304,6 +308,7 @@ public class HyperfitProcessor {
         private ErrorHandler errorHandler;
         private ResourceMethodInfoCache resourceMethodInfoCache;
         private RequestInterceptors requestInterceptors = new RequestInterceptors();
+        private ResponseInterceptors responseInterceptors = new ResponseInterceptors();
         private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
         private Map<String, HyperClient> schemeClientMap = new HashMap<String, HyperClient>();
         private Java8DefaultMethodHandler java8DefaultMethodHandler = new Java8DefaultMethodHandler() {
@@ -409,6 +414,11 @@ public class HyperfitProcessor {
 
         public Builder interfaceSelectionStrategy(InterfaceSelectionStrategy selectionStrategy) {
             this.interfaceSelectionStrategy = selectionStrategy;
+            return this;
+        }
+
+        public Builder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
+            this.responseInterceptors.add(responseInterceptor);
             return this;
         }
 
