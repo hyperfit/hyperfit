@@ -61,6 +61,58 @@ public class ResponseInterceptorsTest {
     }
 
     @Test
+    public void testClearResponseInterceptors(){
+
+        ResponseInterceptors subject = new ResponseInterceptors();
+
+        subject.add(new ResponseInterceptorsTest.CheckHeaderInterceptor("bb-app", "bb-version"));
+        subject.add(new ResponseInterceptorsTest.StatusResponseInterceptor());
+
+        Response response = mock(Response.class);
+
+        subject.intercept(response);
+
+        verify(response, times(1)).getHeader("bb-app");
+        verify(response, times(1)).getHeader("bb-version");
+        verify(response, times(1)).getCode();
+        verifyNoMoreInteractions(response);
+
+        subject.clear();
+
+
+        subject.intercept(response);
+
+        verifyNoMoreInteractions(response);
+    }
+
+    @Test
+    public void testRemoveResponseInterceptors(){
+
+        ResponseInterceptors subject = new ResponseInterceptors();
+
+        subject.add(new ResponseInterceptorsTest.CheckHeaderInterceptor("bb-app", "bb-version"));
+        subject.add(new ResponseInterceptorsTest.StatusResponseInterceptor());
+
+        Response response = mock(Response.class);
+
+        subject.intercept(response);
+
+        verify(response, times(1)).getHeader("bb-app");
+        verify(response, times(1)).getHeader("bb-version");
+        verify(response, times(1)).getCode();
+        verifyNoMoreInteractions(response);
+
+        subject.remove(ResponseInterceptorsTest.CheckHeaderInterceptor.class);
+
+
+        subject.intercept(response);
+
+        //total 2 calls
+        verify(response, times(2)).getCode();
+        verifyNoMoreInteractions(response);
+    }
+
+    @Test
     public void testEmptyInterceptor(){
 
         ResponseInterceptors subject = new ResponseInterceptors();

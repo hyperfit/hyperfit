@@ -174,12 +174,12 @@ public class HyperfitProcessor {
 
         Response response = hyperClient.execute(request);
 
-        responseInterceptors.intercept(response);
-
         return processResponse(classToReturn, response, typeInfo);
     }
 
     public <T> T processResponse(Class<T> classToReturn, Response response, TypeInfo typeInfo) {
+
+        responseInterceptors.intercept(response);
 
         //Special case, if what they want is the Response in a raw format...well they can have it!
         if (Response.class.isAssignableFrom(classToReturn)) {
@@ -412,6 +412,11 @@ public class HyperfitProcessor {
             return this;
         }
 
+        public Builder clearResponseInterceptors() {
+            this.responseInterceptors.clear();
+            return this;
+        }
+
         public Builder interfaceSelectionStrategy(InterfaceSelectionStrategy selectionStrategy) {
             this.interfaceSelectionStrategy = selectionStrategy;
             return this;
@@ -419,6 +424,11 @@ public class HyperfitProcessor {
 
         public Builder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
             this.responseInterceptors.add(responseInterceptor);
+            return this;
+        }
+
+        public Builder removeResponseInterceptor(Class<? extends ResponseInterceptor> typeToRemove) {
+            this.responseInterceptors.remove(typeToRemove);
             return this;
         }
 
