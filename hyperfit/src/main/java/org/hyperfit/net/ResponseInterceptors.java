@@ -23,4 +23,20 @@ public class ResponseInterceptors {
     public void add(ResponseInterceptor requestInterceptor) {
         interceptors.add(requestInterceptor);
     }
+
+    public ResponseInterceptors remove(Class<? extends ResponseInterceptor> typeToRemove) {
+        for (java.util.Iterator<ResponseInterceptor> i = interceptors.iterator(); i.hasNext();) {
+
+            ResponseInterceptor element = i.next();
+            if (typeToRemove.isInstance(element)) {
+                i.remove();
+            }
+        }
+        return this;
+    }
+
+    public ResponseInterceptors clear() {
+        this.interceptors.clear();
+        return this;
+    }
 }
