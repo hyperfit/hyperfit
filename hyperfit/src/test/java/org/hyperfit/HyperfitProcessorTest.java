@@ -88,6 +88,9 @@ public class HyperfitProcessorTest {
     @Test(expected = ResponseException.class)
     public void testBuildResourceEmptyContentTypeInresponseException() {
         //TOOD: this test really should make sure parsing isn't even attempted
+        //could do that if we offered a pluggable parser strategy
+        //which mike make sense if we wanted to let them sniff the body
+        //to magic type the response
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .build();
@@ -108,6 +111,10 @@ public class HyperfitProcessorTest {
     public void testBuildResourceNullContentTypeInresponseException() {
 
         //TOOD: this test really should make sure parsing isn't even attempted
+        //could do that if we offered a pluggable parser strategy
+        //which mike make sense if we wanted to let them sniff the body
+        //to magic type the response
+        
         HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
             .hyperClient(mockHyperClient)
             .build();
