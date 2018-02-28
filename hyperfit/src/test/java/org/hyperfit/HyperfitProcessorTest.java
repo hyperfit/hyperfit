@@ -85,6 +85,44 @@ public class HyperfitProcessorTest {
     }
 
 
+    @Test(expected = ResponseException.class)
+    public void testBuildResourceEmptyContentTypeInresponseException() {
+        //TOOD: this test really should make sure parsing isn't even attempted
+        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
+            .hyperClient(mockHyperClient)
+            .build();
+
+        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
+        Response response = new Response.ResponseBuilder()
+            .addRequest(request)
+            //i believe this is impossible in regards to http spec, but
+            //just in case a bad hyper client is around
+            .addContentType("")
+            .build();
+
+        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
+    }
+
+
+    @Test(expected = ResponseException.class)
+    public void testBuildResourceNullContentTypeInresponseException() {
+
+        //TOOD: this test really should make sure parsing isn't even attempted
+        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
+            .hyperClient(mockHyperClient)
+            .build();
+
+        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
+        Response response = new Response.ResponseBuilder()
+            .addRequest(request)
+            //as if the value wasn't set
+            .addContentType(null)
+            .build();
+
+        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
+    }
+
+
     @Test
     public void testInvokeSingleProfileResourceTest() {
 

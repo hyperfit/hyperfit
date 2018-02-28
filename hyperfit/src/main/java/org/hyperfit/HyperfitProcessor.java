@@ -241,12 +241,20 @@ public class HyperfitProcessor {
     //builds the a hyper resource from a hyper response. Exceptions are handled by
     protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
 
+        //TODO: may be better to make this look at response code first
+        //and try to parse if it can undertsand the type
+        //possibly as an Optional<HyperResource>?
+
         //STAGE 1 - There's response, let's see if we understand the content type!
         ContentType responseContentType = null;
-        try {
-            responseContentType = ContentType.parse(response.getContentType());
-        } catch (Exception e){
-            LOG.warn("Error parsing content type of response.  errorHandler:unhandledContentType will be called", e);
+
+        //Sometimes there is no content type, no need to warn about that
+        if (!StringUtils.isEmpty(response.getContentType())){
+            try {
+                responseContentType = ContentType.parse(response.getContentType());
+            } catch (Exception e) {
+                LOG.warn("Error parsing content type of response.  errorHandler:unhandledContentType will be called", e);
+            }
         }
 
         //See if we have a content type, if not throw
