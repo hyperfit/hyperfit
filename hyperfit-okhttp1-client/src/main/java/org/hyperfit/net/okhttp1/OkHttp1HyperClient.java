@@ -119,11 +119,11 @@ public class OkHttp1HyperClient extends BaseHyperClient {
         String body = convertResponseBodyToString(connection);
 
         Response response = responseBuilder
-                .addRequest(request)
-                .addCode(connection.getResponseCode())
-                .addContentType(connection.getContentType())
-                .addBody(body)
-                .build();
+            .addRequest(request)
+            .addCode(connection.getResponseCode())
+            .addContentType(connection.getContentType())
+            .addBody(body)
+            .build();
 
         LOG.trace("Provider generating response [{}].", response);
         return response;

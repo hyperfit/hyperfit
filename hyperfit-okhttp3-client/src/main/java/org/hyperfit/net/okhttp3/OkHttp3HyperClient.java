@@ -1,23 +1,15 @@
 package org.hyperfit.net.okhttp3;
 
+import okhttp3.*;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.BaseHyperClient;
-import org.hyperfit.net.HyperClient;
+import org.hyperfit.net.*;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
 import org.hyperfit.utils.StringUtils;
 
 import java.net.CookieHandler;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.internal.http.HttpMethod;
 
 /**
@@ -27,33 +19,53 @@ public class OkHttp3HyperClient extends BaseHyperClient {
 
     private static final String ACCEPT = "Accept";
     private static final String CONTENT_TYPE = "Content-Type";
-    private final OkHttpClient client;
+
+    //TODO: make final once we don't have setCookieHandler anymore
+    private OkHttpClient client;
 
     /**
-     * Set OkHttp Client for the Hyper provider
+     * Create a Hyper Client backed by and okhttp3 client
      *
-     * @param okHttpClient {@link okhttp3.OkHttpClient}
+     * @param okHttp3Client {@link okhttp3.OkHttpClient}
      */
-    public OkHttp3HyperClient(OkHttpClient okHttpClient) {
-        if (okHttpClient == null) throw new NullPointerException("Error while creating http client. Client cannot be null.");
-        this.client = okHttpClient;
+    public OkHttp3HyperClient(OkHttpClient okHttp3Client) {
+        if (okHttp3Client == null) {
+            throw new IllegalArgumentException("okHttp3Client cannot be null.");
+        }
+        this.client = okHttp3Client;
     }
+
+
 
     /**
      * @param request {@link org.hyperfit.net.Request}
      * @return {@inheritDoc}
      */
     public Response execute(Request request) {
-        if (request == null) throw new NullPointerException("Error while generating client request. Request cannot be null.");
-        if (request.getMethod() == null)
-            throw new NullPointerException("Error while generating client request. Request method cannot be null.");
-        if (StringUtils.isEmpty(request.getUrl()))
-            throw new IllegalArgumentException("Error while generating client request. Request url cannot be empty.");
+        if (request == null) {
+            throw new IllegalArgumentException("request cannot be null.");
+        }
+
+        if (request.getMethod() == null) {
+            throw new IllegalArgumentException("request's method cannot be null.");
+        }
+
+        if (StringUtils.isEmpty(request.getUrl())) {
+            throw new IllegalArgumentException("request's url cannot be empty.");
+        }
+
         return doResponse(doRequest(prepareRequest(request)), request);
     }
 
     public HyperClient setCookieHandler(CookieHandler handler) {
-        throw new UnsupportedOperationException();
+        //this is weird in that it recreates the client
+        this.client = this.client.newBuilder()
+            .cookieJar(
+                handler == null ? CookieJar.NO_COOKIES : new JavaNetCookieJar(handler)
+            )
+            .build();
+
+        return this;
     }
 
     public String[] getSchemes() {
@@ -70,19 +82,28 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      * @param request {@link org.hyperfit.net.Request} includes url,method, headers information
      * @return {@link okhttp3.Request}
      */
-    private okhttp3.Request prepareRequest(Request request) {
+    okhttp3.Request prepareRequest(Request request) {
         RequestBody requestBody = null;
         if (request.getContentType() != null && request.getContent() != null) {
-            requestBody = RequestBody.create(MediaType.parse(request.getContentType()), request.getContent());
+            requestBody = RequestBody.create(
+                MediaType.parse(request.getContentType()),
+                request.getContent()
+            );
         } else if (HttpMethod.requiresRequestBody(request.getMethod().name())) {
             requestBody = EMPTY_REQUEST_BODY;
         }
         return new okhttp3.Request.Builder()
-                .url(request.getUrl())
-                .method(request.getMethod().name(), requestBody)
-                .headers(extractHeadersFromRequest(request))
-                .addHeader(ACCEPT, buildAcceptHeaderValue(request.getAcceptedContentTypes()))
-                .build();
+            .url(request.getUrl())
+            .method(request.getMethod().name(), requestBody)
+            .headers(extractHeadersFromRequest(request))
+            .addHeader(
+                ACCEPT,
+                HttpUtils.buildAcceptHeaderValue(
+                    request.getAcceptedContentTypes(),
+                    this.getAcceptedContentTypes()
+                )
+            )
+            .build();
     }
 
     /**
@@ -103,21 +124,27 @@ public class OkHttp3HyperClient extends BaseHyperClient {
      *
      * @return {@link org.hyperfit.net.Response}
      */
-    private Response doResponse(okhttp3.Response response, Request request) {
+     Response doResponse(okhttp3.Response response, Request request) {
         Response.ResponseBuilder b = Response.builder()
-                .addCode(response.code())
-                .addRequest(request);
-        for (Entry<String, java.util.List<String>> h : response.headers().toMultimap().entrySet())
-            for (String val : h.getValue())
+            .addCode(response.code())
+            .addRequest(request);
+
+        for (Entry<String, java.util.List<String>> h : response.headers().toMultimap().entrySet()) {
+            for (String val : h.getValue()) {
                 b.addHeader(h.getKey(), val);
+            }
+        }
+
         //Set the content type explicitly, even though it comes from the headers.  Hyperfit needs to know this
         //abstracted from the headers
         b.addContentType(response.header(CONTENT_TYPE));
+
         try {
             b.addBody(response.body().string());
         } catch (Exception ex) {
             throw new HyperfitException("The response [{}] could not be generated correctly.", ex);
         }
+
         return b.build();
     }
 
@@ -130,26 +157,14 @@ public class OkHttp3HyperClient extends BaseHyperClient {
     private Headers extractHeadersFromRequest(Request request) {
         Headers.Builder b = new Headers.Builder();
         Iterable<Entry<String, String>> headers = request.getHeaders();
-        if (null != headers)
-            for (Entry<String, String> h : headers)
+        if (null != headers) {
+            for (Entry<String, String> h : headers) {
                 b.add(h.getKey(), h.getValue());
+            }
+        }
+
         return b.build();
     }
 
-    /**
-     * Builds the HTTP accept header using the configured media types for the client.
-     *
-     * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
-     */
-    private String buildAcceptHeaderValue(Set<String> requestAcceptedContentTypes) {
-        HashSet<String> t = new LinkedHashSet<String>(requestAcceptedContentTypes);
-        t.addAll(this.getAcceptedContentTypes());
-        Iterator<String> contentTypes = t.iterator();
-        StringBuilder builder = new StringBuilder();
-        while (contentTypes.hasNext()) {
-            builder.append(contentTypes.next());
-            if (contentTypes.hasNext()) builder.append(",");
-        }
-        return builder.toString();
-    }
+
 }
