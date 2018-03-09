@@ -1,6 +1,9 @@
 ## 1.15.1 - TBD
 * Added ResponseInterceptor & ResponseInterceptors which can intercept responses prior to them being processed.  However they can not mutate the response at this time.  V2 will allow for full mutation of request and response in a more elegant way.
 * If response content-type is empty, don't try to parse it
+* Added okhttp3 hyper client implementation in the hyperfit-okhttp3-client artifact
+* removed the OkHttp2ClientShim from okhttp2 client implementation as oktthp client is no longer final and can be mocked, nobody should have been using this, but it was mistakenly made public.
+* Added HttpUtils class to net package to consolidate some common http client pieces
 
 ## 1.14.1 - 2017-06-30
 * The Messages class has been removed in favour of inline exception messages.  This is a backwards breaking change...but we're still pretty fluid on those things for now.  If you were importing our messages...we'd like ot know why!

@@ -1,21 +1,23 @@
-package org.hyperfit.net.okhttp2;
+package org.hyperfit.net.okhttp3;
 
 import com.google.common.collect.ArrayListMultimap;
+import okhttp3.*;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.net.*;
-import com.google.common.base.Charsets;
-import com.squareup.okhttp.*;
 
-import java.net.CookieManager;
+import com.google.common.base.Charsets;
+
+import java.net.CookieHandler;
 import java.util.*;
 
 import static org.hyperfit.net.HttpUtils.ACCEPT;
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import okio.Buffer;
 import okio.BufferedSource;
+import org.hyperfit.net.HyperClient;
+import org.hyperfit.net.Method;
+import org.hyperfit.net.RFC6570RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 
 
-public class OkHttp2HyperClientTest {
+public class OkHttp3HyperClientTest {
 
     private static final String CONTENT_TYPE = "application/json; ; charset=utf-8";
     private final static String ACCEPT_VALUE = "application/hal+json";
@@ -46,7 +48,7 @@ public class OkHttp2HyperClientTest {
     private OkHttpClient mockOkHttpClient;
 
 
-    private OkHttp2HyperClient okHttp2HyperClient;
+    private OkHttp3HyperClient okHttp3HyperClient;
 
 
 
@@ -58,10 +60,10 @@ public class OkHttp2HyperClientTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        okHttp2HyperClient = new OkHttp2HyperClient(this.mockOkHttpClient);
+        okHttp3HyperClient = new OkHttp3HyperClient(this.mockOkHttpClient);
         HashSet<String> mediaTypeSet = new HashSet<String>();
         mediaTypeSet.add(ACCEPT_VALUE);
-        okHttp2HyperClient.setAcceptedContentTypes(mediaTypeSet);
+        okHttp3HyperClient.setAcceptedContentTypes(mediaTypeSet);
 
         okRequestBuilder = new Request.Builder();
         okResponseBuilder = new Response.Builder();
@@ -70,14 +72,14 @@ public class OkHttp2HyperClientTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullRequest() {
-        okHttp2HyperClient.execute(null);
+        okHttp3HyperClient.execute(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullMethod() {
 
         when(hyperfitRequestMock.getMethod()).thenReturn(null);
-        okHttp2HyperClient.execute(hyperfitRequestMock);
+        okHttp3HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -86,20 +88,20 @@ public class OkHttp2HyperClientTest {
 
         when(hyperfitRequestMock.getMethod()).thenReturn(Method.GET);
         when(hyperfitRequestMock.getUrl()).thenReturn("");
-        okHttp2HyperClient.execute(hyperfitRequestMock);
+        okHttp3HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteNullUrl() {
         when(hyperfitRequestMock.getMethod()).thenReturn(Method.GET);
         when(hyperfitRequestMock.getUrl()).thenReturn(null);
-        okHttp2HyperClient.execute(hyperfitRequestMock);
+        okHttp3HyperClient.execute(hyperfitRequestMock);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullClient() {
         OkHttpClient client = null;
-        new OkHttp2HyperClient(client);
+        new OkHttp3HyperClient(client);
     }
 
     @Test
@@ -114,7 +116,7 @@ public class OkHttp2HyperClientTest {
             .build();
 
 
-        com.squareup.okhttp.Request request = okHttp2HyperClient.prepareRequest(requestFake);
+        Request request = okHttp3HyperClient.prepareRequest(requestFake);
         assertEquals(CONTENT_TYPE, request.body().contentType().toString());
         assertEquals(CONTENT_BODY.length(), request.body().contentLength());
     }
@@ -127,7 +129,7 @@ public class OkHttp2HyperClientTest {
             .build();
 
 
-        com.squareup.okhttp.Request request = okHttp2HyperClient.prepareRequest(requestFake);
+        Request request = okHttp3HyperClient.prepareRequest(requestFake);
         assertNull(request.body());
     }
 
@@ -139,7 +141,7 @@ public class OkHttp2HyperClientTest {
                 .setMethod(m)
                 .build();
 
-            com.squareup.okhttp.Request request = okHttp2HyperClient.prepareRequest(requestFake);
+            Request request = okHttp3HyperClient.prepareRequest(requestFake);
             assertEquals(m.toString(), request.method());
 
         }
@@ -156,7 +158,7 @@ public class OkHttp2HyperClientTest {
             .build();
 
 
-        com.squareup.okhttp.Request request = okHttp2HyperClient.prepareRequest(requestFake);
+        Request request = okHttp3HyperClient.prepareRequest(requestFake);
         assertEquals(HEADERS.get(ACCEPT), request.header(ACCEPT));
     }
 
@@ -168,7 +170,7 @@ public class OkHttp2HyperClientTest {
             .setMethod(Method.GET)
             .build();
 
-        com.squareup.okhttp.Request request = okHttp2HyperClient.prepareRequest(requestFake);
+        Request request = okHttp3HyperClient.prepareRequest(requestFake);
         assertEquals(1, request.headers().size());
     }
 
@@ -214,7 +216,7 @@ public class OkHttp2HyperClientTest {
 
 
 
-        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
+        org.hyperfit.net.Response response = okHttp3HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
         assertEquals(200, response.getCode());
         assertEquals(fakeContent, response.getBody());
@@ -265,7 +267,7 @@ public class OkHttp2HyperClientTest {
             })
             .build();
 
-        org.hyperfit.net.Response response = okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
+        org.hyperfit.net.Response response = okHttp3HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
         assertFalse(response.getHeaders().iterator().hasNext());
         assertSame(hyperfitRequestMock, response.getRequest());
@@ -288,26 +290,80 @@ public class OkHttp2HyperClientTest {
             .build();
 
 
-        okHttp2HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
+        okHttp3HyperClient.doResponse(okResponseFake, hyperfitRequestMock);
 
     }
 
     @Test
     public void testSetCookieHandler() throws Exception {
-        CookieManager handler = new CookieManager();
+        CookieHandler mockHandler = mock(CookieHandler.class);
 
-        HyperClient result = okHttp2HyperClient.setCookieHandler(handler);
-        assertSame("setCookieHandler should be fluent", okHttp2HyperClient, result);
-        verify(mockOkHttpClient, times(1)).setCookieHandler(handler);
+        HttpUrl fakeUrl = HttpUrl.parse("http://example.com");
 
-        okHttp2HyperClient.setCookieHandler(null);
-        verify(mockOkHttpClient, times(1)).setCookieHandler(null);
+        Map<String, List<String>> fakeCookies = new HashMap<String, List<String>>();
+        fakeCookies.put("Cookie", Collections.singletonList("dog=cat"));
+
+        when(mockHandler.get(fakeUrl.uri(), Collections.<String, List<String>>emptyMap()))
+            .thenReturn(fakeCookies);
+
+        OkHttpClient.Builder fakeBuilder = new OkHttpClient.Builder();
+
+        when(mockOkHttpClient.newBuilder())
+            .thenReturn(fakeBuilder);
+
+
+        HyperClient result = okHttp3HyperClient.setCookieHandler(mockHandler);
+        assertSame("setCookieHandler should be fluent", okHttp3HyperClient, result);
+
+        CookieJar actualJar = fakeBuilder.build().cookieJar();
+
+        List<Cookie> actual = actualJar.loadForRequest(fakeUrl);
+
+        assertThat(
+            actual,
+            hasSize(1)
+        );
+
+        Cookie cookie = actual.get(0);
+
+        assertEquals(
+            "dog",
+            cookie.name()
+        );
+
+        assertEquals(
+            "cat",
+            cookie.value()
+        );
 
     }
+
+
+    @Test
+    public void testSetCookieHandlerNull() throws Exception {
+
+        OkHttpClient.Builder fakeBuilder = new OkHttpClient.Builder();
+
+        when(mockOkHttpClient.newBuilder())
+            .thenReturn(fakeBuilder);
+
+
+        HyperClient result = okHttp3HyperClient.setCookieHandler(null);
+        assertSame("setCookieHandler should be fluent", okHttp3HyperClient, result);
+
+        assertSame(
+            CookieJar.NO_COOKIES,
+            fakeBuilder.build().cookieJar()
+        );
+
+    }
+
+
+
     @Test
     public void testGetSchemes(){
         String[] expected = new String[]{"https", "http"};
-        String[] real = okHttp2HyperClient.getSchemes();
+        String[] real = okHttp3HyperClient.getSchemes();
         Arrays.sort(expected);
         Arrays.sort(real);
         Arrays.equals(expected,real);

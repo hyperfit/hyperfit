@@ -1,9 +1,6 @@
 package org.hyperfit.net.okhttp2;
 
 import java.net.CookieHandler;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -19,46 +16,38 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.RequestBody;
 
+import static org.hyperfit.net.HttpUtils.ACCEPT;
+import static org.hyperfit.net.HttpUtils.CONTENT_TYPE;
+
 /**
- *Implementation of hypermedia provider, making http request using OKHTTP Client
- *
+ * Implementation of hypermedia provider, making http request using OKHTTP Client
  */
 public class OkHttp2HyperClient extends BaseHyperClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(HyperClient.class);
 
-    private final OkHttp2ClientShim okHttpClient;
+    private final OkHttpClient client;
+
 
     public OkHttp2HyperClient() {
-        this.okHttpClient = new OkHttp2ClientShim(new OkHttpClient());
+        this.client = new OkHttpClient();
     }
 
-    /**
-     * Set OKHTTP Client for the Hyper provider
-     * @param okHttpClient {@link com.squareup.okhttp.OkHttpClient}
-     */
-    public OkHttp2HyperClient(OkHttp2ClientShim okHttpClient) {
-        if (okHttpClient == null) {
-            throw new IllegalArgumentException("okHttpClient cannot be null");
-        }
-
-        this.okHttpClient = okHttpClient;
-    }
 
     /**
-     * Set OKHTTP Client for the Hyper provider
+     * Create a Hyper Client backed by and okhttp2 client
+     *
      * @param okHttpClient {@link com.squareup.okhttp.OkHttpClient}
      */
     public OkHttp2HyperClient(OkHttpClient okHttpClient) {
         if (okHttpClient == null) {
-            throw new IllegalArgumentException("okHttpClient cannot be null");
+            throw new IllegalArgumentException("client cannot be null");
         }
 
-        this.okHttpClient = new OkHttp2ClientShim(okHttpClient);
+        this.client = okHttpClient;
     }
 
     /**
-     *
      * @param request {@link org.hyperfit.net.Request}
      * @return {@inheritDoc}
      */
@@ -80,11 +69,11 @@ public class OkHttp2HyperClient extends BaseHyperClient {
     }
 
     public OkHttp2HyperClient setAcceptedContentTypes(Set<String> acceptedContentTypes) {
-        return (OkHttp2HyperClient)super.setAcceptedContentTypes(acceptedContentTypes);
+        return (OkHttp2HyperClient) super.setAcceptedContentTypes(acceptedContentTypes);
     }
 
     public HyperClient setCookieHandler(CookieHandler handler) {
-        this.okHttpClient.setCookieHandler(handler);
+        this.client.setCookieHandler(handler);
         return this;
     }
 
@@ -98,6 +87,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
 
     /**
      * Use the request builder to build the request to be executed in the future
+     *
      * @param request {@link org.hyperfit.net.Request} includes url,method, headers information
      * @return {@link com.squareup.okhttp.Request}
      */
@@ -107,20 +97,26 @@ public class OkHttp2HyperClient extends BaseHyperClient {
 
         if (request.getContentType() != null && request.getContent() != null) {
             requestBody = RequestBody.create(MediaType.parse(request.getContentType()), request.getContent());
-        } else if(HttpMethod.requiresRequestBody(request.getMethod().name())){
+        } else if (HttpMethod.requiresRequestBody(request.getMethod().name())) {
             requestBody = EMPTY_REQUEST_BODY;
         }
 
         return new com.squareup.okhttp.Request.Builder()
-                .url(request.getUrl())
-                .method(request.getMethod().name(), requestBody)
-                .headers(extractHeadersFromRequest(request))
-                .addHeader(HttpHeader.ACCEPT, buildAcceptHeaderValue(request.getAcceptedContentTypes()))
-                .build();
+            .url(request.getUrl())
+            .method(request.getMethod().name(), requestBody)
+            .headers(extractHeadersFromRequest(request))
+            .addHeader(
+                ACCEPT,
+                HttpUtils.buildAcceptHeaderValue(
+                    request.getAcceptedContentTypes(),
+                    this.getAcceptedContentTypes()
+                )
+            ).build();
     }
 
     /**
      * execute OKHTTP call
+     *
      * @param request
      * @return {@link com.squareup.okhttp.Response}
      */
@@ -129,7 +125,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         LOG.trace("Provider executing request url=[{}], method={}, headers={}, body=[{}].", request.url(), request.method(), request.headers(), request.body());
 
         try {
-            return okHttpClient.newCall(request).execute();
+            return client.newCall(request).execute();
         } catch (Exception ex) {
             LOG.error("Unable to Execute Request", ex);
             throw new HyperfitException("The request [" + request + "] could not be executed.", ex);
@@ -138,6 +134,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
 
     /**
      * Build HyperMedia Response based on {@link com.squareup.okhttp.Response}
+     *
      * @param response
      * @return {@link org.hyperfit.net.Response}
      */
@@ -146,11 +143,10 @@ public class OkHttp2HyperClient extends BaseHyperClient {
             .addCode(response.code())
             //TODO: decide if this is ok..or should we build a request from the request
             //available at okhttp.Response.getRequest()?
-            .addRequest(request)
-        ;
+            .addRequest(request);
 
-        for( Entry<String,java.util.List<String>> h  :response.headers().toMultimap().entrySet()){
-            for(String val : h.getValue()){
+        for (Entry<String, java.util.List<String>> h : response.headers().toMultimap().entrySet()) {
+            for (String val : h.getValue()) {
                 responseBuilder.addHeader(h.getKey(), val);
             }
         }
@@ -158,7 +154,7 @@ public class OkHttp2HyperClient extends BaseHyperClient {
 
         //Set the content type explicitly, even though it comes from the headers.  Hyperfit needs to know this
         //abstracted from the headers
-        responseBuilder.addContentType(response.header(HttpHeader.CONTENT_TYPE));
+        responseBuilder.addContentType(response.header(CONTENT_TYPE));
 
         try {
             responseBuilder.addBody(response.body().string());
@@ -178,11 +174,11 @@ public class OkHttp2HyperClient extends BaseHyperClient {
      */
     protected Headers extractHeadersFromRequest(Request request) {
         Headers.Builder headersBuilder = new Headers.Builder();
-        Iterable<Entry<String,String>> headers = request.getHeaders();
+        Iterable<Entry<String, String>> headers = request.getHeaders();
 
 
         if (null != headers) {
-            for(Entry<String,String> h : headers){
+            for (Entry<String, String> h : headers) {
                 headersBuilder.add(h.getKey(), h.getValue());
             }
         }
@@ -190,26 +186,5 @@ public class OkHttp2HyperClient extends BaseHyperClient {
         return headersBuilder.build();
     }
 
-    /**
-     * Builds the HTTP accept header using the configured media types for the client.
-     * @return comma separated media type values. (e.g. "application/hal+json,application/atom+xml"
-     */
-    private String buildAcceptHeaderValue(Set<String> requestAcceptedContentTypes) {
-        HashSet<String> allContentTypes =  new LinkedHashSet<String>(requestAcceptedContentTypes);
-        allContentTypes.addAll(this.getAcceptedContentTypes());
 
-        Iterator<String> contentTypes = allContentTypes.iterator();
-
-        StringBuilder builder =  new StringBuilder();
-        while(contentTypes.hasNext()){
-            builder.append(contentTypes.next());
-
-            if(contentTypes.hasNext()){
-                builder.append(",");
-            }
-        }
-
-        return builder.toString();
-
-    }
 }
