@@ -5,8 +5,17 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-
+/**
+ * Utility class for working with http requests and responses
+ */
 public final class HttpUtils {
+
+    private HttpUtils(){
+
+    }
+
+    public static final String ACCEPT = "Accept";
+    public static final String CONTENT_TYPE = "Content-Type";
 
     /**
      *
@@ -29,12 +38,13 @@ public final class HttpUtils {
         StringBuilder builder = new StringBuilder();
         while (contentTypes.hasNext()) {
             builder.append(contentTypes.next());
-            if (contentTypes.hasNext()) builder.append(",");
+            if (contentTypes.hasNext()){
+                builder.append(",");
+            }
         }
         return builder.toString();
     }
 
 
-    public static final String ACCEPT = "Accept";
-    public static final String CONTENT_TYPE = "Content-Type";
+
 }

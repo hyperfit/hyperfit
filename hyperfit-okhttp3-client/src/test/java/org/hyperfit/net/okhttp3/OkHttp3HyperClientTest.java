@@ -193,6 +193,7 @@ public class OkHttp3HyperClientTest {
         Response okResponseFake = okResponseBuilder
             .request(okRequestFake)
             .code(200)
+            .message("ok")
             .protocol(Protocol.HTTP_1_1)
             .body(new ResponseBody() {
                 @Override
@@ -248,6 +249,7 @@ public class OkHttp3HyperClientTest {
         Response okResponseFake = okResponseBuilder
             .request(okRequestFake)
             .code(200)
+            .message("ok")
             .protocol(Protocol.HTTP_1_1)
             .body(new ResponseBody() {
                 @Override
@@ -285,6 +287,7 @@ public class OkHttp3HyperClientTest {
         Response okResponseFake = okResponseBuilder
             .request(okRequestFake)
             .code(200)
+            .message("ok")
             .protocol(Protocol.HTTP_1_1)
             .body(null)
             .build();

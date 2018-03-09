@@ -7,9 +7,7 @@ import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Utility class for working with http requests and responses
- */
+
 public class HttpUtilsTest {
 
 
