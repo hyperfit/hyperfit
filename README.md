@@ -1,12 +1,12 @@
-[![Latest Release](http://bitwise-bot.dev:8080/badge/artifactory/latest-release/org.hyperfit/hyperfit/)](http://artifactory/webapp/#/artifacts/browse/tree/General/libs-release-local/org/hyperfit/hyperfit)
-[![Build Status](http://bitwise-shields.dev/jenkins/s/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
-[![Sonarqube Lines of Code](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/ncloc.svg?label=lines)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=ncloc)
-[![Tests](http://bitwise-shields.dev/jenkins/t/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
-[![Sonarqube Coverage](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/coverage.svg)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=coverage)
-[![Sonarqube Issues](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/violations.svg)](http://sonarqube.body.prod/component_issues?id=org.hyperfit:hyperfit:origin/master)
-[![Sonarqube Debt Ratio](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/tech_debt.svg?label=Debt Ratio)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=sqale_debt_ratio)
-[![Sonarqube Debt Minutes](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/sqale_index.svg?label=Debt Minutes)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=sqale_index)
-[![Sonarqube Docs](http://bitwise-shields.dev/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/public_documented_api_density.svg?label=Doc%)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=public_documented_api_density)
+[![Latest Release](http://bitwise-bot.qa:8080/badge/artifactory/latest-release/org.hyperfit/hyperfit/)](http://artifactory/webapp/#/artifacts/browse/tree/General/libs-release-local/org/hyperfit/hyperfit)
+[![Build Status](http://bitwise-shields.qa/jenkins/s/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
+[![Sonarqube Lines of Code](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/ncloc.svg?label=lines)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=ncloc)
+[![Tests](http://bitwise-shields.qa/jenkins/t/http/jenkins.body.prod/Hyperfit%20-%20Publish%20to%20Artifactory.svg)](http://jenkins/job/Hyperfit%20-%20Publish%20to%20Artifactory/)
+[![Sonarqube Coverage](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/coverage.svg)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=coverage)
+[![Sonarqube Issues](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/violations.svg)](http://sonarqube.body.prod/component_issues?id=org.hyperfit:hyperfit:origin/master)
+[![Sonarqube Debt Ratio](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/tech_debt.svg?label=Debt+Ratio)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=sqale_debt_ratio)
+[![Sonarqube Debt Minutes](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/sqale_index.svg?label=Debt+Minutes)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=sqale_index)
+[![Sonarqube Docs](http://bitwise-shields.qa/sonar/http/sonarqube.body.prod/org.hyperfit:hyperfit:origin%252Fmaster/public_documented_api_density.svg?label=Documented)](http://sonarqube.body.prod/drilldown/measures?id=org.hyperfit:hyperfit:origin/master&metric=public_documented_api_density)
 
 
 hyperfit
