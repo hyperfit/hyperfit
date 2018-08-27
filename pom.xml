@@ -4,7 +4,7 @@
 
   <groupId>org.hyperfit</groupId>
   <artifactId>hyperfit-root</artifactId>
-  <version>1.15.2-SNAPSHOT</version>
+  <version>1.16.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Hyperfit Root</name>
