@@ -1,4 +1,4 @@
-## 1.15.2 - TBD
+## 1.16.0 - TBD
 
 ## 1.15.1 - 2018-08-27
 * Added ResponseInterceptor & ResponseInterceptors which can intercept responses prior to them being processed.  However they can not mutate the response at this time.  V2 will allow for full mutation of request and response in a more elegant way.
