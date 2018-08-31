@@ -33,6 +33,10 @@ public class SimpleInterfaceSelectionStrategyTest {
                 return false;
             }
 
+            public String[] getDataFieldNames() {
+                return new String[0];
+            }
+
             public boolean canResolveLinkLocal(String relationship) {
                 return false;
             }

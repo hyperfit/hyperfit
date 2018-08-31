@@ -100,6 +100,11 @@ public class Java8DefaultMethodHandlerTest {
         }
 
         @Override
+        public String[] getDataFieldNames() {
+            return new String[0];
+        }
+
+        @Override
         public boolean canResolveLinkLocal(String relationship) {
             return false;
         }
@@ -332,6 +337,11 @@ public class Java8DefaultMethodHandlerTest {
                     @Override
                     public boolean hasPath(String... path) {
                         return false;
+                    }
+
+                    @Override
+                    public String[] getDataFieldNames() {
+                        return new String[0];
                     }
 
                     @Override

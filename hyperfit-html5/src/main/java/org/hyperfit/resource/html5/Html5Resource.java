@@ -173,6 +173,33 @@ public class Html5Resource extends BaseHyperResource {
 
     }
 
+    @Override
+    public String[] getDataFieldNames() {
+
+        if(dataNode == null){
+            return new String[0];
+        }
+
+        HashSet<String> names = new HashSet<String>();
+
+        //TODO: should this exclude forms?  can they ever be datafields?
+        for(Element n: dataNode.select("*[name]")){
+
+            //TODO: should we exclude blank names from this consideration somehow?
+            if(!n.parents().hasAttr("name")) {
+                String name = n.attr("name");
+
+                //protect against name attributes with no value
+                if (!StringUtils.isEmpty(name)) {
+                    names.add(name);
+                }
+            }
+
+        }
+
+        return names.toArray(new String[names.size()]);
+    }
+
     private static final String formByName = "form[name=%s]";
 
     @Override

@@ -209,6 +209,26 @@ public class HalJsonResource extends BaseHyperResource {
         return OBJECT_MAPPER.convertValue(nodeValue, classToReturn);
     }
 
+    public String[] getDataFieldNames(){
+        Iterator<String> fieldNames = jsonResource.fieldNames();
+
+        ArrayList<String> names = new ArrayList<String>();
+
+        while(fieldNames.hasNext()){
+            String fieldName = fieldNames.next();
+
+            //fields starting with _ isn't technically a reserved namespace
+            //but they should be for hal
+            //TODO: add some config way to override this behaviour for weird fields
+            if(!fieldName.startsWith("_")){
+                names.add(fieldName);
+            }
+        }
+
+        return names.toArray(new String[names.size()]);
+
+    }
+
 
     //TODO: we could use data binding here if that were faster...and any of us had a clue how to use JACKSON
     public static HyperLink linkFromHalJSON(String relationship, JsonNode node, String baseURI){

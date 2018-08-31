@@ -3,6 +3,7 @@ package org.hyperfit.resource.html5;
 
 
 
+import org.hamcrest.Matchers;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.resource.HyperResourceException;
 import org.hyperfit.resource.controls.form.Form;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.*;
 import static test.Helpers.makeSet;
 import static org.junit.Assert.*;
+import static test.Helpers.uniqueString;
 
 
 public class Html5ResourceTest {
@@ -115,7 +117,7 @@ public class Html5ResourceTest {
         HyperLink hyperLink = resource.getLink(rel);
         assertEquals(href, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
-        assertEquals(null, hyperLink.getName());
+        assertNull(hyperLink.getName());
     }
 
 
@@ -131,7 +133,7 @@ public class Html5ResourceTest {
         HyperLink hyperLink = resource.getLink(rel);
         assertEquals(href, hyperLink.getHref());
         assertEquals(title, hyperLink.getTitle());
-        assertEquals(null, hyperLink.getName());
+        assertNull(hyperLink.getName());
     }
 
     @Test(expected = HyperResourceException.class)
@@ -447,6 +449,85 @@ public class Html5ResourceTest {
     }
 
 
+    @Test
+    public void testGetDataFieldNamesOnlyHTMLControlFields() {
+        assertThat(
+            new Html5Resource(doc).getDataFieldNames(),
+            Matchers.emptyArray()
+        );
+
+    }
+
+    @Test
+    public void testGetDataFieldNamesExcludesEmptyNameAttrs() {
+
+        Element dataSection = body.appendElement("section");
+        dataSection.addClass("data");
+
+        String name1 = uniqueString();
+
+
+        dataSection.appendElement("span")
+            .attr("name", name1);
+
+        dataSection.appendElement("span")
+            .attr("name", "");
+
+        dataSection.appendElement("span")
+            .attr("name", "    ");
+
+        dataSection.appendElement("span")
+            .attr("name", "  ");
+
+        dataSection.appendElement("span")
+            .attr("name", "  ");
+
+
+        String name2 = uniqueString();
+        dataSection.appendElement("span")
+            .attr("name", name2);
+
+
+        assertThat(
+            "reserved _ prefixed names are ignored",
+            new Html5Resource(doc).getDataFieldNames(),
+            arrayContainingInAnyOrder(
+                name1,
+                name2
+            )
+        );
+
+    }
+
+
+
+    @Test
+    public void testGetDataFieldNamesWithComplexProp() {
+
+        Element dataSection = body.appendElement("section");
+        dataSection.addClass("data");
+
+        String parentName = "parent" + uniqueString();
+
+
+        Element parentSpan = dataSection.appendElement("span")
+            .attr("name", parentName);
+
+        String childName = "child" + uniqueString();
+        parentSpan.appendElement("span")
+            .attr("name", childName);
+
+
+        assertThat(
+            "must not include children",
+            new Html5Resource(doc).getDataFieldNames(),
+            arrayContainingInAnyOrder(
+                parentName
+            )
+        );
+
+    }
+
 
 
     @Test(expected = HyperResourceException.class)
@@ -459,6 +540,7 @@ public class Html5ResourceTest {
         new Html5Resource(doc).getPathAs(String.class,false, "_embedded", "promotionResourceList", "title");
     }
 
+    @Test
     public void testGetPathAsMissingNodeWhenTrueNullWhenMissing() {
         assertNull(new Html5Resource(doc).getPathAs(String.class,true, "_embedded", "promotionResourceList", "title"));
     }

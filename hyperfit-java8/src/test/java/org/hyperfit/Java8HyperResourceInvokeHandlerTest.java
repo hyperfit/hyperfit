@@ -109,6 +109,11 @@ public class Java8HyperResourceInvokeHandlerTest {
             }
 
             @Override
+            public String[] getDataFieldNames() {
+                return new String[0];
+            }
+
+            @Override
             public boolean canResolveLinkLocal(String relationship) {
                 return false;
             }

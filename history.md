@@ -1,4 +1,6 @@
 ## 1.16.1 - TBD
+* added getDataFieldNames method to HyperResource interface to enumerate all the top level fields of the underlying resource.
+ * hal + html content handlers have added implementations for this new interface method
 
 ## 1.15.1 - 2018-08-27
 * Added ResponseInterceptor & ResponseInterceptors which can intercept responses prior to them being processed.  However they can not mutate the response at this time.  V2 will allow for full mutation of request and response in a more elegant way.

@@ -32,4 +32,8 @@ public class Helpers {
     public static <T> T random(T... array) {
         return array[r.nextInt(array.length)];
     }
+
+    public static String uniqueString(){
+        return UUID.randomUUID().toString();
+    }
 }

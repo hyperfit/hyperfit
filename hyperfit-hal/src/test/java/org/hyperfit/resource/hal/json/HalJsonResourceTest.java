@@ -1,6 +1,7 @@
 package org.hyperfit.resource.hal.json;
 
 
+import org.hamcrest.Matchers;
 import org.hyperfit.exception.HyperfitException;
 import org.hyperfit.net.Request;
 import org.hyperfit.net.Response;
@@ -605,11 +606,72 @@ public class HalJsonResourceTest {
         new HalJsonResource(root, null).getLink("");
     }
 
+    @Test
+    public void testGetDataFieldNamesOnlyHALControlFields() {
+        assertThat(
+            new HalJsonResource(root, null).getDataFieldNames(),
+            Matchers.emptyArray()
+        );
+
+    }
+
+    @Test
+    public void testGetDataFieldNamesOnlyHALReservedFields() {
+        root.put(
+            "_reservedCauseStartsWithUnderbar",
+            uniqueString()
+        );
+
+
+        assertThat(
+            "reserved _ prefixed names are ignored",
+            new HalJsonResource(root, null).getDataFieldNames(),
+            Matchers.emptyArray()
+        );
+
+    }
+
+    @Test
+    public void testGetDataFieldNamesWithComplexProp() {
+
+        String complexKey = "complexProp";
+
+        root.put(
+            complexKey,
+            nodeFactory.objectNode().put(
+                uniqueString(),
+                uniqueString()
+            )
+        );
+
+        root.put(
+            "_reservedCauseStartsWithUnderbar",
+            uniqueString()
+        );
+
+
+        String otherKey = uniqueString();
+
+        root.put(
+            otherKey,
+            uniqueString()
+        );
+
+
+        assertThat(
+            new HalJsonResource(root, null).getDataFieldNames(),
+            arrayContainingInAnyOrder(
+                complexKey,
+                otherKey
+            )
+        );
+
+    }
 
     @Test
     public void testHasPath() {
-        assertTrue(!new HalJsonResource(root, null).hasPath("_embedded", "promotionResourceList", "title"));
-        assertTrue(!new HalJsonResource(root, null).hasPath());
+        assertFalse(new HalJsonResource(root, null).hasPath("_embedded", "promotionResourceList", "title"));
+        assertFalse(new HalJsonResource(root, null).hasPath());
 
         String value = uniqueString();
 
@@ -662,7 +724,7 @@ public class HalJsonResourceTest {
 
         HalJsonResource resource3 = new HalJsonResource(embedded, null);
 
-        assertFalse(resource1.equals(resource3));
+        assertNotEquals(resource1, resource3);
 
     }
 
@@ -854,7 +916,7 @@ public class HalJsonResourceTest {
     @Test
     public void linkWithEmptyArray() {
         ArrayNode linkArray = nodeFactory.arrayNode();
-        linkArray.addAll(Collections.EMPTY_LIST);
+        linkArray.addAll(Collections.<JsonNode>emptyList());
 
         HalJsonResource resource = new HalJsonResource(root, null);
         assertThat(resource.hasLink("bb:multi"), is(false));
