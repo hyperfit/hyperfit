@@ -27,6 +27,13 @@ import org.hyperfit.utils.StringUtils;
 @EqualsAndHashCode(exclude = {"linkCache"})
 public class HalJsonResource extends BaseHyperResource {
 
+    //TODO: make this configurable and give it a better name
+    private static final Set<String> WHITELISTED_RESERVED_FIELD_NAMES = new HashSet<String>();
+
+    static {
+        WHITELISTED_RESERVED_FIELD_NAMES.add("_id");
+    }
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -35,7 +42,9 @@ public class HalJsonResource extends BaseHyperResource {
     private final String baseURI;
     private final HashMap<String, HyperLink[]> linkCache = new HashMap<String, HyperLink[]>(5);
 
-    public HalJsonResource(Response response) {
+    public HalJsonResource(
+        Response response
+    ) {
         try {
             this.jsonResource = OBJECT_READER.readTree(response.getBody());
             this.baseURI = response.getRequest().getUrl();
@@ -52,7 +61,10 @@ public class HalJsonResource extends BaseHyperResource {
         }
     }
 
-    public HalJsonResource(JsonNode jsonResource, String baseURI) {
+    public HalJsonResource(
+        JsonNode jsonResource,
+        String baseURI
+    ) {
         if (jsonResource == null) {
             throw new IllegalArgumentException("jsonResource cannot be null.");
         }
@@ -68,7 +80,10 @@ public class HalJsonResource extends BaseHyperResource {
      * @param path varargs variable
      * @return {@link JsonNode}
      */
-    protected JsonNode getJsonNode(JsonNode root, String... path) {
+    protected JsonNode getJsonNode(
+        JsonNode root,
+        String... path
+    ) {
         if (root == null) {
             throw new IllegalArgumentException("root cannot be null.");
         }
@@ -195,7 +210,14 @@ public class HalJsonResource extends BaseHyperResource {
         return (nodeValue != null && !nodeValue.isMissingNode());
     }
 
-    public <T> T getPathAs(Class<T> classToReturn, boolean nullWhenMissing, String... path) {
+    public <T> T getPathAs(
+        Class<T> classToReturn,
+        boolean nullWhenMissing,
+        String... path
+    ) {
+        //NOTE: we don't care if they try to access reserved _ stuff as a datafield...let em do it if they want
+        //IE they can get to the _embedded.dog if they need to
+
         JsonNode nodeValue = getJsonNode(jsonResource, path);
 
         if (nodeValue == null || nodeValue.isMissingNode()) {
@@ -220,7 +242,7 @@ public class HalJsonResource extends BaseHyperResource {
             //fields starting with _ isn't technically a reserved namespace
             //but they should be for hal
             //TODO: add some config way to override this behaviour for weird fields
-            if(!fieldName.startsWith("_")){
+            if(!fieldName.startsWith("_") || WHITELISTED_RESERVED_FIELD_NAMES.contains(fieldName)){
                 names.add(fieldName);
             }
         }

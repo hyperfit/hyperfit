@@ -632,6 +632,30 @@ public class HalJsonResourceTest {
     }
 
     @Test
+    public void testGetDataFieldNamesOnlyHALReservedFieldsWithWhitelist() {
+        root.put(
+            "_reservedCauseStartsWithUnderbar",
+            uniqueString()
+        );
+
+        //this one is whitelisted
+        root.put(
+            "_id",
+            uniqueString()
+        );
+
+
+        assertThat(
+            "reserved _ prefixed names are ignored unless they are whitelisted",
+            new HalJsonResource(root, null).getDataFieldNames(),
+            arrayContainingInAnyOrder(
+                "_id"
+            )
+        );
+
+    }
+
+    @Test
     public void testGetDataFieldNamesWithComplexProp() {
 
         String complexKey = "complexProp";
