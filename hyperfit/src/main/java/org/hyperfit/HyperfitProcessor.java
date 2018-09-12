@@ -239,7 +239,10 @@ public class HyperfitProcessor {
 
 
     //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource buildHyperResource(Response response, Class<T> expectedResourceInterface) {
+    protected <T> HyperResource buildHyperResource(
+        Response response,
+        Class<T> expectedResourceInterface
+    ) {
 
         //TODO: may be better to make this look at response code first
         //and try to parse if it can undertsand the type
