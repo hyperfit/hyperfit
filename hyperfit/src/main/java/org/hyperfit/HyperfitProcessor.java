@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
@@ -177,7 +178,11 @@ public class HyperfitProcessor {
         return processResponse(classToReturn, response, typeInfo);
     }
 
-    public <T> T processResponse(Class<T> classToReturn, Response response, TypeInfo typeInfo) {
+    public <T> T processResponse(
+        Class<T> classToReturn,
+        Response response,
+        TypeInfo typeInfo
+    ) {
 
         responseInterceptors.intercept(response);
 
@@ -192,7 +197,14 @@ public class HyperfitProcessor {
             return (T) response.getBody();
         }
 
-        HyperResource resource = buildHyperResource(response, classToReturn);
+        HyperResource resource =  new ResponseToHyperResourcePipeline(
+            Collections.<ResponseToHyperResourcePipeline.Step<Response,HyperResource>>emptyList(),
+            this,
+            contentRegistry,
+            errorHandler,
+            classToReturn
+        ).run(response);
+
 
         return processResource(classToReturn, resource, typeInfo);
     }
@@ -204,7 +216,11 @@ public class HyperfitProcessor {
      * @param hyperResource resource to proxify
      * @return resource with same type specified in the resource class.
      */
-    public <T> T processResource(Class<T> classToReturn, HyperResource hyperResource, TypeInfo typeInfo) {
+    public <T> T processResource(
+        Class<T> classToReturn,
+        HyperResource hyperResource,
+        TypeInfo typeInfo
+    ) {
 
         //TODO: if they just want a hyper resource, give it to them
 
@@ -237,75 +253,6 @@ public class HyperfitProcessor {
 
 
 
-
-    //builds the a hyper resource from a hyper response. Exceptions are handled by
-    protected <T> HyperResource buildHyperResource(
-        Response response,
-        Class<T> expectedResourceInterface
-    ) {
-
-        //TODO: may be better to make this look at response code first
-        //and try to parse if it can undertsand the type
-        //possibly as an Optional<HyperResource>?
-
-        //STAGE 1 - There's response, let's see if we understand the content type!
-        ContentType responseContentType = null;
-
-        //Sometimes there is no content type, no need to warn about that
-        if (!StringUtils.isEmpty(response.getContentType())){
-            try {
-                responseContentType = ContentType.parse(response.getContentType());
-            } catch (Exception e) {
-                LOG.warn("Error parsing content type of response.  errorHandler:unhandledContentType will be called", e);
-            }
-        }
-
-        //See if we have a content type, if not throw
-        if(responseContentType == null || !this.contentRegistry.canHandle(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE)){
-            //We don't understand the content type, let's ask the error handler what to do!
-            return this.errorHandler.unhandledContentType(
-                this,
-                response,
-                this.contentRegistry,
-                expectedResourceInterface
-            );
-        }
-
-
-        //STAGE 2 - There's a content type we understand, let's try to parse the response!
-
-        ContentTypeHandler contentTypeHandler = this.contentRegistry.getHandler(responseContentType, ContentRegistry.Purpose.PARSE_RESPONSE);
-        HyperResource resource;
-        try{
-            resource = contentTypeHandler.parseResponse(response);
-            //TODO: should we check for null here and throw?
-        } catch (Exception e){
-            //Something went wrong parsing the response, let's ask the error handler what to do!
-            return this.errorHandler.contentParseError(
-                this,
-                response,
-                this.contentRegistry,
-                expectedResourceInterface,
-                e
-            );
-        }
-
-
-        //STAGE 3 - we were able to parse the response into a HyperResponse, let's make sure it's a OK response
-        if(!response.isOK()){
-            return this.errorHandler.notOKResponse(
-                this,
-                response,
-                this.contentRegistry,
-                expectedResourceInterface,
-                resource
-            );
-        }
-
-
-        //Everything with the resource worked out, let's return it
-        return resource;
-    }
 
 
     public static Builder builder() {

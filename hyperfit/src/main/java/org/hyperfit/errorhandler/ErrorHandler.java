@@ -28,17 +28,34 @@ public interface ErrorHandler {
 
 
 
-    HyperResource unhandledContentType(HyperfitProcessor processor, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface);
+    HyperResource unhandledContentType(
+        HyperfitProcessor processor,
+        Response response,
+        ContentRegistry contentRegistry,
+        Class<?> expectedResourceInterface
+    );
 
 
-    HyperResource contentParseError(HyperfitProcessor processor, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, Exception parseException);
+    HyperResource contentParseError(
+        HyperfitProcessor processor,
+        Response response,
+        ContentRegistry contentRegistry,
+        Class<?> expectedResourceInterface,
+        Exception parseException
+    );
 
 
-    HyperResource notOKResponse(HyperfitProcessor processor, Response response, ContentRegistry contentRegistry, Class<?> expectedResourceInterface, HyperResource parsedResource);
+    HyperResource notOKResponse(
+        HyperfitProcessor processor,
+        Response response,
+        ContentRegistry contentRegistry,
+        Class<?> expectedResourceInterface,
+        HyperResource parsedResource
+    );
 
 
     //TODO: handle this situation
     //HyperResource unexpectedResponseType(Request request, Response response, HyperResource parsedResource);
 
-    
+
 }

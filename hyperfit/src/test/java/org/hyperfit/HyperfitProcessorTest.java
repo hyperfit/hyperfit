@@ -1,6 +1,6 @@
 package org.hyperfit;
 
-import org.hyperfit.exception.ResponseException;
+
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.InterfaceSelectionStrategy;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -53,81 +52,6 @@ public class HyperfitProcessorTest {
             ;
     }
 
-    @Test(expected = ResponseException.class)
-    public void testBuildResourceNoContentTypeException() {
-
-        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
-                .hyperClient(mockHyperClient)
-                .build();
-
-        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
-        Response response = new Response.ResponseBuilder()
-            .addRequest(request)
-            .build();
-
-        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
-    }
-
-    @Test(expected = ResponseException.class)
-    public void testBuildResourceNoContentTypeHandlerException() {
-
-        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
-                .hyperClient(mockHyperClient)
-                .build();
-
-        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
-        Response response = new Response.ResponseBuilder()
-            .addRequest(request)
-            .addContentType("someType")
-            .build();
-
-        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
-    }
-
-
-    @Test(expected = ResponseException.class)
-    public void testBuildResourceEmptyContentTypeInresponseException() {
-        //TOOD: this test really should make sure parsing isn't even attempted
-        //could do that if we offered a pluggable parser strategy
-        //which mike make sense if we wanted to let them sniff the body
-        //to magic type the response
-        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
-            .hyperClient(mockHyperClient)
-            .build();
-
-        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
-        Response response = new Response.ResponseBuilder()
-            .addRequest(request)
-            //i believe this is impossible in regards to http spec, but
-            //just in case a bad hyper client is around
-            .addContentType("")
-            .build();
-
-        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
-    }
-
-
-    @Test(expected = ResponseException.class)
-    public void testBuildResourceNullContentTypeInresponseException() {
-
-        //TOOD: this test really should make sure parsing isn't even attempted
-        //could do that if we offered a pluggable parser strategy
-        //which mike make sense if we wanted to let them sniff the body
-        //to magic type the response
-        
-        HyperfitProcessor hyperfitProcessor = HyperfitProcessor.builder()
-            .hyperClient(mockHyperClient)
-            .build();
-
-        Request request = new RFC6570RequestBuilder().setUrlTemplate("http://here.com").build();
-        Response response = new Response.ResponseBuilder()
-            .addRequest(request)
-            //as if the value wasn't set
-            .addContentType(null)
-            .build();
-
-        hyperfitProcessor.buildHyperResource(response, HyperResource.class);
-    }
 
 
     @Test
