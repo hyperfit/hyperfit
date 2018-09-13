@@ -22,11 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Collections;
+import java.util.*;
 
 import static org.hyperfit.utils.MoreObjects.firstNonNull;
 
@@ -49,6 +45,7 @@ public class HyperfitProcessor {
     private final Map<String, HyperClient> schemeClientMap;
     private final Java8DefaultMethodHandler java8DefaultMethodHandler;
     private final ResponseInterceptors responseInterceptors;
+    private final List<Pipeline.Step<Response, HyperResource>> responseToResourcePipelineSteps;
 
     private HyperfitProcessor(Builder builder) {
 
@@ -59,6 +56,10 @@ public class HyperfitProcessor {
         responseInterceptors = firstNonNull(builder.responseInterceptors, new ResponseInterceptors());
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
         java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
+
+        //TODO: check for bad null steps
+        //TOOD: should this just be a stack?
+        responseToResourcePipelineSteps = new ArrayList<Pipeline.Step<Response, HyperResource>>(builder.responseToResourcePipelineBuilder.steps);
 
         if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
             throw new IllegalArgumentException("at least one scheme client mapping must be registered");
@@ -193,12 +194,13 @@ public class HyperfitProcessor {
 
         //Another special case, if what they want is a string we give them response body
         //before we process it
+        //TODO: remove this in v2...if you want the body just get the response
         if (String.class.isAssignableFrom(classToReturn)) {
             return (T) response.getBody();
         }
 
         HyperResource resource =  new ResponseToHyperResourcePipeline(
-            Collections.<ResponseToHyperResourcePipeline.Step<Response,HyperResource>>emptyList(),
+            responseToResourcePipelineSteps,
             this,
             contentRegistry,
             errorHandler,
@@ -262,6 +264,54 @@ public class HyperfitProcessor {
 
     public static class Builder {
 
+
+        public static class PipelineBuilder<I,O> {
+            final List<Pipeline.Step<I,O>> steps = new ArrayList<Pipeline.Step<I,O>>();
+            private final Builder builder;
+
+            PipelineBuilder(
+                Builder builder
+            ){
+
+                this.builder = builder;
+            }
+
+
+            public PipelineBuilder addSteps(Pipeline.Step<I,O> ...pipelineStep) {
+                this.steps.addAll(Arrays.asList(pipelineStep));
+                return this;
+            }
+
+            public PipelineBuilder removeSteps(Pipeline.Step<I,O>... pipelineStep) {
+                this.steps.removeAll(Arrays.asList(pipelineStep));
+                return this;
+            }
+
+            public PipelineBuilder removeSteps(Class<? extends Pipeline.Step<I,O>> ... typesToRemove) {
+                for(Class<? extends Pipeline.Step<I,O>> typeToRemove : typesToRemove) {
+                    for (java.util.Iterator<Pipeline.Step<I,O>> i = steps.iterator(); i.hasNext(); ) {
+
+                        Pipeline.Step element = i.next();
+                        if (typeToRemove.isInstance(element)) {
+                            i.remove();
+                        }
+                    }
+                }
+
+                return this;
+            }
+
+            public PipelineBuilder resetSteps() {
+                this.steps.clear();
+                return this;
+            }
+
+            public Builder done(){
+                return builder;
+            }
+        }
+
+
         private ContentRegistry contentRegistry = new ContentRegistry();
         private ErrorHandler errorHandler;
         private ResourceMethodInfoCache resourceMethodInfoCache;
@@ -269,6 +319,10 @@ public class HyperfitProcessor {
         private ResponseInterceptors responseInterceptors = new ResponseInterceptors();
         private InterfaceSelectionStrategy interfaceSelectionStrategy = new SimpleInterfaceSelectionStrategy();
         private Map<String, HyperClient> schemeClientMap = new HashMap<String, HyperClient>();
+        private final PipelineBuilder<Response, HyperResource> responseToResourcePipelineBuilder = new PipelineBuilder<Response, HyperResource>(
+            this
+        );
+
         private Java8DefaultMethodHandler java8DefaultMethodHandler = new Java8DefaultMethodHandler() {
             public Object invoke(@NonNull DefaultMethodContext context, Object[] args) {
                 throw new HyperfitException("No Java8DefaultMethodHandler implementation specified.  Are you missing a call to the HyperfitProcessor builder?");
@@ -399,6 +453,12 @@ public class HyperfitProcessor {
 
             return this;
         }
+
+
+        public PipelineBuilder<Response, HyperResource> responseToResourcePipeline(){
+            return responseToResourcePipelineBuilder;
+        }
+
 
         public HyperfitProcessor build() {
             return new HyperfitProcessor(this);

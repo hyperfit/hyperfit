@@ -15,6 +15,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.containsString;
@@ -410,5 +411,126 @@ public class ResponseToHyperResourcePipelineTest {
 
     }
 
+
+
+    @Test
+    public void testRunWithSomeCustomSteps() {
+
+        String fakeContentType = "not/real";
+        final Response responseOverriddenInStep1 = mock(Response.class);
+        when(responseOverriddenInStep1.getContentType())
+            .thenReturn(fakeContentType);
+
+        final HyperResource resultOverriddenInStep2 = mock(HyperResource.class);
+
+        Pipeline.Step<Response,HyperResource> step1 = new Pipeline.Step<Response, HyperResource>(){
+            public HyperResource run(
+                Response input,
+                Pipeline<Response, HyperResource> pipeline
+            ) {
+
+                assertSame(
+                    "response passed to run in step1 must be the response seen in step 1",
+                    mockResponse,
+                    input
+                );
+
+
+                HyperResource result =  pipeline.run(responseOverriddenInStep1);
+
+                assertSame(
+                    "result from pipeline.run must be result from step 2",
+                    resultOverriddenInStep2,
+                    result
+                );
+
+
+                return result;
+
+            }
+        };
+
+
+        final HyperResource resourceFromResponse = mock(HyperResource.class);
+
+        Pipeline.Step<Response,HyperResource> step2 = new Pipeline.Step<Response, HyperResource>(){
+            public HyperResource run(
+                Response input,
+                Pipeline<Response, HyperResource> pipeline
+            ) {
+
+                assertSame(
+                    "response passed to run in step2 must be the response sent by step1",
+                    responseOverriddenInStep1,
+                    input
+                );
+
+
+                HyperResource result =  pipeline.run(input);
+
+                assertSame(
+                    "result from pipeline.run must be result from response",
+                    resourceFromResponse,
+                    result
+                );
+
+                return resultOverriddenInStep2;
+            }
+        };
+
+
+        ResponseToHyperResourcePipeline subject = new ResponseToHyperResourcePipeline(
+            //techinaclly order is not guaranteed....not sure what we should do about that right now...
+            Arrays.asList(
+                step2,
+                step1
+            ),
+            mockHyperfitProcessor,
+            mockContentRegistry,
+            mockErrorHandler,
+            Resource1.class
+        );
+
+
+
+        //This never gets used because it's replaced in step 1
+        verifyZeroInteractions(mockResponse);
+
+        when(mockContentRegistry.canHandle(
+            ContentType.parse(fakeContentType),
+            ContentRegistry.Purpose.PARSE_RESPONSE
+        ))
+            .thenReturn(
+                true
+            );
+
+
+        when(mockContentRegistry.getHandler(
+            ContentType.parse(fakeContentType),
+            ContentRegistry.Purpose.PARSE_RESPONSE
+        ))
+            .thenReturn(
+                mockContentTypeHandler
+            );
+
+
+
+        when(mockContentTypeHandler.parseResponse(
+            responseOverriddenInStep1
+        ))
+            .thenReturn(resourceFromResponse);
+
+        when(responseOverriddenInStep1.isOK())
+            .thenReturn(true);
+
+
+        assertSame(
+            resultOverriddenInStep2,
+            subject.run(
+                mockResponse
+            )
+        );
+
+    }
 
 }

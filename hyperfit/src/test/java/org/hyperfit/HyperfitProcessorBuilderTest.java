@@ -275,4 +275,110 @@ public class HyperfitProcessorBuilderTest {
 
         requestProcessor.processRequest(RootResource.class, "host.com");
     }
+
+
+    @Test
+    public void testCustomResponseToResourceProcessing(){
+
+        final HyperResource fakeResource = mock(HyperResource.class);
+
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"random1", "random2"});
+
+        HyperfitProcessor requestProcessor = HyperfitProcessor.builder()
+
+            .responseToResourcePipeline()
+                .addSteps(
+                    new Pipeline.Step<Response, HyperResource>() {
+                        public HyperResource run(Response input, Pipeline<Response, HyperResource> pipeline) {
+                            return fakeResource;
+                        }
+                    }
+                )
+                .done()
+            .hyperClient(mockHyperClient)
+            .addContentTypeHandler(mockContentTypeHandler)
+            .build();
+
+
+        requestProcessor.processResponse(
+            RootResource.class,
+            mockResponse,
+            null
+        );
+
+    }
+
+
+
+    @Test
+    public void testBuilderDoesntModifyCreatedThing(){
+
+        String fakePath = uniqueString();
+
+        final HyperResource fakeResource1 = mock(HyperResource.class);
+        when(fakeResource1.hasPath(fakePath))
+            .thenReturn(true);
+
+        when(mockHyperClient.getSchemes()).thenReturn(new String[]{"random1", "random2"});
+
+        HyperfitProcessor.Builder builder = HyperfitProcessor.builder()
+            .responseToResourcePipeline()
+            .addSteps(
+                new Pipeline.Step<Response, HyperResource>() {
+                    public HyperResource run(Response input, Pipeline<Response, HyperResource> pipeline) {
+                        return fakeResource1;
+                    }
+                }
+            )
+            .done()
+            .hyperClient(mockHyperClient)
+            .addContentTypeHandler(mockContentTypeHandler)
+            ;
+
+
+        HyperfitProcessor proccessor1 = builder.build();
+
+        assertTrue(
+            proccessor1.processResponse(
+                HyperResource.class,
+                mockResponse,
+                null
+            ).hasPath(fakePath)
+        );
+
+        final HyperResource fakeResource2 = mock(HyperResource.class);
+
+        HyperfitProcessor proccessor2 = builder
+            .responseToResourcePipeline()
+                .resetSteps()
+                .addSteps(
+                    new Pipeline.Step<Response, HyperResource>() {
+                        public HyperResource run(Response input, Pipeline<Response, HyperResource> pipeline) {
+                            return fakeResource2;
+                        }
+                    }
+                )
+                .done()
+            .build();
+
+
+        assertFalse(
+            proccessor2.processResponse(
+                RootResource.class,
+                mockResponse,
+                null
+            ).hasPath(fakePath)
+        );
+
+
+        assertTrue(
+            "processor 1 must not be affected",
+            proccessor1.processResponse(
+                RootResource.class,
+                mockResponse,
+                null
+            ).hasPath(fakePath)
+        );
+    }
+
 }

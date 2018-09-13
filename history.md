@@ -1,6 +1,15 @@
 ## 1.16.1 - TBD
 * added getDataFieldNames method to HyperResource interface to enumerate all the top level fields of the underlying resource.
  * hal + html content handlers have added implementations for this new interface method
+* Introduced the concept of a Pipeline which is a process that consist of a series of steps
+ * pipelines allow devs to control the entire transformation of one type of thing into another, IE a request to a response, or a response to a hyper resource interface
+ * First pipeline is the one that turns a response into a hyper resource
+ * HyperfitProcessor builder has new PipeLineBuilder type that manages a specific pipeline
+ * HyperfitProcessor builder has new method responseToResourcePipeline that returns the builder for the response to resource pipeline 
+ * exit a PipelineBuilder by calling it's done() method, which returns you to the HyperfitProcessor builder
+ * more pipeline are coming in the future, they replace interceptors
+* ResponseInterceptor has been deprecated in favour of using a response to hyper resource step
+ 
 
 ## 1.15.1 - 2018-08-27
 * Added ResponseInterceptor & ResponseInterceptors which can intercept responses prior to them being processed.  However they can not mutate the response at this time.  V2 will allow for full mutation of request and response in a more elegant way.

@@ -2,9 +2,11 @@ package org.hyperfit.net;
 
 /**
  * Intercept response.
+ * @deprecated create a custom step in the Response to HyperResource pipeline to intercept responses
  */
+@Deprecated
 public interface ResponseInterceptor {
 
-    public void intercept(Response response);
+    void intercept(Response response);
 
 }
