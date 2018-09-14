@@ -88,8 +88,14 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
                 //identify which one is the link...thus we have to fetch it via request
                 //TODO: there's an edge case where if we have a link from a multilink relationship that only has 1 link
                 //and embedded has just 1, then we can return that link...but punting on this for  now.
-                if (!hyperResource.isMultiLink(linkRelationship) && hyperResource.canResolveLinkLocal(linkRelationship)) {
-                    return requestProcessor.processResource(returnClass, hyperResource.resolveLinkLocal(linkRelationship), typeInfo.make(genericReturnType));
+                if (!hyperResource.isMultiLink(linkRelationship) && hyperResource.canResolveLinkLocal(linkRelationship) && HyperResource.class.isAssignableFrom(returnClass)) {
+                    return returnClass.cast(
+                        requestProcessor.processResource(
+                            (Class<? extends HyperResource>)returnClass,
+                            hyperResource.resolveLinkLocal(linkRelationship),
+                            typeInfo.make(genericReturnType)
+                        )
+                    );
                 }
 
                 RequestBuilder requestBuilder = this.toRequestBuilder();
@@ -127,22 +133,36 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
     }
 
 
-    protected <T> T processEmbeddedResources(Class<T> returnClass, Type genericReturnType, HyperResource[] hyperResources){
+    protected <T> T processEmbeddedResources(
+        Class<T> returnClass,
+        Type genericReturnType,
+        HyperResource[] hyperResources
+    ){
         //TODO: in the future this would actually be a strategy...not these if blocks
 
         if (returnClass.isArray()) {
             //If config info isn't there, let's fall back assuming it's a HyperResource
             //TODO if we had the type as Page<? extends XYZ> could we then fallback to XYZ?
             Pair<? extends Class<?>,Type> arrayTypeInfo = typeInfo.getArrayType(returnClass, genericReturnType, HyperResource.class);
-            TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getValue1());
 
-            Object[] result = ReflectUtils.createArray(arrayTypeInfo.getValue0(), hyperResources.length);
+            Class<?> arrayComponentClass = arrayTypeInfo.getValue0();
 
-            for (int i = 0; i < hyperResources.length; i++) {
-                result[i] =  this.requestProcessor.processResource(arrayTypeInfo.getValue0(), hyperResources[i], newInfo);
+            if(!HyperResource.class.isAssignableFrom(arrayComponentClass)){
+                throw new RuntimeException("Can't deal with array component type of " + arrayComponentClass);
             }
 
-            return (T)result;
+            TypeInfo newInfo = typeInfo.make(arrayTypeInfo.getValue1());
+
+            Object[] result = ReflectUtils.createArray(arrayComponentClass, hyperResources.length);
+
+            for (int i = 0; i < hyperResources.length; i++) {
+                result[i] =  this.requestProcessor.processResource(
+                    (Class<? extends HyperResource>)arrayComponentClass,
+                    hyperResources[i],
+                    newInfo);
+            }
+
+            return returnClass.cast(result);
 
         }
 
@@ -235,13 +255,23 @@ public class HyperResourceInvokeHandler implements InvocationHandler {
             }
 
             //If we can get it locally...do it!
-            if (hyperResource.canResolveLinkLocal(linkRelationship)) {
+            if (hyperResource.canResolveLinkLocal(linkRelationship) ) {
                 //TODO: when we get to strategies this condition can be much more interesting
                 //for now we do this if the return type is an array or the link is a multi link
                 if(hyperResource.isMultiLink(linkRelationship) || methodInfo.getReturnType().isArray()) {
-                    return this.processEmbeddedResources(methodInfo.getReturnType(), methodInfo.getGenericReturnType(), hyperResource.resolveLinksLocal(linkRelationship));
-                } else {
-                    return this.requestProcessor.processResource(methodInfo.getReturnType(), hyperResource.resolveLinkLocal(linkRelationship), typeInfo.make(methodInfo.getGenericReturnType()));
+
+                    return this.processEmbeddedResources(
+                        methodInfo.getReturnType(),
+                        methodInfo.getGenericReturnType(),
+                        hyperResource.resolveLinksLocal(linkRelationship)
+                    );
+
+                } else if (HyperResource.class.isAssignableFrom(methodInfo.getReturnType())){
+                    return this.requestProcessor.processResource(
+                        (Class<? extends HyperResource>)methodInfo.getReturnType(),
+                        hyperResource.resolveLinkLocal(linkRelationship),
+                        typeInfo.make(methodInfo.getGenericReturnType())
+                    );
                 }
 
             }

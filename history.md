@@ -3,7 +3,7 @@
  * hal + html content handlers have added implementations for this new interface method
 * Introduced the concept of a Pipeline which is a process that consist of a series of steps
  * pipelines allow devs to control the entire transformation of one type of thing into another, IE a request to a response, or a response to a hyper resource interface
- * First pipeline is the one that turns a response into a hyper resource
+ * First pipeline is the one that turns a response into a hyper resource proxified interface
  * HyperfitProcessor builder has new PipeLineBuilder type that manages a specific pipeline
  * HyperfitProcessor builder has new method responseToResourcePipeline that returns the builder for the response to resource pipeline 
  * exit a PipelineBuilder by calling it's done() method, which returns you to the HyperfitProcessor builder

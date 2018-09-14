@@ -7,6 +7,7 @@ import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.net.Response;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.utils.StringUtils;
+import org.hyperfit.utils.TypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +20,10 @@ class ResponseToHyperResourcePipeline implements Pipeline<Response, HyperResourc
     private static final Logger LOG = LoggerFactory.getLogger(ResponseToHyperResourcePipeline.class);
 
     private final Stack<Step<Response, HyperResource>> steps = new Stack<Step<Response, HyperResource>>();
+    private final TypeInfo typeInfo;
     private final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
-    private final Class<?> expectedInterface;
+    private final Class<? extends HyperResource> expectedInterface;
     private final HyperfitProcessor processor;
 
 
@@ -30,11 +32,14 @@ class ResponseToHyperResourcePipeline implements Pipeline<Response, HyperResourc
         HyperfitProcessor processor,
         ContentRegistry contentRegistry,
         ErrorHandler errorHandler,
-        Class<?> expectedInterface
+        Class<? extends HyperResource> expectedInterface,
+        TypeInfo typeInfo
 
     ) {
+
         this.steps.addAll(steps);
 
+        this.typeInfo = typeInfo;
         this.processor = processor;
         this.contentRegistry = contentRegistry;
         this.errorHandler = errorHandler;
@@ -112,7 +117,11 @@ class ResponseToHyperResourcePipeline implements Pipeline<Response, HyperResourc
 
 
             //Everything with the resource worked out, let's return it
-            return resource;
+            return processor.processResource(
+                expectedInterface,
+                resource,
+                typeInfo
+            );
         }
 
         return steps.pop().run(response,this);

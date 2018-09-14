@@ -8,6 +8,7 @@ import org.hyperfit.exception.ResponseException;
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
 import org.hyperfit.resource.InterfaceSelectionStrategy;
+import org.hyperfit.utils.TypeInfo;
 import org.hyperfit.utils.TypeRef;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +46,9 @@ public class ResponseToHyperResourcePipelineTest {
     @Mock
     Response mockResponse;
 
+    @Mock
+    TypeInfo mockTypeInfo;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -60,7 +64,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource = mock(HyperResource.class);
@@ -100,7 +105,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource = mock(HyperResource.class);
@@ -140,7 +146,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource = mock(HyperResource.class);
@@ -180,7 +187,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource = mock(HyperResource.class);
@@ -229,7 +237,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource = mock(HyperResource.class);
@@ -295,7 +304,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
         HyperResource fakeResource1 = mock(HyperResource.class);
@@ -362,12 +372,12 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
-        HyperResource fakeResource = mock(HyperResource.class);
-
-
+        HyperResource fakeBaseResource = mock(HyperResource.class);
+        Resource1 fakeProxyResource = mock(Resource1.class);
 
 
         String fakeContentType = "not/real";
@@ -377,33 +387,41 @@ public class ResponseToHyperResourcePipelineTest {
         when(mockContentRegistry.canHandle(
             ContentType.parse(fakeContentType),
             ContentRegistry.Purpose.PARSE_RESPONSE
-        ))
-            .thenReturn(
-                true
-            );
+        )).thenReturn(
+            true
+        );
 
 
         when(mockContentRegistry.getHandler(
             ContentType.parse(fakeContentType),
             ContentRegistry.Purpose.PARSE_RESPONSE
-        ))
-            .thenReturn(
-                mockContentTypeHandler
-            );
+        )).thenReturn(
+            mockContentTypeHandler
+        );
 
 
 
         when(mockContentTypeHandler.parseResponse(
             mockResponse
-        ))
-            .thenReturn(fakeResource);
+        )).thenReturn(
+            fakeBaseResource
+        );
 
         when(mockResponse.isOK())
             .thenReturn(true);
 
 
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
+            fakeBaseResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxyResource
+        );
+
+
         assertSame(
-            fakeResource,
+            fakeProxyResource,
             subject.run(
                 mockResponse
             )
@@ -436,7 +454,7 @@ public class ResponseToHyperResourcePipelineTest {
                 );
 
 
-                HyperResource result =  pipeline.run(responseOverriddenInStep1);
+                HyperResource result = pipeline.run(responseOverriddenInStep1);
 
                 assertSame(
                     "result from pipeline.run must be result from step 2",
@@ -451,7 +469,7 @@ public class ResponseToHyperResourcePipelineTest {
         };
 
 
-        final HyperResource resourceFromResponse = mock(HyperResource.class);
+        final Resource1 resourceFromResponse = mock(Resource1.class);
 
         Pipeline.Step<Response,HyperResource> step2 = new Pipeline.Step<Response, HyperResource>(){
             public HyperResource run(
@@ -479,6 +497,7 @@ public class ResponseToHyperResourcePipelineTest {
         };
 
 
+
         ResponseToHyperResourcePipeline subject = new ResponseToHyperResourcePipeline(
             //techinaclly order is not guaranteed....not sure what we should do about that right now...
             Arrays.asList(
@@ -488,7 +507,8 @@ public class ResponseToHyperResourcePipelineTest {
             mockHyperfitProcessor,
             mockContentRegistry,
             mockErrorHandler,
-            Resource1.class
+            Resource1.class,
+            mockTypeInfo
         );
 
 
@@ -499,26 +519,33 @@ public class ResponseToHyperResourcePipelineTest {
         when(mockContentRegistry.canHandle(
             ContentType.parse(fakeContentType),
             ContentRegistry.Purpose.PARSE_RESPONSE
-        ))
-            .thenReturn(
-                true
-            );
+        )).thenReturn(
+            true
+        );
 
 
         when(mockContentRegistry.getHandler(
             ContentType.parse(fakeContentType),
             ContentRegistry.Purpose.PARSE_RESPONSE
-        ))
-            .thenReturn(
-                mockContentTypeHandler
-            );
+        )).thenReturn(
+            mockContentTypeHandler
+        );
 
 
 
         when(mockContentTypeHandler.parseResponse(
             responseOverriddenInStep1
-        ))
-            .thenReturn(resourceFromResponse);
+        )).thenReturn(
+            resourceFromResponse
+        );
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
+            resourceFromResponse,
+            mockTypeInfo
+        )).thenReturn(
+            resourceFromResponse
+        );
 
         when(responseOverriddenInStep1.isOK())
             .thenReturn(true);

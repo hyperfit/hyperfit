@@ -280,7 +280,7 @@ public class HyperfitProcessorBuilderTest {
     @Test
     public void testCustomResponseToResourceProcessing(){
 
-        final HyperResource fakeResource = mock(HyperResource.class);
+        final HyperResource fakeResource = mock(RootResource.class);
 
         when(mockHyperClient.getSchemes()).thenReturn(new String[]{"random1", "random2"});
 
@@ -315,7 +315,7 @@ public class HyperfitProcessorBuilderTest {
 
         String fakePath = uniqueString();
 
-        final HyperResource fakeResource1 = mock(HyperResource.class);
+        final RootResource fakeResource1 = mock(RootResource.class);
         when(fakeResource1.hasPath(fakePath))
             .thenReturn(true);
 
@@ -340,13 +340,13 @@ public class HyperfitProcessorBuilderTest {
 
         assertTrue(
             proccessor1.processResponse(
-                HyperResource.class,
+                RootResource.class,
                 mockResponse,
                 null
             ).hasPath(fakePath)
         );
 
-        final HyperResource fakeResource2 = mock(HyperResource.class);
+        final HyperResource fakeResource2 = mock(RootResource.class);
 
         HyperfitProcessor proccessor2 = builder
             .responseToResourcePipeline()

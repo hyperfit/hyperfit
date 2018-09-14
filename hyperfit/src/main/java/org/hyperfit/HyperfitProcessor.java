@@ -189,26 +189,34 @@ public class HyperfitProcessor {
 
         //Special case, if what they want is the Response in a raw format...well they can have it!
         if (Response.class.isAssignableFrom(classToReturn)) {
-            return (T) response;
+            return classToReturn.cast(response);
         }
 
         //Another special case, if what they want is a string we give them response body
         //before we process it
         //TODO: remove this in v2...if you want the body just get the response
         if (String.class.isAssignableFrom(classToReturn)) {
-            return (T) response.getBody();
+            return classToReturn.cast(response.getBody());
         }
 
-        HyperResource resource =  new ResponseToHyperResourcePipeline(
-            responseToResourcePipelineSteps,
-            this,
-            contentRegistry,
-            errorHandler,
-            classToReturn
-        ).run(response);
+        if(HyperResource.class.isAssignableFrom(classToReturn)){
+            return classToReturn.cast(
+                new ResponseToHyperResourcePipeline(
+                    responseToResourcePipelineSteps,
+                    this,
+                    contentRegistry,
+                    errorHandler,
+                    (Class<? extends HyperResource>)classToReturn,
+                    typeInfo
+                ).run(response)
+            );
+        }
+
+        throw new HyperfitException(
+            "Return type of " + classToReturn + " is not supported"
+        );
 
 
-        return processResource(classToReturn, resource, typeInfo);
     }
 
     /**
@@ -218,20 +226,13 @@ public class HyperfitProcessor {
      * @param hyperResource resource to proxify
      * @return resource with same type specified in the resource class.
      */
-    public <T> T processResource(
+    public <T extends HyperResource> T processResource(
         Class<T> classToReturn,
         HyperResource hyperResource,
         TypeInfo typeInfo
     ) {
 
         //TODO: if they just want a hyper resource, give it to them
-
-        //This can happen if they ask for the String of an embedded resource...not sure that i like that we parse it before
-        //But it makes sense.  Note that if we made a request they don't get here because the String case is caught above
-        //to skip the parsing of the response into a mediatype
-        if (String.class.isAssignableFrom(classToReturn)) {
-            return (T) hyperResource.toString();
-        }
 
 
         InvocationHandler handler = new HyperResourceInvokeHandler(
@@ -248,6 +249,7 @@ public class HyperfitProcessor {
             interfaceSelectionStrategy.determineInterfaces(classToReturn, hyperResource),
             handler
         );
+
 
         return ReflectUtils.cast(classToReturn, proxy);
     }
