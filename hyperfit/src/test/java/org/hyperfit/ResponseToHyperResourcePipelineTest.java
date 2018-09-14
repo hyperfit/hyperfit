@@ -85,8 +85,19 @@ public class ResponseToHyperResourcePipelineTest {
             .thenReturn("");
 
 
-        assertSame(
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
             fakeResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
+
+
+        assertSame(
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
@@ -125,9 +136,18 @@ public class ResponseToHyperResourcePipelineTest {
         when(mockResponse.getContentType())
             .thenReturn(null);
 
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
+            fakeResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
 
         assertSame(
-            fakeResource,
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
@@ -166,9 +186,19 @@ public class ResponseToHyperResourcePipelineTest {
         when(mockResponse.getContentType())
             .thenReturn("three/part/throws");
 
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
+            fakeResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
+
 
         assertSame(
-            fakeResource,
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
@@ -210,15 +240,24 @@ public class ResponseToHyperResourcePipelineTest {
         when(mockContentRegistry.canHandle(
             ContentType.parse(fakeContentType),
             ContentRegistry.Purpose.PARSE_RESPONSE
-        ))
-            .thenReturn(
-                false
-            );
+        )).thenReturn(
+            false
+        );
 
 
+
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
+            fakeResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
 
         assertSame(
-            fakeResource,
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
@@ -285,8 +324,19 @@ public class ResponseToHyperResourcePipelineTest {
             fakeResource
         );
 
-        assertSame(
+
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
             fakeResource,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
+
+        assertSame(
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
@@ -354,8 +404,19 @@ public class ResponseToHyperResourcePipelineTest {
             fakeResource2
         );
 
-        assertSame(
+        Resource1 fakeProxiedResource = mock(Resource1.class);
+
+        when(mockHyperfitProcessor.processResource(
+            Resource1.class,
             fakeResource2,
+            mockTypeInfo
+        )).thenReturn(
+            fakeProxiedResource
+        );
+
+
+        assertSame(
+            fakeProxiedResource,
             subject.run(
                 mockResponse
             )
