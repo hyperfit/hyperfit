@@ -1,3 +1,6 @@
+## 1.17.1 - TBD
+* 
+
 ## 1.16.1 - 2018-10-05
 * added getDataFieldNames method to HyperResource interface to enumerate all the top level fields of the underlying resource.
  * hal + html content handlers have added implementations for this new interface method
