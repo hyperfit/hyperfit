@@ -1,4 +1,4 @@
-## 1.16.2 - 2018-10-10
+## 1.17.1 - TBD
 * Exposing HyperfitProcessor in Pipeline
 
 ## 1.16.1 - 2018-10-05
