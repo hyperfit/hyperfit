@@ -7,4 +7,6 @@ public interface Pipeline<I,O> {
     }
 
     O run(I input);
+
+    HyperfitProcessor getProcessor();
 }

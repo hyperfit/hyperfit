@@ -1,5 +1,5 @@
-## 1.17.1 - TBD
-* 
+## 1.16.2 - 2018-10-10
+* Exposing HyperfitProcessor in Pipeline
 
 ## 1.16.1 - 2018-10-05
 * added getDataFieldNames method to HyperResource interface to enumerate all the top level fields of the underlying resource.

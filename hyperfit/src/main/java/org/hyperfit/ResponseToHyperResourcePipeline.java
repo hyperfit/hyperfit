@@ -134,4 +134,8 @@ class ResponseToHyperResourcePipeline implements Pipeline<Response, HyperResourc
         return resource;
     }
 
+    public HyperfitProcessor getProcessor(){
+        return this.processor;
+    }
+
 }
