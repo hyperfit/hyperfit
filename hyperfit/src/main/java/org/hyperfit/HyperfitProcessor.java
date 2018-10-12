@@ -57,6 +57,11 @@ public class HyperfitProcessor {
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
         java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
 
+        /*
+         * Don't tie ourselves to the actual List in the Builder. If a Step is added/removed from the Pipeline in
+         * the builder it will be changed in the Pipeline of all existing HyperfitProcessors (since it's the same List
+         * in memory).
+         */
         //TODO: check for bad null steps
         //TOOD: should this just be a stack?
         responseToResourcePipelineSteps = new ArrayList<Pipeline.Step<Response, HyperResource>>(builder.responseToResourcePipelineBuilder.steps);
@@ -64,7 +69,13 @@ public class HyperfitProcessor {
         if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
             throw new IllegalArgumentException("at least one scheme client mapping must be registered");
         }
-        schemeClientMap = builder.schemeClientMap;
+
+        /*
+         * Like the PipelineSteps above, we don't want to tie ourselves to the actual list in the Builder. If a
+         * HyperClient is added/removed from the Map in the builder it will be changed in the Map of all existing
+         * HyperfitProcessors (since it's the same Map in memory).
+         */
+        schemeClientMap = new HashMap<String, HyperClient>(builder.schemeClientMap);
 
         //get the distinct hyperclient from the map and call the setAcceptedContentTypes
         Set<HyperClient> uniqueClient = new HashSet<HyperClient>();
