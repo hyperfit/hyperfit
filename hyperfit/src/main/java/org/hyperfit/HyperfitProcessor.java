@@ -42,7 +42,7 @@ public class HyperfitProcessor {
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
-    private final Map<String, HyperClient> schemeClientMap;
+    private final HyperClientSelectionStrategy clientSelectionStrategy;
     private final Java8DefaultMethodHandler java8DefaultMethodHandler;
     private final ResponseInterceptors responseInterceptors;
     private final List<Pipeline.Step<Response, HyperResource>> responseToResourcePipelineSteps;
@@ -75,16 +75,11 @@ public class HyperfitProcessor {
          * HyperClient is added/removed from the Map in the builder it will be changed in the Map of all existing
          * HyperfitProcessors (since it's the same Map in memory).
          */
-        schemeClientMap = new HashMap<String, HyperClient>(builder.schemeClientMap);
+        clientSelectionStrategy = new SchemeBasedHyperClientSelectionStrategy(
+            builder.schemeClientMap,
+            contentRegistry.getResponseParsingContentTypes()
+        );
 
-        //get the distinct hyperclient from the map and call the setAcceptedContentTypes
-        Set<HyperClient> uniqueClient = new HashSet<HyperClient>();
-        for(HyperClient hyperClient: schemeClientMap.values()){
-            uniqueClient.add(hyperClient);
-        }
-        for(HyperClient hyperClient: uniqueClient){
-            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
-        }
     }
 
 
@@ -165,29 +160,13 @@ public class HyperfitProcessor {
         requestInterceptors.intercept(requestBuilder);
 
         Request request = requestBuilder.build();
-        //find the scheme
-        int pos = request.getUrl().indexOf(":");
-
-        String scheme = null;
-        if(pos > 0) {
-            scheme = request.getUrl().substring(0, pos);
-        }
-
-        if(StringUtils.isEmpty(scheme)){
-            throw new IllegalArgumentException("The request url does not have a scheme");
-        }
-
-        //TODO: return the request if that's what they want
 
 
-        HyperClient hyperClient = schemeClientMap.get(scheme);
-        if(hyperClient == null){
-            throw new NoClientRegisteredForSchemeException(scheme);
-        }
-
-        Response response = hyperClient.execute(request);
-
-        return processResponse(classToReturn, response, typeInfo);
+        return processResponse(
+            classToReturn,
+            clientSelectionStrategy.chooseClient(request).execute(request),
+            typeInfo
+        );
     }
 
     public <T> T processResponse(
@@ -476,6 +455,16 @@ public class HyperfitProcessor {
         public HyperfitProcessor build() {
             return new HyperfitProcessor(this);
         }
+    }
+
+
+    //TODO: make public when builder can take a strategy
+    interface HyperClientSelectionStrategy {
+
+        HyperClient chooseClient(
+            Request request
+        );
+
     }
 
 }

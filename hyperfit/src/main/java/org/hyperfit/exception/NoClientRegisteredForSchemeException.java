@@ -8,7 +8,7 @@ public class NoClientRegisteredForSchemeException extends HyperfitException {
 
 
     public NoClientRegisteredForSchemeException(String unsupportedScheme) {
-        super("No HyperClient implementation registration found for scheme " + unsupportedScheme);
+        super("No HyperClient has been registered for the " + unsupportedScheme +  " scheme");
     }
 
 }
