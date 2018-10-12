@@ -8,7 +8,6 @@ import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.handlers.Java8DefaultMethodHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
