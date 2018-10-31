@@ -8,7 +8,6 @@ import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.DefaultErrorHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
 import org.hyperfit.exception.HyperfitException;
-import org.hyperfit.exception.NoClientRegisteredForSchemeException;
 import org.hyperfit.handlers.Java8DefaultMethodHandler;
 import org.hyperfit.methodinfo.ConcurrentHashMapResourceMethodInfoCache;
 import org.hyperfit.methodinfo.ResourceMethodInfoCache;
@@ -42,7 +41,7 @@ public class HyperfitProcessor {
     protected final ContentRegistry contentRegistry;
     private final ErrorHandler errorHandler;
     private final InterfaceSelectionStrategy interfaceSelectionStrategy;
-    private final Map<String, HyperClient> schemeClientMap;
+    private final HyperClientSelectionStrategy clientSelectionStrategy;
     private final Java8DefaultMethodHandler java8DefaultMethodHandler;
     private final ResponseInterceptors responseInterceptors;
     private final List<Pipeline.Step<Response, HyperResource>> responseToResourcePipelineSteps;
@@ -57,6 +56,11 @@ public class HyperfitProcessor {
         interfaceSelectionStrategy =  Preconditions.checkNotNull(builder.interfaceSelectionStrategy);
         java8DefaultMethodHandler = Preconditions.checkNotNull(builder.java8DefaultMethodHandler);
 
+        /*
+         * Don't tie ourselves to the actual List in the Builder. If a Step is added/removed from the Pipeline in
+         * the builder it will be changed in the Pipeline of all existing HyperfitProcessors (since it's the same List
+         * in memory).
+         */
         //TODO: check for bad null steps
         //TOOD: should this just be a stack?
         responseToResourcePipelineSteps = new ArrayList<Pipeline.Step<Response, HyperResource>>(builder.responseToResourcePipelineBuilder.steps);
@@ -64,16 +68,17 @@ public class HyperfitProcessor {
         if(builder.schemeClientMap == null || builder.schemeClientMap.size() == 0){
             throw new IllegalArgumentException("at least one scheme client mapping must be registered");
         }
-        schemeClientMap = builder.schemeClientMap;
 
-        //get the distinct hyperclient from the map and call the setAcceptedContentTypes
-        Set<HyperClient> uniqueClient = new HashSet<HyperClient>();
-        for(HyperClient hyperClient: schemeClientMap.values()){
-            uniqueClient.add(hyperClient);
-        }
-        for(HyperClient hyperClient: uniqueClient){
-            hyperClient.setAcceptedContentTypes(contentRegistry.getResponseParsingContentTypes());
-        }
+        /*
+         * Like the PipelineSteps above, we don't want to tie ourselves to the actual list in the Builder. If a
+         * HyperClient is added/removed from the Map in the builder it will be changed in the Map of all existing
+         * HyperfitProcessors (since it's the same Map in memory).
+         */
+        clientSelectionStrategy = new SchemeBasedHyperClientSelectionStrategy(
+            builder.schemeClientMap,
+            contentRegistry.getResponseParsingContentTypes()
+        );
+
     }
 
 
@@ -154,29 +159,13 @@ public class HyperfitProcessor {
         requestInterceptors.intercept(requestBuilder);
 
         Request request = requestBuilder.build();
-        //find the scheme
-        int pos = request.getUrl().indexOf(":");
-
-        String scheme = null;
-        if(pos > 0) {
-            scheme = request.getUrl().substring(0, pos);
-        }
-
-        if(StringUtils.isEmpty(scheme)){
-            throw new IllegalArgumentException("The request url does not have a scheme");
-        }
-
-        //TODO: return the request if that's what they want
 
 
-        HyperClient hyperClient = schemeClientMap.get(scheme);
-        if(hyperClient == null){
-            throw new NoClientRegisteredForSchemeException(scheme);
-        }
-
-        Response response = hyperClient.execute(request);
-
-        return processResponse(classToReturn, response, typeInfo);
+        return processResponse(
+            classToReturn,
+            clientSelectionStrategy.chooseClient(request).execute(request),
+            typeInfo
+        );
     }
 
     public <T> T processResponse(
@@ -465,6 +454,16 @@ public class HyperfitProcessor {
         public HyperfitProcessor build() {
             return new HyperfitProcessor(this);
         }
+    }
+
+
+    //TODO: make public when builder can take a strategy
+    interface HyperClientSelectionStrategy {
+
+        HyperClient chooseClient(
+            Request request
+        );
+
     }
 
 }

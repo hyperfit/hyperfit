@@ -4,25 +4,20 @@ import org.hyperfit.content.ContentRegistry;
 import org.hyperfit.content.ContentType;
 import org.hyperfit.content.ContentTypeHandler;
 import org.hyperfit.errorhandler.ErrorHandler;
-import org.hyperfit.exception.ResponseException;
 import org.hyperfit.net.*;
 import org.hyperfit.resource.HyperResource;
-import org.hyperfit.resource.InterfaceSelectionStrategy;
 import org.hyperfit.utils.TypeInfo;
-import org.hyperfit.utils.TypeRef;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static test.TestUtils.uniqueString;
+
 
 public class ResponseToHyperResourcePipelineTest {
 
