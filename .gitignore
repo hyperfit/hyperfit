@@ -49,3 +49,6 @@ nbproject/
 
 #JRebel
 rebel.xml
+
+#mvn versions plugin
+*.versionsBackup
