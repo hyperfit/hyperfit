@@ -1,0 +1,17 @@
+language: java
+# We build with 8 but target diff JREs via compiler settings in pom
+jdk:
+ - oraclejdk8
+
+
+before_install:
+  #these env vars are only set for internal repo PRs and branches...forks won't have em
+  - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import; fi
+  - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | gpg --batch --import-ownertrust; fi
+
+install: true
+
+script:
+  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./mvnw clean test jacoco:report coveralls:report -B -U; fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false"  ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then ./mvnw clean deploy jacoco:report coveralls:report --settings .travis/settings.xml -B -U; fi; fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false"  ]; then if [ "$TRAVIS_BRANCH" != "master" ]; then ./mvnw clean verify jacoco:report coveralls:report -B -U; fi; fi
