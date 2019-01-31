@@ -8,7 +8,7 @@
 
   <packaging>pom</packaging>
   <name>Hyperfit Root</name>
-  <url>http://hyperfit.org</url>
+  <url>https://hyperfit.org</url>
 
   <modules>
     <module>hyperfit</module>
@@ -19,6 +19,17 @@
     <module>hyperfit-html5</module>
     <module>hyperfit-java8</module>
   </modules>
+  
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -112,24 +123,24 @@
     <plugins>
       <!-- ATTACHES SOURCES -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
+            <phase>verify</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
 
-      <!-- ATTACHES JAVADOC -->
+      <!-- from https://maven.apache.org/plugins/maven-javadoc-plugin/usage.html -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
+        <version>2.10.4</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -140,11 +151,46 @@
         </executions>
       </plugin>
 
-      <!-- Code coverage for SONAR -->
+      <!-- from http://maven.apache.org/plugins/maven-gpg-plugin/usage.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.3</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.7.6.201602180812</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
@@ -161,6 +207,30 @@
 
     </pluginManagement>
   </build>
+  
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+
+  <developers>
+    <developer>
+      <id>VitalizeOSS</id>
+      <name>Vitalize OSS</name>
+      <email>oss@vitalize.com</email>
+      <url>https://bodybuilding.com</url>
+    </developer>
+    <developer>
+      <id>drdamour</id>
+      <name>drdamour</name>
+      <email>drdamour@gmail.com</email>
+      <url>https://talkshowhost.net</url>
+    </developer>
+  </developers>
 
 
 </project>
