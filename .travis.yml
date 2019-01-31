@@ -13,5 +13,5 @@ install: true
 
 script:
   - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./mvnw clean test jacoco:report coveralls:report -B -U; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false"  ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then ./mvnw clean deploy jacoco:report coveralls:report --settings .travis/settings.xml -B -U; fi; fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false"  ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then ./mvnw clean deploy jacoco:report  --settings .travis/settings.xml -B -U; fi; fi
   - if [ "$TRAVIS_PULL_REQUEST" = "false"  ]; then if [ "$TRAVIS_BRANCH" != "master" ]; then ./mvnw clean verify jacoco:report coveralls:report -B -U; fi; fi
